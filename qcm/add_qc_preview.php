@@ -1,0 +1,590 @@
+<?php
+	session_start();
+	if(!isset($_SESSION['sessionadmin']))
+	{
+	echo '<script language="JavaScript" type="text/JavaScript">';
+	echo "window.location='../login.php' ";
+	echo '</script>';
+	}
+	else
+	{
+	$year1=$_SESSION['ayear1'];
+	$year2=$_SESSION['ayear2'];
+	$username= $_SESSION['username'];
+	$yearid_id=$_SESSION['yearid_id'];
+	$role=$_SESSION['role'];
+    $loginid=$_SESSION['loginid'];
+    $logid=$_SESSION['logid'];
+	$lgnid=$_SESSION['logid'];
+	$plantcode=$_SESSION['plantcode'];
+	$plantcode1=$_SESSION['plantcode1'];
+	$plantcode2=$_SESSION['plantcode2'];
+	$plantcode3=$_SESSION['plantcode3'];
+	$plantcode4=$_SESSION['plantcode4'];
+	}
+	require_once("../include/config.php");
+	require_once("../include/connection.php");
+
+	if(isset($_REQUEST['cropid']))
+	{
+   		$pid = $_REQUEST['cropid'];
+	}
+	if(isset($_REQUEST['date']))
+	{
+		$ee1 = $_REQUEST['date'];
+	}
+	if(isset($_REQUEST['txtcrop']))
+	{
+		$txtcrop= $_REQUEST['txtcrop'];	 
+	}
+	if(isset($_REQUEST['txtvariety']))
+	{
+		$txtvariety = $_REQUEST['txtvariety'];	 
+	}
+	
+	if(isset($_POST['frm_action'])=='submit')
+	{
+	//exit;
+	$sql_arr=mysqli_query($link,"select * from tbl_qcgen where arrival_id='".$pid."'") or die(mysqli_error($link));
+	while($row_arr=mysqli_fetch_array($sql_arr))
+	{
+	$stage=$row_arr['stage'];
+	$tdate=$row_arr['arrival_date'];
+	$ststus=$row_arr['status'];	
+	$sql_arrsub=mysqli_query($link,"select * from tbl_qcgen1 where arrival_id='".$pid."'") or die(mysqli_error($link));
+	while($row_arrsub=mysqli_fetch_array($sql_arrsub))
+	{
+		$lotno=$row_arrsub['lotno'];
+		$lotn=$row_arrsub['lotno'];
+		//$sstatus=$row_arrsub['pp'];
+		$moist=$row_arrsub['moist'];
+		$gemp=$row_arrsub['gemp'];
+		$got=$row_arrsub['got'];
+		$pp=$row_arrsub['pp'];
+		$gotr=$row_arrsub['gotr'];
+		$qcr=$row_arrsub['qcr'];
+		$crop=$row_arrsub['crop'];
+		$variety=$row_arrsub['variety'];
+		if($stage=="")$stage=$row_arrsub['stage'];
+		$rsl="";
+		if($stage=="Raw")$lotn=$lotn."R";
+		if($stage=="Condition")$lotn=$lotn."C";
+		if($stage=="Pack")$lotn=$lotn."P";
+		 $qc="";
+		//$got="";
+		if($pp=="P")$rsl="P";
+		if($moist=="M"){ if($rsl!="")$rsl=$rsl."/"."M"; else $rsl="M"; }
+		if($gemp=="G"){ if($rsl!="")$rsl=$rsl."/"."G"; else $rsl="G"; }
+		if($got=="T"){ if($rsl!="")$rsl=$rsl."/"."T"; else $rsl="T"; }
+			
+		if($got!="" && $got=="T") $got="UT";
+		if($gemp!="" && $gemp=="G") $qc="UT";
+			
+		$sql_code1="SELECT MAX(sampleno) FROM tbl_qctest where yearid='$yearid_id' ORDER BY tid DESC";
+		$res_code1=mysqli_query($link,$sql_code1)or die(mysqli_error($link));
+		
+		if(mysqli_num_rows($res_code1) > 0)
+		{
+			$row_code1=mysqli_fetch_row($res_code1);
+			$t_code1=$row_code1['0'];
+			$ncode1=$t_code1+1;
+			//$ncode=sprintf("%004d",$ncode);
+		}
+		else
+		{
+			$ncode1=1;
+		}
+		$p=""; $m=""; $g="";
+		$sql_ldg=mysqli_query($link,"select * from tbl_lot_ldg where orlot='$lotno' order by lotldg_id desc limit 0,1") or die(mysqli_error($link));
+		$tot_ldg=mysqli_num_rows($sql_ldg);
+		if($tot_ldg > 0)
+		{
+			$row_ldg=mysqli_fetch_array($sql_ldg);
+			$p=$row_ldg['lotldg_vchk'];
+			$m=$row_ldg['lotldg_moisture'];
+			$g=$row_ldg['lotldg_gemp'];
+		}
+		
+		$sql_sub_sub="insert into tbl_qctest(lotno, oldlot, crop, variety, qc, got, trstage, srdate, sampleno, state, pp, moist, gemp, yearid,logid) values('$lotn', '$lotno', '$crop', '$variety', '$qc', '$got', '$stage','$tdate','$ncode1','$rsl','$p','$m','$g', '$yearid_id','$logid')";
+		mysqli_query($link,$sql_sub_sub) or die(mysqli_error($link));
+				
+		
+		if($qc=="UT" && $got=="UT")
+		{
+			 $sql_itm="update tbl_lot_ldg set lotldg_qc='UT', lotldg_got='UT' where orlot='$lotno'";
+	         $qq=mysqli_query($link,$sql_itm) or die(mysqli_error($link));
+		}
+		else if($qc=="UT" && $got=="")
+		{
+			 $sql_itm="update tbl_lot_ldg set lotldg_qc='UT' where orlot='$lotno'";
+	         $qq=mysqli_query($link,$sql_itm) or die(mysqli_error($link));
+		}
+		else if($qc=="" && $got=="UT")
+		{
+			 $sql_itm="update tbl_lot_ldg set lotldg_got='UT' where orlot='$lotno'";
+	         $qq=mysqli_query($link,$sql_itm) or die(mysqli_error($link));
+		}
+	}				 
+		$sql_main="update tbl_qcgen set arrtrflag=1 where arrival_id ='$pid'";
+	    $a123456=mysqli_query($link,$sql_main) or die(mysqli_error($link));
+		
+		$sql_code="SELECT MAX(arr_code) FROM tbl_qcgen where year_code='$yearid_id'";
+		$res_code=mysqli_query($link,$sql_code)or die(mysqli_error($link));
+		
+		if(mysqli_num_rows($res_code) > 0)
+		{
+			$row_code=mysqli_fetch_row($res_code);
+			$t_code=$row_code['0'];
+			$code=$t_code+1;
+		}
+		else
+		{
+			$code=1;
+		}
+	}
+		echo "<script>window.location='home_qc.php'</script>";	
+}
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<script type="text/javascript" src="../include/animatedcollapse.js"></script>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Quality - Transaction - QC Sampling - Preview</title>
+<link href="../include/main_quality.css" rel="stylesheet" type="text/css" />
+<link href="../include/vnrtrac_quality.css" rel="stylesheet" type="text/css" />
+</head>
+<script src="trading.js"></script>
+<script type="text/javascript">
+//SuckerTree Horizontal Menu (Sept 14th, 06)
+//By Dynamic Drive: http://www.dynamicdrive.com/style/
+var menuids=["nav"] //Enter id(s) of SuckerTree UL menus, separated by commas
+function buildsubmenus_horizontal(){
+for (var i=0; i<menuids.length; i++){
+  var ultags=document.getElementById(menuids[i]).getElementsByTagName("ul")
+    for (var t=0; t<ultags.length; t++){
+		if (ultags[t].parentNode.parentNode.id==menuids[i]){ //if this is a first level submenu
+			ultags[t].style.top=ultags[t].parentNode.offsetHeight+"px" //dynamically position first level submenus to be height of main menu item
+			ultags[t].parentNode.getElementsByTagName("a")[0].className="mainfoldericon"
+		}
+		else{ //else if this is a sub level menu (ul)
+		  ultags[t].style.left=ultags[t-1].getElementsByTagName("a")[0].offsetWidth+"px" //position menu to the right of menu item that activated it
+    	ultags[t].parentNode.getElementsByTagName("a")[0].className="subfoldericon"
+		}
+    ultags[t].parentNode.onmouseover=function(){
+    this.getElementsByTagName("ul")[0].style.visibility="visible"
+    }
+    ultags[t].parentNode.onmouseout=function(){
+  this.getElementsByTagName("ul")[0].style.visibility="hidden"
+    }
+    }
+  }
+}
+
+if (window.addEventListener)
+window.addEventListener("load", buildsubmenus_horizontal, false)
+else if (window.attachEvent)
+window.attachEvent("onload", buildsubmenus_horizontal)
+
+</script>
+<script language="javascript" type="text/javascript">
+
+function formPost(top_element){
+	var inputs=top_element.getElementsByTagName('*');
+	var qstring=new Array();
+	for(var i=0;i<inputs.length;i++){
+		if(!inputs[i].disabled&&inputs[i].getAttribute('name')!=""&&inputs[i].getAttribute('name')){
+			qs_str=inputs[i].getAttribute('name')+"="+encodeURIComponent(inputs[i].value);
+			switch(inputs[i].tagName.toLowerCase()){
+				case "select":
+					if(inputs[i].getAttribute("multiple")){
+						var len2=inputs[i].length;
+						for(var j=0;j<len2;j++){
+							if(inputs[i].options[j].selected){
+								var targ=(inputs[i].options[j].value) ? inputs[i].options[j].value : inputs[i].options[j].text;
+								qstring[qstring.length]=inputs[i].getAttribute('name')+"="+encodeURIComponent(targ);
+							}
+						}
+					}
+					else{
+						var targ=(inputs[i].options[inputs[i].selectedIndex].value) ? inputs[i].options[inputs[i].selectedIndex].value : inputs[i].options[inputs[i].selectedIndex].text
+						qstring[qstring.length]=inputs[i].getAttribute('name')+"="+encodeURIComponent(targ);
+					}
+				break;
+				case "textarea":
+					qstring[qstring.length]=qs_str;
+				break;
+				case "input":
+					switch(inputs[i].getAttribute("type").toLowerCase()){
+						case "radio":
+							if(inputs[i].checked){
+								qstring[qstring.length]=qs_str;
+							}
+						break;
+						case "checkbox":
+							if(inputs[i].value!=""){
+								if(inputs[i].checked){
+									qstring[qstring.length]=qs_str;
+								}
+							}
+							else{
+								var stat=(inputs[i].checked) ? "true" : "false"
+								qstring[qstring.length]=inputs[i].getAttribute('name')+"="+stat;
+							}
+						break;
+						case "text":
+							qstring[qstring.length]=qs_str;
+						break;
+						case "password":
+							qstring[qstring.length]=qs_str;
+						break;
+						case "hidden":
+							qstring[qstring.length]=qs_str;
+						break;
+					}
+				break;
+			}
+		}
+	}
+	return qstring.join("&");
+}
+
+function openslocpopprint()
+{
+	//alert(txtcrop);
+	if(document.frmaddDepartment.txtitem.value!="")
+	{
+		var itm=document.frmaddDepartment.txtitem.value;
+		var remarks=document.frmaddDepartment.txtvariety.value
+		winHandle=window.open('qc_print.php?itmid='+itm+'&txtvariety='+remarks,'WelCome','top=170,left=180,width=820,height=350,scrollbars=yes');
+		if(winHandle==null){
+		alert("While Launching New Window...\nYour browser maybe blocking up Popup windows. \n\n  Please check your Popup Blocker Settings or ..\n Please hold Ctrl Key and Click on link to open new Browser"); }
+	}
+	else
+	{
+		alert("Please Select Crop first.");
+		document.frmaddDepartment.txtcrop.focus();
+	}
+}
+
+function mySubmit()
+{ 
+	if(confirm('Have You completed the Transaction?\nDo You wish to Final Submit it?')==true)
+	{
+		return true;	 
+	}
+	else
+	{
+		return false;
+	} 
+}
+</script>
+
+<body>
+<table width="1003" height="600" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
+
+    <td valign="top"><table width="1003" height="72" border="0" cellspacing="0" cellpadding="0" align="center">
+        <tr>
+         <tr>
+           <td valign="top"><?php require_once("../include/arr_qcm.php");?></td>
+         </tr>
+        </tr>
+      </table>
+      <table width="100%" style=" z-index:-1;" height="auto" align="center" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="100%" valign="top" align="center">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="100%" valign="top" height="auto" align="center"  class="midbgline">
+		  <!-- actual page start--->	
+  
+ <table  width="974" border="0" cellpadding="0" cellspacing="0" bordercolor="#d21704" >
+  <tr><td>
+   <table  width="974" border="0" cellpadding="0" cellspacing="0" bordercolor="#d21704" >
+	   <tr style="padding:0px 0px 0px 0px" >
+	  <td width="32" height="25"><img src="../images/rupee1.jpg" align="right" width="30" height="30" />&nbsp;</td>
+	  <td width="940" class="Mainheading" height="25">
+	  <table width="940" border="0" cellpadding="0" cellspacing="0" bordercolor="#d21704" style="border-bottom:solid; border-bottom-color:#d21704" >
+	    <tr >
+	      <td width="813" height="25" class="Mainheading">&nbsp;Transaction - QC Sampling Request Form Preview <img src="../images/qty_curvetop.gif" /></td>
+	    </tr></table></td>
+	           
+	  </tr>
+	  </table></td></tr>
+  
+ <?php 
+ $tid=$pid;
+$sql_tbl=mysqli_query($link,"select * from tbl_qcgen where arr_role='".$logid."'  and arrival_id='".$tid."'") or die(mysqli_error($link));
+$row_tbl=mysqli_fetch_array($sql_tbl);			
+ $arrival_id=$row_tbl['arrival_id'];
+ 
+$tdate=$row_tbl['arrival_date'];
+	$tyear=substr($tdate,0,4);
+	$tmonth=substr($tdate,5,2);
+	$tday=substr($tdate,8,2);
+	$tdate=$tday."-".$tmonth."-".$tyear;
+	
+	$sql_tbl_sub=mysqli_query($link,"select * from tbl_qcgen1 where arrival_id='".$arrival_id."'") or die(mysqli_error($link));
+$subtbltot=mysqli_num_rows($sql_tbl_sub);
+$subtid=0;
+?> 
+	  
+	  <td align="center" colspan="4" >
+	  
+<form name="frmaddDepartment" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>"   > 
+	 <input name="frm_action" value="submit" type="hidden"> 
+	 	<input type="hidden" name="logid" value="<?php echo $logid?>" />
+		<input type="hidden" name="txtitem" value="<?php echo $pid?>" />
+		<input type="hidden" name="txtvariety" value="<?php echo $remarks?>" />
+			<input type="hidden" name="date" value="<?php echo $tdate?>" />
+		</br>
+<table border="0" cellspacing="0" cellpadding="0" align="center" width="974"  style="border-collapse:collapse">
+<tr height="7"><td height="7"></td></tr>
+<tr>
+<td width="30">	 </td><td>
+<table align="center" border="1" width="850" cellspacing="0" cellpadding="0" bordercolor="#d21704" style="border-collapse:collapse" > 
+<tr class="tblsubtitle" height="20">
+  <td colspan="6" align="center" class="tblheading">QC Sampling Request Form Preview</td>
+</tr>
+
+ <tr class="Dark" height="30">
+<td width="159" align="right" valign="middle" class="tblheading">&nbsp;Transaction Id &nbsp;</td>
+<td width="233"  align="left" valign="middle" class="tbltext">&nbsp;<?php echo "TQS".$row_tbl['arr_code']."/".$yearid_id."/".$lgnid;?></td>
+
+<td width="269" align="right" valign="middle" class="tblheading">&nbsp;Date&nbsp;</td>
+<td width="179" align="left" valign="middle" class="tbltext">&nbsp;<?php echo $tdate;?>&nbsp;</td>
+</tr>
+<!--<tr class="Light" height="30">
+<td align="right" width="202" valign="middle" class="tblheading">Seed&nbsp;stage&nbsp;</td>
+<td align="left" width="275" valign="middle" class="tbltext" colspan="3">&nbsp;<?php echo $row_tbl['stage'];?>&nbsp;</td>
+
+</tr>-->
+
+
+ 
+<?php
+ $srno=1;
+$total_tbl=mysqli_num_rows($sql_tbl);
+if($total_tbl > 0)
+{
+while($row_tbl_sub=mysqli_fetch_array($sql_tbl_sub))
+{
+if($srno%2!=0)
+{
+$quer3=mysqli_query($link,"SELECT * FROM tblvariety where varietyid ='".$row_tbl['variety']."' and actstatus='Active'"); 
+	$rowvv=mysqli_fetch_array($quer3);
+	
+	
+$quer3=mysqli_query($link,"SELECT * FROM tblcrop  where cropid='".$row_tbl['crop']."'"); 
+	$row31=mysqli_fetch_array($quer3);
+//$quer3=mysqli_query($link,"SELECT cropid, cropname FROM tblcrop  order by cropname Asc"); 
+?>
+
+<!--<td align="right"  valign="middle" class="tblheading">Crop&nbsp;</td>
+<td align="left"  valign="middle" class="tbltext" >&nbsp;<?php echo $row31['cropname'];?></td>
+
+ <?php
+$quer3=mysqli_query($link,"SELECT * FROM tblvariety where varietyid ='".$row_tbl['variety']."' and actstatus='Active'"); 
+	$rowvv=mysqli_fetch_array($quer3);
+//$quer3=mysqli_query($link,"SELECT cropid, cropname FROM tblcrop  order by cropname Asc"); 
+?>
+
+	<td align="right"  valign="middle" class="tblheading">Variety &nbsp;</td>
+    <td align="left"  valign="middle" class="tbltext" colspan="3">&nbsp;<?php echo $rowvv['popularname'];?></td>
+           </tr>-->
+</table>
+<br />
+<table align="center" border="1" cellspacing="0" cellpadding="0" width="850" bordercolor="#d21704" style="border-collapse:collapse">
+    <?php
+	$tid=$pid;
+$sql_tbl=mysqli_query($link,"select * from tbl_qcgen where arr_role='".$logid."'  and arrival_id='".$tid."'") or die(mysqli_error($link));
+$row_tbl=mysqli_fetch_array($sql_tbl);
+ $tot=mysqli_num_rows($sql_tbl);		
+ $arrival_id=$row_tbl['arrival_id'];
+
+$sql_tbl_sub=mysqli_query($link,"select * from tbl_qcgen1 where arrival_id='".$arrival_id."'") or die(mysqli_error($link));
+$subtbltot=mysqli_num_rows($sql_tbl_sub);
+$subtid=$tid;
+
+$tdate=$row_tbl['arrival_date'];
+	$tyear=substr($tdate,0,4);
+	$tmonth=substr($tdate,5,2);
+	$tday=substr($tdate,8,2);
+	$tdate=$tday."-".$tmonth."-".$tyear;
+?>
+<tr class="tblsubtitle" height="20">
+    <td width="3%"  align="center" valign="middle" class="tblheading">#</td>
+    <td width="14%"  align="center" valign="middle" class="tblheading">Crop</td>
+    <td width="17%"  align="center" valign="middle" class="tblheading">Variety</td>	
+	<td width="12%" align="center" valign="middle" class="tblheading">Lot No. </td>
+	<td width="6%" align="center" valign="middle" class="tblheading">NoB</td>
+    <td width="7%" align="center" valign="middle" class="tblheading">Qty</td>
+	<td width="17%" align="center" valign="middle" class="tblheading">Stage</td>
+    <td width="12%" align="center" valign="middle" class="tblheading">Quality</td>
+	<td width="12%" align="center" valign="middle" class="tblheading">GOT</td>
+</tr>
+  <?php
+ 
+$srno=1;
+$total_tbl=mysqli_num_rows($sql_tbl);
+if($total_tbl > 0)
+{
+while($row_tbl_sub=mysqli_fetch_array($sql_tbl_sub))
+{
+
+  $quer3=mysqli_query($link,"SELECT * FROM tblvariety where varietyid ='".$row_tbl_sub['variety']."' and actstatus='Active'"); 
+	$rowvv=mysqli_fetch_array($quer3);
+	 $tt=$rowvv['popularname'];
+	  $tot=mysqli_num_rows($quer3);	
+	 if($tot==0)
+	 {
+	 $vv=$row_tbl_sub['variety'];
+	 }
+	 else
+	 {
+	  $vv=$tt;
+	  }
+	
+	
+   $quer3=mysqli_query($link,"SELECT * FROM tblcrop  where cropid='".$row_tbl_sub['crop']."'"); 
+	$row31=mysqli_fetch_array($quer3);
+	$crop=$row31['cropname'];
+	$lot=$row_tbl_sub['lotno'];
+		$lot=$row_tbl_sub['lotno'];
+	$sql_tbl=mysqli_query($link,"select * from tbl_lot_ldg where orlot='".$lot."'") or die(mysqli_error($link));
+   $row_tbl=mysqli_fetch_array($sql_tbl);
+   
+    $row_tbl_sub['lotno'];
+ $totqty=0; $totnob=0; $totqc=""; $totdot=""; $totmost=""; $totgemp=""; $totgot=""; $reserve=""; $totsst=""; 	$sloc=""; 
+	$sql_issue=mysqli_query($link,"select distinct lotldg_subbinid, lotldg_whid, lotldg_binid from tbl_lot_ldg where  orlot='".$row_tbl_sub['lotno']."' ") or die(mysqli_error($link));
+
+ while($row_issue=mysqli_fetch_array($sql_issue))
+ { 
+
+$sql_issue1=mysqli_query($link,"select max(lotldg_id) from tbl_lot_ldg where lotldg_subbinid='".$row_issue['lotldg_subbinid']."' and lotldg_binid='".$row_issue['lotldg_binid']."' and lotldg_whid='".$row_issue['lotldg_whid']."' and orlot='".$row_tbl_sub['lotno']."' ") or die(mysqli_error($link));
+$row_issue1=mysqli_fetch_array($sql_issue1); 
+ $row_issue1[0];
+$sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg where lotldg_id='".$row_issue1[0]."' and lotldg_balqty > 0") or die(mysqli_error($link)); 
+
+ while($row_issuetbl=mysqli_fetch_array($sql_issuetbl))
+ { 
+ 
+	$totqty=$totqty+$row_issuetbl['lotldg_balqty']; 
+	$totnob=$totnob+$row_issuetbl['lotldg_balbags']; 
+}
+}
+
+    $pp="";
+			 if($row_tbl_sub['pp']!=""){
+		if($pp!="")
+		{
+		$pp=$pp." ".$row_tbl_sub['pp'];
+		}
+		else
+		{
+		$pp=$row_tbl_sub['pp'];
+		}
+		}
+		if($row_tbl_sub['moist']!=""){
+		if($pp!="")
+		{
+		$pp=$pp." ".$row_tbl_sub['moist'];
+		}
+		else
+		{
+		$pp=$row_tbl_sub['moist'];
+		}
+		
+		}
+		if($row_tbl_sub['gemp']!=""){
+		if($pp!="")
+		{
+		$pp=$pp." ".$row_tbl_sub['gemp'];
+		}
+		else
+		{
+		$pp=$row_tbl_sub['gemp'];
+		}
+		}
+		if($row_tbl_sub['got']!=""){
+		if($pp!="")
+		{
+		$pp=$pp." ".$row_tbl_sub['got'];
+		}
+		else
+		{
+		$pp=$row_tbl_sub['got'];
+		}
+		}
+		
+		if($srno%2!=0)
+{
+?>
+<tr class="Light" height="20">
+	<td width="3%" align="center" valign="middle" class="tblheading"><?php echo $srno;?></td>
+	<td align="center" valign="middle" class="tblheading"><?php echo $crop;?></td>
+	<td align="center" valign="middle" class="tblheading"><?php echo $vv;?></td>
+	<td width="12%" align="center" valign="middle" class="tblheading"><?php echo $row_tbl_sub['lotno'];?></td>
+	<td align="center" valign="middle" class="tblheading"><?php echo $totnob;?></td>
+	<td align="center" valign="middle" class="tblheading"><?php echo $totqty;?></td>
+	<td width="17%" align="center" valign="middle" class="tblheading">&nbsp;<?php echo $row_tbl_sub['stage'];?>&nbsp;</td>
+	<td align="center" valign="middle" class="tblheading"><?php echo $pp;?></td>
+	<td align="center" valign="middle" class="tblheading"><?php echo $row_tbl['lotldg_got1'];?></td>
+</tr>
+  <?php
+}
+else
+{
+?>
+<tr class="Light" height="20">
+	<td width="3%" align="center" valign="middle" class="tblheading"><?php echo $srno;?></td>
+	<td align="center" valign="middle" class="tblheading"><?php echo $crop;?></td>
+	<td align="center" valign="middle" class="tblheading"><?php echo $vv;?></td>
+	<td width="12%" align="center" valign="middle" class="tblheading"><?php echo $row_tbl_sub['lotno'];?></td>
+	<td align="center" valign="middle" class="tblheading"><?php echo $totnob;?></td>
+	<td align="center" valign="middle" class="tblheading"><?php echo $totqty;?></td>
+	<td width="17%" align="center" valign="middle" class="tblheading">&nbsp;<?php echo $row_tbl_sub['stage'];?>&nbsp;</td>
+	<td align="center" valign="middle" class="tblheading"><?php echo $pp;?></td>
+	<td align="center" valign="middle" class="tblheading"><?php echo $row_tbl['lotldg_got1'];?></td>
+</tr>
+<?php
+}
+$srno++;
+}
+}
+}
+}
+}
+?>
+</table>
+<table align="center" width="850" cellpadding="5" cellspacing="5" border="0" >
+<tr >
+<td valign="top" align="right"><a href="edit_qcsamp.php?cropid=<?php echo $pid;?>"><img src="../images/edit.gif" border="0"style="display:inline;cursor:Pointer;" /></a>&nbsp;&nbsp;<a href="Javascript:void(0)" onclick="openslocpopprint();"><img src="../images/printpreview.gif" border="0"style="display:inline;cursor:Pointer;" /></a>&nbsp;&nbsp;<input name="Submit" type="image" src="../images/finalsubmit.gif" alt="Submit Value"  border="0" style="display:inline;cursor:Pointer;" tabindex="" onClick="return mySubmit();">&nbsp;&nbsp;</td>
+</tr>
+</table>
+</td><td width="30"></td>
+</tr>
+<tr><td colspan="4">&nbsp;</td></tr>
+</table>
+</form> 
+	  
+	  
+	  </td>
+	  </tr>
+	  </table>
+<!-- actual page end--->			  
+		  </td>
+        </tr>
+        <tr>
+          <td width="989" valign="top" align="center"  class="border_bottom">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="989" valign="top" align="left" ><div class="footer" ><img src="../images/istratlogo.gif"  align="left"/><img src="../images/vnrlogo.gif"  align="right"/></div></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>
+</body>
+</html>
+
+  

@@ -1,0 +1,227 @@
+<?php
+	session_start();
+	if(!isset($_SESSION['sessionadmin']))
+	{
+	echo '<script language="JavaScript" type="text/JavaScript">';
+	echo "window.location='../login.php' ";
+	echo '</script>';
+	}
+	else
+	{
+	$year1=$_SESSION['ayear1'];
+	$year2=$_SESSION['ayear2'];
+	$username= $_SESSION['username'];
+	$yearid_id=$_SESSION['yearid_id'];
+	$role=$_SESSION['role'];
+    $loginid=$_SESSION['loginid'];
+    $logid=$_SESSION['logid'];
+	$lgnid=$_SESSION['logid'];
+	$plantcode=$_SESSION['plantcode'];
+	$plantcode1=$_SESSION['plantcode1'];
+	$plantcode2=$_SESSION['plantcode2'];
+	$plantcode3=$_SESSION['plantcode3'];
+	$plantcode4=$_SESSION['plantcode4'];
+	}
+	require_once("../include/config.php");
+	require_once("../include/connection.php");
+
+	//$logid="opr1";
+	//$lgnid="OP1";
+	if(isset($_REQUEST['pid']))
+	{
+	$pid = $_REQUEST['pid'];
+	}
+	
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>PSW -Transaction  - Sloc Update Bin wise</title>
+<link href="../include/vnrtrac_psw.css" rel="stylesheet" type="text/css" />
+<style type="text/css" media="print">
+body { font-family:Arial;}
+img.butn { display:none; visibility:hidden; }
+@page {size:portrait;}
+</style>
+</head>
+<body topmargin="0" >
+<?php
+	$sql1=mysqli_query($link,"select * from tbl_sloc_upsw where plantcode='$plantcode' and slid='".$pid."'")or die(mysqli_error($link));
+    $row=mysqli_fetch_array($sql1);
+	
+	$tdate=$row['sldate'];
+	$tyear=substr($tdate,0,4);
+	$tmonth=substr($tdate,5,2);
+	$tday=substr($tdate,8,2);
+	$tdate=$tday."-".$tmonth."-".$tyear;
+
+	
+	
+	$sql_wh=mysqli_query($link,"select cropid, cropname from tblcrop where cropid='".$row['crop']."' order by cropname") or die(mysqli_error($link));
+	$row_wh=mysqli_fetch_array($sql_wh);
+	
+	$sql_bn=mysqli_query($link,"select varietyid, popularname from tblvariety where varietyid='".$row['variety']."' and actstatus='Active'") or die(mysqli_error($link));
+	$row_bn=mysqli_fetch_array($sql_bn);
+	
+?>   
+<table width="800" height="282" border="0" align="center" cellpadding="0" cellspacing="0" >
+   <tr>
+  <td valign="top">
+  <form name="from" method="post" action="<?php $_SERVER['PHP_SELF']; ?>" onSubmit="post_value();">
+	 <input name="frm_action" value="submit" type="hidden"> 
+	  
+<table align="center" border="1" width="750" cellspacing="0" cellpadding="0" bordercolor="#0BC5F4" style="border-collapse:collapse" > 
+<tr class="tblsubtitle" height="25">
+  <td colspan="6" align="center" class="tblheading">SLOC Consolidation - UPS wise</td>
+</tr>
+ <tr class="tblsubtitle">
+    <td align="center" valign="middle" class="tblheading" colspan="6">Existing SLOC</td>
+  </tr>
+<tr class="Light" height="25">
+	<td width="110" align="right"  valign="middle" class="tblheading">&nbsp;Crop&nbsp; </td>                                   
+	<td width="163" align="left" valign="middle" class="tbltext">&nbsp;<?php echo $row_wh['cropname'];?></td>
+	<td width="67" align="right"  valign="middle" class="tblheading">Variety&nbsp;</td>
+	<td width="143" align="left" valign="middle" class="tbltext">&nbsp;<?php echo $row_bn['popularname'];?></td>
+	<td width="73" align="right"  valign="middle" class="tblheading">UPS&nbsp;</td>
+	<td width="180" align="left" valign="middle" class="tbltext">&nbsp;<?php echo $row['upssize'];?></td>
+</tr>
+</table>
+<div id="showsloc" style="display:block">
+<table align="center" border="1" width="750" cellspacing="0" cellpadding="0" bordercolor="#0BC5F4" style="border-collapse:collapse"  cols="2">
+  <tr class="tblsubtitle">
+    <td width="70" align="center" valign="middle" class="tblheading" >#</td>
+	<td width="318" align="center" valign="middle" class="tblheading">Lot No.</td>
+	  <td width="296" align="center" valign="middle" class="tblheading">SLOC</td>
+	   <td width="256" align="center" valign="middle" class="tblheading">NoMP</td>
+	   <td width="256" align="center" valign="middle" class="tblheading">Qty</td>
+  </tr>
+<?php
+$srno=1; $cnt=0; $cropt="";$vert=""; $crpflg=0; $verflg=0;
+$sql_iss=mysqli_query($link,"select distinct (lotno)  from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row['crop']."' and lotldg_variety='".$row['variety']."' and packtype='".$row['upssize']."' order by lotno") or die(mysqli_error($link));
+$tot=mysqli_num_rows($sql_iss);
+while($row_iss=mysqli_fetch_array($sql_iss))
+{ 
+$nomp=0; $qty=0;$sloc=""; 
+$sql_iss23=mysqli_query($link,"select distinct (subbinid)  from tbl_lot_ldg_pack where plantcode='$plantcode' and lotno='".$row_iss['lotno']."' order by subbinid") or die(mysqli_error($link));
+$tot23=mysqli_num_rows($sql_iss23);
+while($row_iss23=mysqli_fetch_array($sql_iss23))
+{ 
+
+$sql_issue1=mysqli_query($link,"select max(lotdgp_id) from tbl_lot_ldg_pack where plantcode='$plantcode' and subbinid='".$row_iss23['subbinid']."' and lotno='".$row_iss['lotno']."' ") or die(mysqli_error($link));
+$row_issue1=mysqli_fetch_array($sql_issue1); 
+
+$sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where plantcode='$plantcode' and lotdgp_id='".$row_issue1[0]."' and balqty>0") or die(mysqli_error($link)); 
+while($row_issuetbl=mysqli_fetch_array($sql_issuetbl))
+{ 
+
+$lot=$row_issuetbl['lotno'];
+
+$nomp=$nomp+$row_issuetbl['balnomp'];
+
+$qty=$qty+$row_issuetbl['balqty'];
+
+$sql_whouse=mysqli_query($link,"select perticulars from tbl_warehouse where plantcode='$plantcode' and whid='".$row_issuetbl['whid']."' order by perticulars") or die(mysqli_error($link));
+$row_whouse=mysqli_fetch_array($sql_whouse);
+$wareh=$row_whouse['perticulars']."/";
+
+$sql_binn=mysqli_query($link,"select binname from tbl_bin where plantcode='$plantcode' and binid='".$row_issuetbl['binid']."' and whid='".$row_issuetbl['whid']."'") or die(mysqli_error($link));
+$row_binn=mysqli_fetch_array($sql_binn);
+$binn=$row_binn['binname']."/";
+//$binn=$row_binn[binname];
+
+
+$sql_subbinn=mysqli_query($link,"select sname from tbl_subbin where plantcode='$plantcode' and sid='".$row_issuetbl['subbinid']."' and binid='".$row_issuetbl['binid']."' and whid='".$row_issuetbl['whid']."'") or die(mysqli_error($link));
+$row_subbinn=mysqli_fetch_array($sql_subbinn);
+//$subbinn="<a href='Javascript:void(0)' onclick='openprintsubbin($row_tbl_sub[subbinid],$row_tbl_sub[binid],$row_tbl_sub[whid])'>$row_subbinn[sname]</a>";
+$subbinn=$row_subbinn['sname'];
+
+if($sloc!="")
+$sloc=$sloc.$wareh.$binn.$subbinn."<br/>";
+else
+$sloc=$wareh.$binn.$subbinn."<br/>";
+
+}
+}
+$sql_crop=mysqli_query($link,"Select * from tblcrop where cropid='".$row_issuetbl['lotldg_crop']."'") or die(mysqli_error($link));
+$row_crop=mysqli_fetch_array($sql_crop);
+$crp=$row_crop['cropname'];
+$sql_veriety=mysqli_query($link,"Select * from tblvariety where varietyid='".$row_issuetbl['lotldg_variety']."' and actstatus='Active'") or die(mysqli_error($link));
+$row_veriety=mysqli_fetch_array($sql_veriety);
+$vv=$row_veriety['popularname'];
+
+$sql_sbn2=mysqli_query($link,"select sid, sname from tbl_subbin where plantcode='$plantcode' and sid='".$a."' order by sname")or die("Error:".mysqli_error($link));
+$row_sbn2=mysqli_fetch_array($sql_sbn2);
+	
+	$cnt++;  
+if($srno%2!=0)
+{
+?> 
+<tr class="Light" height="30">
+	<td width="70" align="center" valign="middle" class="tblheading"><?php echo $srno;?></td>
+	<td width="318"  align="center"  valign="middle"><?php echo $lot;?>&nbsp;<input type="hidden" name="lotsn" id="lotsn<?php echo $srno;?>" value="<?php echo $lot;?>" /></td>
+	<td width="296"  align="center"  valign="middle"><?php echo $sloc;?></td>
+	<td width="256"  align="center"  valign="middle"><?php echo $nomp;?></td>
+	<td width="256"  align="center"  valign="middle"><?php echo $qty;?></td>
+</tr>
+ <?php
+}
+else
+{
+?>
+<tr class="Light" height="30">
+	<td width="70" align="center" valign="middle" class="tblheading"><?php echo $srno;?></td>
+	<td width="318"  align="center"  valign="middle"><?php echo $lot;?>&nbsp;<input type="hidden" name="lotsn" id="lotsn<?php echo $srno;?>" value="<?php echo $lot;?>" /></td>
+	<td width="296"  align="center"  valign="middle"><?php echo $sloc;?></td>
+	<td width="256"  align="center"  valign="middle"><?php echo $nomp;?></td>
+	<td width="256"  align="center"  valign="middle"><?php echo $qty;?></td>
+</tr>
+<?php
+}
+$srno=$srno+1;
+}
+
+?>
+<input type="hidden" name="cnt" value="<?php echo $cnt;?>" /><input type="hidden" name="crpflg" value="<?php echo $crpflg;?>" /><input type="hidden" name="cropt" value="<?php echo $cropt;?>" /><input type="hidden" name="verflg" value="<?php echo $verflg;?>" /><input type="hidden" name="vert" value="<?php echo $vert;?>" /><input type="hidden" name="stageflg" value="<?php echo $stageflg;?>" /><input type="hidden" name="stage" value="<?php echo $stage;?>" />
+ </table>
+ <br />
+<table align="center" border="1" width="750" cellspacing="0" cellpadding="0" bordercolor="#0BC5F4" style="border-collapse:collapse"> 
+<tr class="tblsubtitle">
+    <td align="center" valign="middle" class="tblheading" colspan="6">New SLOC</td>
+  </tr>
+<?php
+	$sql_sub=mysqli_query($link,"select * from tbl_sloc_upsw_sub2 where plantcode='$plantcode' and slocid='".$pid."'")or die(mysqli_error($link));
+    $row_sub=mysqli_fetch_array($sql_sub);
+	
+	$sql_wh2=mysqli_query($link,"select whid, perticulars from tbl_warehouse where plantcode='$plantcode' and whid='".$row_sub['whid']."' order by perticulars") or die(mysqli_error($link));
+	$row_wh2=mysqli_fetch_array($sql_wh2);
+	
+	$sql_bn2=mysqli_query($link,"select binid, binname from tbl_bin  where plantcode='$plantcode' and binid='".$row_sub['binid']."'") or die(mysqli_error($link));
+	$row_bn2=mysqli_fetch_array($sql_bn2);
+	
+	$sql_sbn2=mysqli_query($link,"select sid, sname from tbl_subbin where plantcode='$plantcode' and sid='".$row_sub['subbinid']."' order by sname")or die("Error:".mysqli_error($link));
+	$row_sbn2=mysqli_fetch_array($sql_sbn2);
+?>  
+<tr class="Light" height="25">
+	<td width="110" align="right"  valign="middle" class="tblheading">&nbsp;WH&nbsp; </td>                                   
+	<td width="163" align="left" valign="middle" class="tbltext">&nbsp;<?php echo $row_wh2['perticulars'];?></td>
+	<td width="67" align="right"  valign="middle" class="tblheading">Bin&nbsp;</td>
+	<td width="143" align="left" valign="middle" class="tbltext">&nbsp;<?php echo $row_bn2['binname'];?></td>
+	<td width="73" align="right"  valign="middle" class="tblheading">Sub-Bin&nbsp;</td>
+	<td width="180" align="left" valign="middle" class="tbltext">&nbsp;<?php echo $row_sbn2['sname'];?></td>
+</tr>
+</table>
+</div>
+<br />
+<table align="center" cellpadding="5" cellspacing="5" border="0" width="750">
+<tr >
+<td align="right" colspan="3"><img src="../images/close_icon2.jpg" height="30"  border="0" onClick="window.close()" style="cursor:pointer" />&nbsp;&nbsp;<img src="../images/Vista-printer.png" height="29" width="35" border="0" onClick="javascript:window.print();" style="cursor:pointer" />&nbsp;&nbsp;</td>
+</tr>
+</table>
+</form>
+</td></tr>
+</table>
+
+</body>
+</html>

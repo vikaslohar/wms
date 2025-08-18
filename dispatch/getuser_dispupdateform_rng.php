@@ -1,0 +1,1456 @@
+<?php
+	session_start();
+	if(!isset($_SESSION['sessionadmin']))
+	{
+		echo '<script language="JavaScript" type="text/JavaScript">';
+		echo "window.location='../login.php' ";
+		echo '</script>';
+	}
+	else
+	{
+		$year1=$_SESSION['ayear1'];
+		$year2=$_SESSION['ayear2'];
+		$username= $_SESSION['username'];
+		$yearid_id=$_SESSION['yearid_id'];
+		$role=$_SESSION['role'];
+		$loginid=$_SESSION['loginid'];
+		$logid=$_SESSION['logid'];
+		$lgnid=$_SESSION['logid'];
+	$plantcode=$_SESSION['plantcode'];
+	$plantcode1=$_SESSION['plantcode1'];
+	$plantcode2=$_SESSION['plantcode2'];
+	$plantcode3=$_SESSION['plantcode3'];
+	$plantcode4=$_SESSION['plantcode4'];
+	}
+ 	
+	require_once("../include/config.php");
+	require_once("../include/connection.php");
+
+if($logid=="" && $lgnod!="") $logid=$lgnid;
+if($logid=="" && $lgnod=="") $logid='DP1';
+if($yearid_id=="")
+{
+	$sq_yr=mysqli_query($link,"Select * from tbl_lgenyear where plantcode='".$plantcode."'  order by lgenyearid desc") or Die(mysqli_error($link));
+	$row_yr=mysqli_fetch_array($sq_yr);
+	$yearid_id=$row_yr['lgenyearcode'];
+}
+
+
+if(isset($_POST['txtid'])) { $txtid=$_POST['txtid']; }
+if(isset($_POST['date'])) { $date=$_POST['date']; }
+/*if(isset($_POST['dcdate'])) { $dcdate=$_POST['dcdate']; }
+if(isset($_POST['txtdcno'])) { $txtdcno=$_POST['txtdcno']; }*/
+if(isset($_POST['txtpp'])) { $txtpp=$_POST['txtpp']; }
+if(isset($_POST['txtstatesl'])) { $txtstatesl=$_POST['txtstatesl']; }
+if(isset($_POST['txtlocationsl'])) { $txtlocationsl=$_POST['txtlocationsl'];	}
+if(isset($_POST['locationname'])) { $locationname=$_POST['locationname']; }
+if(isset($_POST['txtstfp'])) { $txtstfp=$_POST['txtstfp']; }
+if(isset($_POST['txtstage'])) { $txtstage=$_POST['txtstage']; }
+if(isset($_POST['mchksel'])) { $mchksel=$_POST['mchksel']; }
+if(isset($_POST['barcode'])) { $barcode=$_POST['barcode']; }
+if(isset($_POST['barcodet'])) { $barcodet=$_POST['barcodet']; }
+if(isset($_POST['delbarcode'])) { $delbarcode=$_POST['delbarcode']; }
+if(isset($_POST['sn'])) { $sn=$_POST['sn']; }
+if(isset($_POST['sno1'])) { $sno1=$_POST['sno1']; }
+if(isset($_POST['srno2'])) { $srno2=$_POST['srno2']; }
+
+if(isset($_POST['txt11'])) { $txt11=$_POST['txt11']; }
+if(isset($_POST['txttname'])) { $txttname=$_POST['txttname']; }
+if(isset($_POST['txtlrn'])) { $txtlrn=$_POST['txtlrn']; }
+if(isset($_POST['txtvn'])) { $txtvn=$_POST['txtvn']; }
+if(isset($_POST['txt13'])) { $txt13=$_POST['txt13']; }
+if(isset($_POST['txtcname'])) { $txtcname=$_POST['txtcname']; }
+if(isset($_POST['txtdc'])) { $txtdc=$_POST['txtdc']; }
+if(isset($_POST['txtpname'])) { $txtpname=$_POST['txtpname']; }
+
+if(isset($_POST['txtpvariety'])) { $txtpvariety=$_POST['txtpvariety']; }
+if(isset($_POST['txtornomp'])) { $txtornomp=$_POST['txtornomp']; }
+if(isset($_POST['txtnomp'])) { $txtnomp=$_POST['txtnomp']; }
+if(isset($_POST['txtlonomp'])) { $txtlonomp=$_POST['txtlonomp']; }
+if(isset($_POST['txtorblnomp'])) { $txtorblnomp=$_POST['txtorblnomp']; }
+
+
+if(isset($_POST['brflg'])) { $brflg=$_POST['brflg']; }
+if(isset($_POST['brchflg'])) { $brchflg=$_POST['brchflg']; }
+
+$remarks=trim($_POST['txtremarks1']);
+$remarks=str_replace("&","and",$remarks);
+			
+if(isset($_POST['maintrid'])) { $maintrid=$_POST['maintrid']; }
+if(isset($_POST['subtrid'])) { $subtrid=$_POST['subtrid']; }
+if(isset($_POST['subsubtrid'])) { $subsubtrid=$_POST['subsubtrid']; }
+
+$se_array="";
+$ebrc=str_split($barcode);
+$tbrc=str_split($barcodet);
+$rf1=$ebrc[2].$ebrc[3].$ebrc[4].$ebrc[5].$ebrc[6].$ebrc[7].$ebrc[8].$ebrc[9].$ebrc[10];
+$rt1=$tbrc[2].$tbrc[3].$tbrc[4].$tbrc[5].$tbrc[6].$tbrc[7].$tbrc[8].$tbrc[9].$tbrc[10];
+	if($barcode!="" && $barcodet!="")
+	{
+		$se_array=$barcode;
+		for($i=$rf1; $i<$rt1; $i++) {$rf1++;  $nbrcdo=$ebrc[0].$ebrc[1].$rf1; $se_array=$se_array.",".$nbrcdo; } 
+	}
+
+
+//frm_action=submit&txt11=By%20Hand&txt14=&txtid=1043&logid=DP1&getdetflg=0&txtconchk=&txtptype=C%26F&txtcountrysl=&txtcountryl=&rettype=&extdcno=&plantcodes=&yearcodes=&date=10-04-2015&txtdcno=test&txtpp=C%26F&txtstatesl=Andhra%20Pradesh&txtlocationsl=4&locationname=4&txtstfp=411&txt1=By%20Hand&txttname=&txtlrn=&txtvn=&txt13=Select&txtcname=&txtdc=&txtpname=demo&ecrop1=Ash%20Gourd&evariety1=VNR-AG%20Long&eupstyp1=NST&eups1=50%20Gms%3Cbr%2F%3E&enop1=10000&eqty1=500&eordno1=OT4%2F15-16%2FOB1&rnob1=&rbarcodes1=OT4%2F15-16%2FOB1&rqty1=&bnop1=500&ecrop2=Bhindi&evariety2=Super%20Green&eupstyp2=ST&eups2=500.000%20Gms%3Cbr%2F%3E&enop2=4000&eqty2=2000&eordno2=OT4%2F15-16%2FOB1&rnob2=&rbarcodes2=OT4%2F15-16%2FOB1&rqty2=&bnop2=2000&selsh=2&ecrop3=Bhindi&evariety3=VNR-06&eupstyp3=NST&eups3=250%20Gms%3Cbr%2F%3E&enop3=1000&eqty3=250&eordno3=OT4%2F15-16%2FOB1&rnob3=&rbarcodes3=OT4%2F15-16%2FOB1&rqty3=&bnop3=250&ecrop4=Bhindi&evariety4=VNR-999&eupstyp4=ST&eups4=250.000%20Gms%3Cbr%2F%3E&enop4=4000&eqty4=270&eordno4=OT4%2F15-16%2FOB1&rnob4=&rbarcodes4=OT4%2F15-16%2FOB1&rqty4=&bnop4=270&ecrop5=Bitter%20Gourd&evariety5=Aishwarya&eupstyp5=ST&eups5=50.000%20Gms%3Cbr%2F%3E&enop5=1960&eqty5=98&eordno5=OT4%2F15-16%2FOB1&rnob5=&rbarcodes5=OT4%2F15-16%2FOB1&rqty5=&bnop5=98&ecrop6=Bitter%20Gourd&evariety6=Navdhan&eupstyp6=ST&eups6=50.000%20Gms%3Cbr%2F%3E&enop6=980&eqty6=49&eordno6=OT4%2F15-16%2FOB1&rnob6=&rbarcodes6=OT4%2F15-16%2FOB1&rqty6=&bnop6=49&ecrop7=Brinjal&evariety7=Simran&eupstyp7=NST&eups7=10%20Gms%3Cbr%2F%3E&enop7=10000&eqty7=88&eordno7=OT4%2F15-16%2FOB1&rnob7=&rbarcodes7=OT4%2F15-16%2FOB1&rqty7=&bnop7=88&ecrop8=Chilli&evariety8=Priyamani(420-7)&eupstyp8=ST&eups8=10.000%20Gms%3Cbr%2F%3E&enop8=1200&eqty8=12&eordno8=OT4%2F15-16%2FOB1&rnob8=&rbarcodes8=OT4%2F15-16%2FOB1&rqty8=&bnop8=12&ecrop9=Cowpea&evariety9=CP-27&eupstyp9=ST&eups9=500.000%20Gms%3Cbr%2F%3E&enop9=1000&eqty9=500&eordno9=OT4%2F15-16%2FOB1&rnob9=&rbarcodes9=OT4%2F15-16%2FOB1&rqty9=&bnop9=500&ecrop10=Cowpea&evariety10=Gomchi-1&eupstyp10=ST&eups10=100.000%20Gms%3Cbr%2F%3E&enop10=5000&eqty10=60&eordno10=OT4%2F15-16%2FOB1&rnob10=&rbarcodes10=OT4%2F15-16%2FOB1&rqty10=&bnop10=60&ecrop11=Cowpea&evariety11=Gomchi-1&eupstyp11=NST&eups11=250%20Gms%3Cbr%2F%3E&enop11=1000&eqty11=250&eordno11=OT4%2F15-16%2FOB1&rnob11=&rbarcodes11=OT4%2F15-16%2FOB1&rqty11=&bnop11=250&ecrop12=Cucumber&evariety12=Dosakai&eupstyp12=ST&eups12=100.000%20Gms%3Cbr%2F%3E&enop12=1000&eqty12=30&eordno12=OT4%2F15-16%2FOB1&rnob12=&rbarcodes12=OT4%2F15-16%2FOB1&rqty12=&bnop12=30&ecrop13=Dolichos&evariety13=Pairy&eupstyp13=ST&eups13=500.000%20Gms%3Cbr%2F%3E&enop13=8000&eqty13=440&eordno13=OT4%2F15-16%2FOB1&rnob13=&rbarcodes13=OT4%2F15-16%2FOB1&rqty13=&bnop13=440&ecrop14=Pumpkin&evariety14=VNR-P-7&eupstyp14=ST&eups14=50.000%20Gms%3Cbr%2F%3E&enop14=280&eqty14=14&eordno14=OT4%2F15-16%2FOB1&rnob14=&rbarcodes14=OT4%2F15-16%2FOB1&rqty14=&bnop14=14&ecrop15=Tomato&evariety15=VNR-3335&eupstyp15=NST&eups15=10%20Gms%3Cbr%2F%3E&enop15=1200&eqty15=12&eordno15=OT4%2F15-16%2FOB1&rnob15=&rbarcodes15=OT4%2F15-16%2FOB1&rqty15=&bnop15=12&sn=16&txtornos=OT4%2F15-16%2FOB1&txtveridno=368&txtupsnos=500.000%20Gms&txteqty=2000&itmsel=2&barcode=DF030016224&brflg=0&brchflg=1&delbarcode=&maintrid=0&subtrid=0&txtremarks1=
+
+	$z1=$maintrid;
+		
+	$tdate11=$date;
+	$tday1=substr($tdate11,0,2);
+	$tmonth1=substr($tdate11,3,2);
+	$tyear1=substr($tdate11,6,4);
+	$tdate1=$tyear1."-".$tmonth1."-".$tday1;
+	
+	$tdate12=$date;
+	$tday2=substr($tdate12,0,2);
+	$tmonth2=substr($tdate12,3,2);
+	$tyear2=substr($tdate12,6,4);
+	$tdate2=$tyear2."-".$tmonth2."-".$tday2;
+//echo $z1." - ".$subtrid." - ".$subsubtrid;
+//echo $tdate1.', '.$txtdcno.', '.$tdate2.', '.$txtpp.', '.$txtstatesl.', '.$locationname.', '.$txtstfp;
+//if($brflg==0)		
+{
+	if($z1 == 0)
+	{
+echo	  $sql_main="insert into tbl_disp(disp_tcode, disp_date, disp_partytype, disp_state, disp_location, disp_party, disp_yearcode, disp_logid, tmode, trans_name, trans_lorryrepno, trans_vehno, trans_paymode, courier_name, docket_no, pname_byhand, disp_remarks, disp_tflg,plantcode,plantcode) values ('$txtid', '$tdate1', '$txtpp', '$txtstatesl', '$locationname', '$txtstfp', '$yearid_id', '$logid', '$txt11', '$txttname', '$txtlrn', '$txtvn', '$txt13', '$txtcname', '$txtdc', '$txtpname', '$remarks', '2','$plantcode','$plantcode')";
+	if(mysqli_query($link,$sql_main) or die(mysqli_error($link)))
+	{
+		$mainid=mysqli_insert_id($link);
+		$j=$mchksel;
+		if($mchksel!="")
+		{
+			$ecropx="ecrop".$j;
+			$evarietyx="evariety".$j;
+			$eupstypx="eupstyp".$j;
+			$enopx="enop".$j;
+			$eqtyx="eqty".$j;
+			$eordnox="eordno".$j;
+			$enoordnox="enoordno".$j;
+			$eupsx="eups".$j;
+			$rnobx="rnob".$j;
+			$rqtyx="rqty".$j;
+			$bnopx="bnop".$j;
+			$selshx="selsh".$j;
+			
+			if(isset($_POST[$ecropx])) { $ecrop= $_POST[$ecropx]; }
+			if(isset($_POST[$evarietyx])) { $evariety= $_POST[$evarietyx]; }
+			if(isset($_POST[$eupstypx])) { $eupstyp= $_POST[$eupstypx]; }
+			if(isset($_POST[$enopx])) { $enop= $_POST[$enopx]; }
+			if(isset($_POST[$eqtyx])) { $eqty= $_POST[$eqtyx]; }
+			if(isset($_POST[$eordnox])) { $eordno= $_POST[$eordnox]; }
+			if(isset($_POST[$enoordnox])) { $enoordno= $_POST[$enoordnox]; }
+			if(isset($_POST[$eupsx])) { $eups= $_POST[$eupsx]; }
+			if(isset($_POST[$rnobx])) { $rnob= $_POST[$rnobx]; }
+			if(isset($_POST[$bnopx])) { $bnop= $_POST[$bnopx]; }
+			if(isset($_POST[$rqtyx])) { $rqty= $_POST[$rqtyx]; }
+			if(isset($_POST[$selshx])) { $selsh= $_POST[$selshx]; }
+			
+			if($subtrid==0)
+			{
+echo			 	$sql_subsub="insert into tbl_disp_sub (disp_id, disps_crop, disps_variety, disps_noorders, disps_ordno, disps_upstype, disps_ups, disps_oqty, disps_onop, disps_qty, disps_bqty, disps_onomp, disps_tnomp, disps_nomp, disps_bnomp, disps_nvariety,plantcode,plantcode) values ('$mainid', '$ecrop', '$evariety', '$enoordno', '$eordno', '$eupstyp', '$eups', '$eqty', '$enop', '$rqty', '$bnop', '$txtornomp', '$txtnomp', '$txtlonomp', '$txtorblnomp','$txtpvariety','$plantcode','$plantcode')";
+				if(mysqli_query($link,$sql_subsub) or die(mysqli_error($link)))
+				{
+					$sid=mysqli_insert_id($link);
+				 
+					if($barcode!="" && $brflg==0)
+					{
+						$arr=explode(",",$se_array);
+						foreach($arr as $sa)
+						{
+						//echo $sa;
+							if($sa<>"")
+							{
+								$sqlbar1=mysqli_query($link,"Select * from tbl_mpmain where plantcode='".$plantcode."' and  mpmain_barcode='".$sa."' and mpmain_dflg=0 and mpmain_upflg=0 and mpmain_rvflg=0 and bar_bctyp='range'") or die(mysqli_error($link));
+								if($totbar1=mysqli_num_rows($sqlbar1) > 0)
+								{
+									$rowbar1=mysqli_fetch_array($sqlbar1);
+									
+									$sqlbarcode=mysqli_query($link,"Select bar_grosswt from tbl_barcodes where plantcode='".$plantcode."' and  bar_barcode='".$sa."'") or die(mysqli_error($link));
+									$totbarcode=mysqli_num_rows($sqlbarcode);
+									$rowbarcode=mysqli_fetch_array($sqlbarcode);
+									$grweight=$rowbarcode['bar_grosswt'];
+		
+									$pty=$rowbar1['mpmain_trtype'];
+									if($pty=="PACKSMC") $packtyp="SMC";
+									if($pty=="PACKLMC")	$packtyp="LMC";
+									if($pty=="PACKMMC")	$packtyp="MMC";
+									if($pty=="PACKNMC")	$packtyp="NMC";
+									if($pty=="PACKNLC") $packtyp="NLC";
+									
+									$lotn=$rowbar1['mpmain_lotno'].",";
+									$qty=$rowbar1['mpmain_wtmp'];
+									$ups=$rowbar1['mpmain_upssize'];
+									$crop2=$rowbar1['mpmain_crop'];
+									$variety2=$rowbar1['mpmain_variety'];
+									
+									$ltno=explode(",",$lotn);
+									foreach($ltno as $lotno)
+									{
+										if($lotno<>"")	
+										{
+											$sql_lot2=mysqli_query($link,"Select max(lotdgp_id) from tbl_lot_ldg_pack where plantcode='".$plantcode."' and  lotno='$lotno' and packtype='$ups' and lotldg_rvflg=0 and lotldg_dispflg!=1 order by lotdgp_id DESC") or die(mysqli_error($link));
+											$tot_lot2=mysqli_num_rows($sql_lot2);
+											$row_lot2=mysqli_fetch_array($sql_lot2);
+											
+											$sql_lot=mysqli_query($link,"Select * from tbl_lot_ldg_pack where plantcode='".$plantcode."' and  lotdgp_id='".$row_lot2[0]."' and lotldg_rvflg=0 and lotldg_dispflg!=1") or die(mysqli_error($link));
+											$tot_lot=mysqli_num_rows($sql_lot);
+											$row_lot=mysqli_fetch_array($sql_lot);
+											
+											$qc=$row_lot['lotldg_qc'];
+											$dot=$row_lot['lotldg_qctestdate'];
+											$dov=$row_lot['lotldg_valupto'];
+											
+											$zz=str_split($lotno);
+											$ltno=$zz[0].$zz[1].$zz[2].$zz[3].$zz[4].$zz[5].$zz[6].$zz[7].$zz[8].$zz[9].$zz[10].$zz[11].$zz[12].$zz[13].$zz[14].$zz[15];
+											
+											$srfl=0; $qcdot2="";
+											$sql_pnp=mysqli_query($link,"Select * from tbl_pnpslipsub where plantcode='".$plantcode."' and  pnpslipsub_plotno='$lotno'") or die(mysqli_error($link));
+											$row_pnp=mysqli_fetch_array($sql_pnp);
+											$tot_pnp=mysqli_num_rows($sql_pnp);
+											if($tot_pnp > 0)
+											{
+												if($row_pnp['pnpslipsub_qcdttype']=="DoSF" || $row_pnp['pnpslipsub_qcdttype']=="DosF")
+												$srfl=1;
+											}
+											
+											if($srfl==1)
+											{
+												$sql_softr_sub=mysqli_query($link,"Select max(softr_id) from tbl_softr_sub where plantcode='".$plantcode."' and  softrsub_lotno='".$ltno."'") or die(mysqli_error($link));
+												$tot_softr_sub=mysqli_num_rows($sql_softr_sub);
+												if($tot_softr_sub > 0)
+												{
+													$row_softr_sub=mysqli_fetch_array($sql_softr_sub);
+													$sql_softr=mysqli_query($link,"Select * from tbl_softr where plantcode='".$plantcode."' and  softr_id='".$row_softr_sub[0]."'") or die(mysqli_error($link));
+													$tot_softr=mysqli_num_rows($sql_softr);
+													$row_softr=mysqli_fetch_array($sql_softr);
+													if($tot_softr > 0)
+													{
+														$qcdot2=$row_softr['softr_date'];
+													}
+												}
+												if($qcdot2=="")
+												{
+													$sql_softr_sub2=mysqli_query($link,"Select max(softr_id) from tbl_softr_sub2 where plantcode='".$plantcode."' and  softrsub_lotno='".$ltno."'") or die(mysqli_error($link));
+													$tot_softr_sub2=mysqli_num_rows($sql_softr_sub2);
+													if($tot_softr_sub2 > 0)
+													{
+														$row_softr_sub2=mysqli_fetch_array($sql_softr_sub2);
+														$sql_softr2=mysqli_query($link,"Select * from tbl_softr2 where plantcode='".$plantcode."' and  softr_id='".$row_softr_sub2[0]."'") or die(mysqli_error($link));
+														$tot_softr2=mysqli_num_rows($sql_softr2);
+														$row_softr2=mysqli_fetch_array($sql_softr2);
+														if($tot_softr2 > 0)
+														{
+															$qcdot2=$row_softr2['softr_date'];
+														}
+													}
+												}
+											}
+											if($srfl==1 && $qcdot2!="")$dot=$qcdot2;
+											
+											if($subsubtrid==0)
+											{
+echo												$sql_subsub2="insert into tbl_dispsub_sub (disp_id, disps_id, dpss_barcode, dpss_crop, dpss_variety, dpss_ups, dpss_lotno, dpss_qty, dpss_grosswt, dpss_dov, dpss_qc, dpss_dot, dpss_barcodetype,plantcode,plantcode) values ('$mainid', '$sid', '$sa', '$crop2', '$variety2', '$ups', '$lotno', '$qty', '$grweight', '$dov', '$qc', '$dot', '$packtyp','$plantcode','$plantcode')";
+												$sdfg=mysqli_query($link,$sql_subsub2) or die(mysqli_error($link));
+												
+											}
+										}
+									}
+								}
+echo								$sqlb1="update tbl_mpmain set mpmain_dflg=2 where mpmain_barcode='".$sa."'";
+								$adcs=mysqli_query($link,$sqlb1) or die(mysqli_error($link));	
+								
+echo								$sql_subsub5="update tbl_disp_sub set disps_flg=2 where disps_id='$sid'";
+								$asdf5=mysqli_query($link,$sql_subsub5) or die(mysqli_error($link));	
+							}
+						}		
+					}	
+					$rn=0; $rq=0; $rbq=0; $tore=0;
+					$sq=mysqli_query($link,"Select * from tbl_dispsub_sub where plantcode='".$plantcode."' and  disps_id='$sid'") or die(mysqli_error($link));
+					if($to=mysqli_num_rows($sq) > 0)
+					{
+						while($ro=mysqli_fetch_array($sq))
+						{
+							$rq=$rq+$ro['dpss_qty']; $tore++;
+						}
+					}
+					$rbq=$eqty-$rq;
+				 	$sql_subsub5="update tbl_disp_sub set disps_qty='$rq', disps_bqty='$rbq', disps_onomp='$txtornomp', disps_tnomp='$txtnomp', disps_nomp='$tore', disps_bnomp='$txtorblnomp', disps_nvariety='$txtpvariety' where disps_id='$sid'";
+					$asdf5=mysqli_query($link,$sql_subsub5) or die(mysqli_error($link));		 
+				}
+			}
+		}
+	
+	}
+	 $z1=$mainid;
+	}
+	else
+	{
+		$sql_main="update tbl_disp set tmode='$txt11', trans_name='$txttname', trans_lorryrepno='$txtlrn', trans_vehno='$txtvn', trans_paymode='$txt13', courier_name='$txtcname', docket_no='$txtdc', pname_byhand='$txtpname', disp_remarks='$remarks', disp_tflg='2' where disp_id='$mainid'";
+		$as=mysqli_query($link,$sql_main) or die(mysqli_error($link));
+		$mainid=$z1;
+		$j=$mchksel;
+		if($mchksel!="")
+		{
+			$ecropx="ecrop".$j;
+			$evarietyx="evariety".$j;
+			$eupstypx="eupstyp".$j;
+			$enopx="enop".$j;
+			$eqtyx="eqty".$j;
+			$eordnox="eordno".$j;
+			$enoordnox="enoordno".$j;
+			$eupsx="eups".$j;
+			$rnobx="rnob".$j;
+			$rqtyx="rqty".$j;
+			$bnopx="bnop".$j;
+			$selshx="selsh".$j;
+			
+			if(isset($_POST[$ecropx])) { $ecrop= $_POST[$ecropx]; }
+			if(isset($_POST[$evarietyx])) { $evariety= $_POST[$evarietyx]; }
+			if(isset($_POST[$eupstypx])) { $eupstyp= $_POST[$eupstypx]; }
+			if(isset($_POST[$enopx])) { $enop= $_POST[$enopx]; }
+			if(isset($_POST[$eqtyx])) { $eqty= $_POST[$eqtyx]; }
+			if(isset($_POST[$eordnox])) { $eordno= $_POST[$eordnox]; }
+			if(isset($_POST[$enoordnox])) { $enoordno= $_POST[$enoordnox]; }
+			if(isset($_POST[$eupsx])) { $eups= $_POST[$eupsx]; }
+			if(isset($_POST[$rnobx])) { $rnob= $_POST[$rnobx]; }
+			if(isset($_POST[$bnopx])) { $bnop= $_POST[$bnopx]; }
+			if(isset($_POST[$rqtyx])) { $rqty= $_POST[$rqtyx]; }
+			if(isset($_POST[$selshx])) { $selsh= $_POST[$selshx]; }
+			
+			
+			if($subtrid==0)
+			{
+		 		//$sql_subsub="insert into tbl_disp_sub (disp_id, disps_crop, disps_variety, disps_noorders, disps_ordno, disps_upstype, disps_ups, disps_oqty, disps_nob, disps_qty, disps_bqty,plantcode) values ('$mainid', '$ecrop', '$evariety', '$enoordno', '$eordno', '$eupstyp', '$eups', '$eqty', '$rnob', '$rqty', '$bnop','$plantcode')";
+				$sql_subsub="insert into tbl_disp_sub (disp_id, disps_crop, disps_variety, disps_noorders, disps_ordno, disps_upstype, disps_ups, disps_oqty, disps_onop, disps_qty, disps_bqty, disps_onomp, disps_tnomp, disps_nomp, disps_bnomp, disps_nvariety,plantcode,plantcode) values ('$mainid', '$ecrop', '$evariety', '$enoordno', '$eordno', '$eupstyp', '$eups', '$eqty', '$enop', '$rqty', '$bnop', '$txtornomp', '$txtnomp', '$txtlonomp', '$txtorblnomp', '$txtpvariety','$plantcode','$plantcode')";
+			}
+			else
+			{
+				$on=0; $oq=0; $bq=0; 
+				$sq=mysqli_query($link,"Select * from tbl_disp_sub where plantcode='".$plantcode."' and  disps_id='$subtrid'") or die(mysqli_error($link));
+				if($to=mysqli_num_rows($sq) > 0)
+				{
+					$ro=mysqli_fetch_array($sq);
+					$oq=$ro['disps_qty']; 
+				}
+				else
+				{
+					$oq=$rqty; 
+				}
+		 		$sql_subsub="update tbl_disp_sub set disps_noorders='$enoordno', disps_ordno='$eordno', disps_oqty='$eqty', disps_onop='$enop', disps_qty='$oq' where disps_id='$subtrid'";
+				
+			}		
+			if(mysqli_query($link,$sql_subsub) or die(mysqli_error($link)))
+			{
+				if($subtrid==0)
+				{
+					$sid=mysqli_insert_id($link);
+					$subtrid=$sid;
+				}
+				else
+				{
+					$sid=$subtrid;
+				}
+				 
+				if($barcode!="" && $brflg==0)
+				{
+					$arr=explode(",",$se_array);
+					foreach($arr as $sa)
+					{
+						if($sa<>"")
+						{
+							$sqlbar1=mysqli_query($link,"Select * from tbl_mpmain where plantcode='".$plantcode."' and  mpmain_barcode='".$sa."' and mpmain_dflg=0 and mpmain_upflg=0 and mpmain_rvflg=0 and bar_bctyp='range'") or die(mysqli_error($link));
+							if($totbar1=mysqli_num_rows($sqlbar1) > 0)
+							{
+								$rowbar1=mysqli_fetch_array($sqlbar1);
+									
+								$sqlbarcode=mysqli_query($link,"Select bar_grosswt from tbl_barcodes where plantcode='".$plantcode."' and  bar_barcode='".$sa."'") or die(mysqli_error($link));
+								$totbarcode=mysqli_num_rows($sqlbarcode);
+								$rowbarcode=mysqli_fetch_array($sqlbarcode);
+								$grweight=$rowbarcode['bar_grosswt'];
+		
+								$pty=$rowbar1['mpmain_trtype'];
+								if($pty=="PACKSMC") $packtyp="SMC";
+								if($pty=="PACKLMC")	$packtyp="LMC";
+								if($pty=="PACKMMC")	$packtyp="MMC";
+								if($pty=="PACKNMC")	$packtyp="NMC";
+								if($pty=="PACKNLC") $packtyp="NLC";
+								
+								$lotn=$rowbar1['mpmain_lotno'].",";
+								$qty=$rowbar1['mpmain_wtmp'];
+								$ups=$rowbar1['mpmain_upssize'];
+								$crop2=$rowbar1['mpmain_crop'];
+								$variety2=$rowbar1['mpmain_variety'];
+									
+								$ltno=explode(",",$lotn);
+								foreach($ltno as $lotno)
+								{
+									if($lotno<>"")	
+									{
+										$sql_lot2=mysqli_query($link,"Select max(lotdgp_id) from tbl_lot_ldg_pack where plantcode='".$plantcode."' and  lotno='$lotno' and packtype='$ups' and lotldg_rvflg=0 and lotldg_dispflg!=1 order by lotdgp_id DESC") or die(mysqli_error($link));
+										$tot_lot2=mysqli_num_rows($sql_lot2);
+										$row_lot2=mysqli_fetch_array($sql_lot2);
+											
+										$sql_lot=mysqli_query($link,"Select * from tbl_lot_ldg_pack where plantcode='".$plantcode."' and  lotdgp_id='".$row_lot2[0]."' and lotldg_rvflg=0 and lotldg_dispflg!=1") or die(mysqli_error($link));
+										$tot_lot=mysqli_num_rows($sql_lot);
+										$row_lot=mysqli_fetch_array($sql_lot);
+											
+										$qc=$row_lot['lotldg_qc'];
+										$dot=$row_lot['lotldg_qctestdate'];
+										$dov=$row_lot['lotldg_valupto'];
+											
+										$zz=str_split($lotno);
+										$ltno=$zz[0].$zz[1].$zz[2].$zz[3].$zz[4].$zz[5].$zz[6].$zz[7].$zz[8].$zz[9].$zz[10].$zz[11].$zz[12].$zz[13].$zz[14].$zz[15];
+										
+											
+										$srfl=0;
+										$sql_pnp=mysqli_query($link,"Select * from tbl_pnpslipsub where plantcode='".$plantcode."' and  pnpslipsub_plotno='$lotno'") or die(mysqli_error($link));
+										$row_pnp=mysqli_fetch_array($sql_pnp);
+										$tot_pnp=mysqli_num_rows($sql_pnp);
+										if($tot_pnp > 0)
+										{
+											if($row_pnp['pnpslipsub_qcdttype']=="DoSF" || $row_pnp['pnpslipsub_qcdttype']=="DosF")
+											$srfl=1;
+										}
+										
+										if($srfl==1)
+										{
+											$sql_softr_sub=mysqli_query($link,"Select max(softr_id) from tbl_softr_sub where plantcode='".$plantcode."' and  softrsub_lotno='".$ltno."'") or die(mysqli_error($link));
+											$tot_softr_sub=mysqli_num_rows($sql_softr_sub);
+											if($tot_softr_sub > 0)
+											{
+												$row_softr_sub=mysqli_fetch_array($sql_softr_sub);
+												$sql_softr=mysqli_query($link,"Select * from tbl_softr where plantcode='".$plantcode."' and  softr_id='".$row_softr_sub[0]."'") or die(mysqli_error($link));
+												$tot_softr=mysqli_num_rows($sql_softr);
+												$row_softr=mysqli_fetch_array($sql_softr);
+												if($tot_softr > 0)
+												{
+													$qcdot2=$row_softr['softr_date'];
+												}
+											}
+											if($qcdot2=="")
+											{
+												$sql_softr_sub2=mysqli_query($link,"Select max(softr_id) from tbl_softr_sub2 where plantcode='".$plantcode."' and  softrsub_lotno='".$ltno."'") or die(mysqli_error($link));
+												$tot_softr_sub2=mysqli_num_rows($sql_softr_sub2);
+												if($tot_softr_sub2 > 0)
+												{
+													$row_softr_sub2=mysqli_fetch_array($sql_softr_sub2);
+													$sql_softr2=mysqli_query($link,"Select * from tbl_softr2 where plantcode='".$plantcode."' and  softr_id='".$row_softr_sub2[0]."'") or die(mysqli_error($link));
+													$tot_softr2=mysqli_num_rows($sql_softr2);
+													$row_softr2=mysqli_fetch_array($sql_softr2);
+													if($tot_softr2 > 0)
+													{
+														$qcdot2=$row_softr2['softr_date'];
+													}
+												}
+											}
+										}
+										if($srfl==1 && $qcdot2!="")$dot=$qcdot2;
+											
+										if($subsubtrid==0)
+										{
+											$sql_subsub2="insert into tbl_dispsub_sub (disp_id, disps_id, dpss_barcode, dpss_crop, dpss_variety, dpss_ups, dpss_lotno, dpss_qty, dpss_grosswt, dpss_dov, dpss_qc, dpss_dot, dpss_barcodetype,plantcode) values ('$mainid', '$sid', '$sa', '$crop2', '$variety2', '$ups', '$lotno', '$qty', '$grweight', '$dov', '$qc', '$dot', '$packtyp','$plantcode')";
+											$sdfg=mysqli_query($link,$sql_subsub2) or die(mysqli_error($link));
+												
+										}
+									}
+								}
+							}
+							$sqlb1="update tbl_mpmain set mpmain_dflg=2 where plantcode='".$plantcode."' and  mpmain_barcode='".$sa."'";
+							$adcs=mysqli_query($link,$sqlb1) or die(mysqli_error($link));
+							
+							$sql_subsub5="update tbl_disp_sub set disps_flg=2 where plantcode='".$plantcode."' and  disps_id='$sid'";
+							$asdf5=mysqli_query($link,$sql_subsub5) or die(mysqli_error($link));	
+						}
+					}		
+				}	
+				$rn=0; $rq=0; $rbq=0; $tore=0;
+				$sq=mysqli_query($link,"Select * from tbl_dispsub_sub where plantcode='".$plantcode."' and  disps_id='$sid'") or die(mysqli_error($link));
+				if($to=mysqli_num_rows($sq) > 0)
+				{
+					while($ro=mysqli_fetch_array($sq))
+					{
+						$rq=$rq+$ro['dpss_qty']; $tore++;
+					}
+				}
+				$rbq=$eqty-$rq;
+				$sql_subsub5="update tbl_disp_sub set disps_qty='$rq', disps_bqty='$rbq', disps_onomp='$txtornomp', disps_tnomp='$txtnomp', disps_nomp='$tore', disps_bnomp='$txtorblnomp', disps_nvariety='$txtpvariety'  where disps_id='$sid'";
+				$asdf5=mysqli_query($link,$sql_subsub5) or die(mysqli_error($link));		 
+			}
+		}
+	}
+}
+$tid=$z1;
+
+
+$sql_tbl=mysqli_query($link,"select * from tbl_disp where plantcode='".$plantcode."' and  disp_id='".$tid."'") or die(mysqli_error($link));
+$row_tbl=mysqli_fetch_array($sql_tbl);
+$tot=mysqli_num_rows($sql_tbl);		
+
+$arrival_id=$row_tbl['disp_id'];
+
+	$tdate=$row_tbl['disp_date'];
+	$tyear=substr($tdate,0,4);
+	$tmonth=substr($tdate,5,2);
+	$tday=substr($tdate,8,2);
+	$tdate=$tday."-".$tmonth."-".$tyear;
+	
+$subtid=$subtrid;
+$subsubtid=$subsubtrid;
+ 
+?>	
+<table align="center" border="1" width="950" cellspacing="0" cellpadding="0" bordercolor="#378b8b" style="border-collapse:collapse" > 
+<tr class="tblsubtitle" height="20">
+  <td colspan="6" align="center" class="tblheading">Dispatch - Direct Loading / Non-Allocation Type</td>
+</tr>
+<tr height="15"><td colspan="6" align="right" class="smalltblheading"><font color="#FF0000" >*</font>indicates required field&nbsp;</td></tr>
+
+ <tr class="Dark" height="30">
+<td width="205" align="right" valign="middle" class="smalltblheading">&nbsp;Transaction Id&nbsp;</td>
+<td width="234"  align="left" valign="middle" class="smalltbltext">&nbsp;<?php echo "TDP".$row_tbl['disp_tcode']."/".$row_tbl['disp_yearcode']."/".$row_tbl['disp_logid'];?></td>
+
+<td width="172" align="right" valign="middle" class="smalltblheading">Date&nbsp;</td>
+<td width="229" align="left" valign="middle" class="smalltbltext">&nbsp;<?php echo $tdate;?><input name="date" type="hidden" size="10" class="smalltbltext" bndex="0" readonly="true"  style="background-color:#CCCCCC" value="<?php echo $tdate;?>" maxlength="10"/>&nbsp;</td>
+</tr>
+ <tr class="Dark" height="30">
+<td width="205" align="right" valign="middle" class="smalltblheading">&nbsp;Party Type&nbsp;</td>
+<td width="234"  align="left" valign="middle" class="smalltbltext" colspan="3">&nbsp;<?php echo $row_tbl['disp_partytype']; ?><input type="hidden" class="smalltbltext" name="txtpp" style="width:120px;" onChange="modetchk1(this.value)" value="<?php echo $row_tbl['disp_partytype']; ?>"  /></td>
+</tr>
+</table>
+<div id="selectpartylocation"style="display:<?php if($row_tbl['disp_partytype']!=""){ echo "block";} else { echo "none"; }?>" >
+<table align="center" border="1" width="950" cellspacing="0" cellpadding="0" bordercolor="#378b8b" style="border-collapse:collapse" > 
+<?php
+if($row_tbl['disp_partytype']!="Export Buyer")
+{	
+?>
+<tr class="Dark" height="30">
+<td width="229"  align="right"  valign="middle" class="smalltblheading">State&nbsp;</td>
+<td width="262" align="left"  valign="middle" class="smalltbltext">&nbsp;<?php echo $row_tbl['disp_state']; ?><input type="hidden"  class="smalltbltext" name="txtstatesl" style="width:120px;" onchange="locslchk(this.value)" value="<?php echo $row_tbl['disp_state']; ?>" /></td>
+
+<?php
+$sql_month3=mysqli_query($link,"select * from tblproductionlocation where state='".$row_tbl['disp_state']."' and productionlocationid='".$row_tbl['disp_location']."' order by productionlocation")or die(mysqli_error($link));
+$noticia3 = mysqli_fetch_array($sql_month3);
+?>	
+	<td width="180"  align="right"  valign="middle" class="smalltblheading">Location&nbsp;</td>
+<td width="269" align="left"  valign="middle" class="smalltbltext" id="locations">&nbsp;<?php echo $noticia3['productionlocation']; ?><input type="hidden" class="smalltbltext" name="txtlocationsl" style="width:160px;" onchange="stateslchk(this.value)" value="<?php echo $row_tbl['disp_location']; ?>" /></td>
+</tr><input type="hidden" name="locationname" value="<?php echo $row_tbl['disp_location']; ?>" />
+<?php
+}
+else
+{
+$sql_month=mysqli_query($link,"select * from tblcountry where country='".$row_tbl['disp_location']."' order by country")or die(mysqli_error($link));
+$noticia = mysqli_fetch_array($sql_month);
+?>
+<tr class="Light" height="30">
+<td width="230"  align="right"  valign="middle" class="smalltblheading">Country&nbsp;</td>
+<td  colspan="3" align="left"  valign="middle" class="smalltbltext">&nbsp;<?php echo $noticia['country'];?><input type="hidden" class="smalltbltext" name="txtcountrysl" style="width:120px;" onchange="loccontrychk(this.value)" value="<?php echo $row_tbl['disp_location'];?>" /></td>
+</tr><input type="hidden" name="locationname" value="<?php echo $row_tbl['disp_location'];?>" />
+<?php
+}
+?>
+</table>
+</div>		   
+<div id="selectparty"style="display:<?php if($row_tbl['disp_partytype']!=""){ echo "block";} else { echo "none"; }?>" >		   
+<table align="center" border="1" width="950" cellspacing="0" cellpadding="0" bordercolor="#378b8b" style="border-collapse:collapse" >
+<?php
+$sql_month24=mysqli_query($link,"select * from tbl_partymaser where p_id='".$row_tbl['disp_party']."' order by business_name")or die(mysqli_error($link));
+$noticia = mysqli_fetch_array($sql_month24);
+//echo $t=mysqli_num_rows($sql_month24);
+?>   
+ <tr class="Dark" height="30">
+<td width="230"  align="right"  valign="middle" class="smalltblheading">Party Name&nbsp;</td>
+<td width="714"  colspan="3" align="left"  valign="middle" class="smalltbltext" id="vitem1">&nbsp;<?php echo $noticia['business_name'];?><input type="hidden" class="smalltbltext"  id="itm1" name="txtstfp" style="width:220px;" onChange="showaddr(this.value);" value="<?php echo $row_tbl['disp_party'];?>"  /></td>
+	</tr>
+<?php
+	$quer33=mysqli_query($link,"SELECT * FROM tbl_partymaser where p_id='".$row_tbl['disp_party']."'"); 
+	$row33=mysqli_fetch_array($quer33);
+?>
+<tr class="Dark" height="30">
+<td width="230" align="right"  valign="middle" class="smalltblheading">Address&nbsp;</td>
+<td align="left"  valign="middle" class="smalltbltext" colspan="3" id="vaddress"><div style="padding-left:3px"><?php echo $row33['address'];?><?php if($row33['city']!=""){ echo ", ".$row33['city'];}?>, <?php echo $row33['state'];?></div><input type="hidden" name="adddchk" value="" />  </td>
+</tr>
+<tr class="Light" height="25">
+<td width="230" align="right"  valign="middle" class="smalltblheading">&nbsp;Mode of Transit&nbsp;</td>
+<td align="left"  valign="middle" class="smalltbltext" colspan="3" >&nbsp;<input name="txt1" type="radio" class="smalltbltext" value="Transport" onClick="clk(this.value);" <?php if($row_tbl['tmode']=="Transport") echo "checked"; ?> />Transport&nbsp;<input name="txt1" type="radio" class="smalltbltext" value="Courier" onClick="clk(this.value);" <?php if($row_tbl['tmode']=="Courier") echo "checked"; ?> />Courier&nbsp;<input name="txt1" type="radio" class="smalltbltext" value="By Hand" onClick="clk(this.value);" <?php if($row_tbl['tmode']=="By Hand") echo "checked"; ?> />Hand Delivery&nbsp;<font color="#FF0000">*</font>&nbsp;<input name="txt11" value="<?php echo $row_tbl['tmode'];?>" type="hidden"> </td>
+</tr>
+</table>
+<div id="trans" style="display:<?php if($row_tbl['tmode'] == "Transport"){ echo "block";}else{ echo "none";} ?>; width:950">
+<table align="center" border="1" width="950" cellspacing="0" cellpadding="0" bordercolor="#378b8b" style="border-collapse:collapse" > 
+<tr class="Dark" height="30">
+<td width="230" align="right" valign="middle" class="smalltblheading">&nbsp;Transport Name&nbsp;</td>
+<td width="262" align="left"  valign="middle" class="smalltbltext">&nbsp;<input name="txttname" type="text" size="25" class="smalltbltext" tabindex="" maxlength="25" value="<?php echo $row_tbl['trans_name'];?>"></td>
+<td width="192" align="right" valign="middle" class="smalltblheading">Lorry Receipt No.&nbsp;</td>
+<td width="256" align="left" valign="middle" class="smalltbltext">&nbsp;<input name="txtlrn" type="text" size="15" class="smalltbltext" tabindex=""  maxlength="15" value="<?php echo $row_tbl['trans_lorryrepno'];?>" ></td>
+</tr>
+
+<tr class="Light" height="25">
+<td width="230" align="right" valign="middle" class="smalltblheading">&nbsp;Vehicle No.&nbsp;</td>
+<td width="262" align="left" valign="middle" class="smalltbltext" >&nbsp;<input name="txtvn" type="text" size="12" class="smalltbltext" tabindex="" maxlength="12" value="<?php echo $row_tbl['trans_vehno'];?>" ></td>
+<td width="192" align="right" valign="middle" class="smalltblheading">&nbsp;Payment Mode&nbsp;</td>
+ <td width="256" align="left" valign="middle" class="smalltbltext">&nbsp;<select class="smalltbltext" name="txt13" style="width:70px;"  >
+<option value="" selected="selected">Select</option>
+<option <?php if($row_tbl['trans_paymode']=="TBB")echo "Selected";?> value="TBB">TBB</option>
+<option <?php if($row_tbl['trans_paymode']=="To Pay")echo "Selected";?> value="To Pay" >To Pay</option>
+<option <?php if($row_tbl['trans_paymode']=="Paid")echo "Selected";?> value="Paid">Paid</option>
+</select>&nbsp;<font color="#FF0000">*</font>&nbsp;(Transport)&nbsp;(Transport)</td>
+</tr>
+</table>
+</div>
+<div id="courier" style="display:<?php if($row_tbl['tmode'] == "Courier"){ echo "block";}else{ echo "none";} ?>; width:950">
+<table align="center" border="1" width="950" cellspacing="0" cellpadding="0" bordercolor="#378b8b" style="border-collapse:collapse"> 
+<tr class="Dark" height="30">
+<td width="230" align="right" valign="middle" class="smalltblheading">&nbsp;Courier Name&nbsp;</td>
+<td width="262" align="left" valign="middle" class="smalltbltext">&nbsp;<input name="txtcname" type="text" size="20" class="smalltbltext" tabindex=""  maxlength="20" value="<?php echo $row_tbl['courier_name'];?>" ></td>
+<td width="192" align="right" valign="middle" class="smalltblheading">&nbsp;Docket No. &nbsp;</td>
+<td width="256" align="left" valign="middle" class="smalltbltext">&nbsp;<input name="txtdc" type="text" size="15" class="smalltbltext" tabindex="" maxlength="15" value="<?php echo $row_tbl['docket_no'];?>" ></td>
+</tr>
+</table>
+</div>
+<div id="byhand" style="display:<?php if($row_tbl['tmode'] == "By Hand"){ echo "block";}else{ echo "none";} ?>; width:950">
+<table align="center" border="1" width="950" cellspacing="0" cellpadding="0" bordercolor="#378b8b" style="border-collapse:collapse"> 
+<tr class="Dark" height="30">
+<td width="230" align="right" valign="middle" class="smalltblheading">&nbsp;Name of Person&nbsp;</td>
+<td colspan="3" align="left" valign="middle" class="smalltbltext">&nbsp;<input name="txtpname" type="text" size="30" class="smalltbltext" tabindex=""  maxlength="30" value="<?php echo $row_tbl['pname_byhand'];?>" ></td>
+</tr>
+</table>
+</div>
+</div>
+<div id="orderdetails">
+<?php
+
+$sqlmonth=mysqli_query($link,"select distinct(orderm_id) from tbl_orderm where plantcode='".$plantcode."' and  orderm_party='".$row_tbl['disp_party']."' and orderm_dispatchflag!='1' and orderm_supflag!='1' and orderm_cancelflag!='1' and (order_trtype='Order Sales' OR order_trtype='Order Stock') and orderm_holdflag!=1 and orderm_tflag=1 order by orderm_id")or die("Error:".mysqli_error($link));
+$t=mysqli_num_rows($sqlmonth);
+
+$arrivalid="";
+while($rowtbl=mysqli_fetch_array($sqlmonth))
+{
+	if($arrivalid!="")
+		$arrivalid=$arrivalid.",".$rowtbl['orderm_id'];
+	else
+		$arrivalid=$rowtbl['orderm_id'];
+}
+
+$ver=""; $cpr="";
+if($arrivalid!="")
+{
+$sql_ver1=mysqli_query($link,"select distinct order_sub_crop from tbl_order_sub where plantcode='".$plantcode."' and  orderm_id in($arrivalid) and order_sub_totbal_qty>0 and order_sub_hold_flag=0 order by order_sub_crop") or die(mysqli_error($link));
+$totver1=mysqli_num_rows($sql_ver1);
+while($row_ver1=mysqli_fetch_array($sql_ver1))
+{
+	if($cpr!="")
+		$cpr=$cpr.",".$row_ver1['order_sub_crop'];
+	else
+		$cpr=$row_ver1['order_sub_crop'];
+}
+//echo $arrivalid;
+$cp="";
+$sq_crp=mysqli_query($link,"SELECT cropid, cropname FROM tblcrop where cropid IN ($cpr) order by cropname Asc") or die(mysqli_error($link));
+while($ro_crp=mysqli_fetch_array($sq_crp))
+{
+	if($cp!="")
+		$cp=$cp.",".$ro_crp['cropid'];
+	else
+		$cp=$ro_crp['cropid'];
+}
+$arid=explode(",",$cp);
+foreach($arid as $atrid)
+{
+if($atrid<>"")
+{
+$ver1="";
+$sql_ver2=mysqli_query($link,"select distinct order_sub_variety from tbl_order_sub where plantcode='".$plantcode."' and  orderm_id in($arrivalid) and order_sub_crop='$atrid' and order_sub_totbal_qty>0 and order_sub_hold_flag=0 order by order_sub_variety") or die(mysqli_error($link));
+$totver2=mysqli_num_rows($sql_ver2);
+while($row_ver2=mysqli_fetch_array($sql_ver2))
+{
+	if($ver1!="")
+		$ver1=$ver1.",".$row_ver2['order_sub_variety'];
+	else
+		$ver1=$row_ver2['order_sub_variety'];
+}
+$vp="";
+$sq_vrp=mysqli_query($link,"SELECT varietyid, popularname FROM tblvariety where varietyid IN ($ver1) and actstatus='Active' order by popularname Asc") or die(mysqli_error($link));
+while($ro_vrp=mysqli_fetch_array($sq_vrp))
+{
+	if($vp!="")
+		$vp=$vp.",".$ro_vrp['varietyid'];
+	else
+		$vp=$ro_vrp['varietyid'];
+}
+if($ver!="")
+	$ver=$ver.",".$vp;
+else
+	$ver=$vp;
+
+}
+}
+}
+?>
+<table align="center" border="1" width="950" cellspacing="0" cellpadding="0" bordercolor="#378b8b" style="border-collapse:collapse" > 
+<tr class="tblsubtitle" height="20">
+  <td colspan="14" align="center" class="tblheading">Pending Order(s) in Progress</td>
+</tr>
+<tr class="Dark" height="30">
+	<td width="205"  align="center"  valign="middle" class="smalltblheading">#</td>
+	<td width="275" align="center"  valign="middle" class="smalltblheading">Crop</td>
+	<td width="275" align="center"  valign="middle" class="smalltblheading">Variety</td>
+	<td width="275" align="center"  valign="middle" class="smalltblheading">UPS Type</td>
+	<td width="275" align="center"  valign="middle" class="smalltblheading">UPS</td>
+	<td width="275" align="center"  valign="middle" class="smalltblheading">NoP</td>
+	<td width="275" align="center"  valign="middle" class="smalltblheading">Qty</td>
+	<td width="275" align="center"  valign="middle" class="smalltblheading">Order No</td>
+	<td width="275" align="center"  valign="middle" class="smalltblheading">NoMP</td>
+	<td width="275" align="center"  valign="middle" class="smalltblheading">Barcodes</td>
+	<td width="275" align="center"  valign="middle" class="smalltblheading">Qty Dispatched</td>
+	<td width="275" align="center"  valign="middle" class="smalltblheading">Qty Balance</td>
+	<td width="275" align="center"  valign="middle" class="smalltblheading">Select</td>
+</tr>
+<?php 
+$ordnos=""; $veridno=""; $upsnos=""; $sn=1; $totbarcs="";
+if($ver!="")
+{
+$verid=explode(",",$ver);
+foreach($verid as $verrid)
+{
+if($verrid<>"")
+{
+
+$orsid="";
+$sqlson=mysqli_query($link,"select * from tbl_order_sub where plantcode='".$plantcode."' and  order_sub_variety='".$verrid."' and orderm_id in($arrivalid) and order_sub_totbal_qty>0 and order_sub_hold_flag=0 order by order_sub_variety")or die("Error:".mysqli_error($link));
+$totsz=mysqli_num_rows($sqlson);
+while($rowtsub=mysqli_fetch_array($sqlson))
+{
+if($orsid!="")
+$orsid=$orsid.",".$rowtsub['order_sub_id'];
+else
+$orsid=$rowtsub['order_sub_id'];
+}
+
+$sqlsloc=mysqli_query($link,"select distinct order_sub_sub_ups from tbl_order_sub_sub where plantcode='".$plantcode."' and  orderm_id in($arrivalid) and order_sub_id IN ($orsid) and order_sub_subbal_qty>0 order by order_sub_sub_ups") or die(mysqli_error($link));
+$totvs=mysqli_num_rows($sqlsloc);
+while($rowsloc=mysqli_fetch_array($sqlsloc))
+{
+$up=""; $up1=""; $qt=""; $qt1=""; $zz=""; $np="";$crop=""; $variety="";  $stage=""; $got=""; $sstatus=""; $nord=0; $ordno="";
+$sqlsloc2=mysqli_query($link,"select * from tbl_order_sub_sub where plantcode='".$plantcode."' and  orderm_id in($arrivalid) and order_sub_sub_ups='".$rowsloc['order_sub_sub_ups']."' and order_sub_subbal_qty>0 order by order_sub_sub_ups") or die(mysqli_error($link));
+$totvs=mysqli_num_rows($sqlsloc2);
+while($rowsloc2=mysqli_fetch_array($sqlsloc2))
+{
+$sqlmon=mysqli_query($link,"select * from tbl_order_sub where plantcode='".$plantcode."' and  order_sub_variety='".$verrid."' and orderm_id in($arrivalid) and order_sub_id='".$rowsloc2['order_sub_id']."' and order_sub_totbal_qty>0 and order_sub_hold_flag=0 order by order_sub_id")or die("Error:".mysqli_error($link));
+$totz=mysqli_num_rows($sqlmon);
+while($rowtblsub=mysqli_fetch_array($sqlmon))
+{
+
+		$sql_m=mysqli_query($link,"select * from tbl_orderm where plantcode='".$plantcode."' and  orderm_id='".$rowtblsub['orderm_id']."' and orderm_tflag=1 and orderm_holdflag!=1")or die("Error:".mysqli_error($link));
+		if($tot=mysqli_num_rows($sql_m) > 0)
+		{
+			while($row_m=mysqli_fetch_array($sql_m))
+			{
+				if($ordno!="")
+				$ordno=$ordno.",".$row_m['orderm_porderno'];
+				else
+				$ordno=$row_m['orderm_porderno'];
+				$nord++;
+			}
+		}
+		
+		$orxd=explode(",",$ordno);
+		$tid240=array_keys(array_flip($orxd));
+		$ordno=implode(",",$tid240);
+		
+		if($reptyp1=="hold")
+	    {	
+			if($rowtblsub['order_sub_hold_flag']!=0)
+				$statussub=$rowtblsub['order_sub_hold_type'];	
+		}
+		else
+		{
+			$statussub="";
+		}
+
+
+		$variet=$row_dept4['popularname'];
+		$upstyp=$rowtblsub['order_sub_ups_type'];
+		if($upstyp=="Yes")$upstyp="ST";
+		if($upstyp=="No")$upstyp="NST";
+		
+		/*if($crop!="")
+		{
+		$crop=$crop."<br>".$rowtblsub['order_sub_crop'];
+		// $rowtblsub['lotcrop'];
+		}
+		else
+		{*/
+		$crop=$rowtblsub['order_sub_crop'];
+		//}
+		$quer5=mysqli_query($link,"SELECT cropid, cropname FROM tblcrop where cropid='$crop'"); 
+		$row_dept5=mysqli_fetch_array($quer5);
+		$cro=$row_dept5['cropname'];
+		/*if($variety!="")
+		{
+		$variety=$variety."<br>".$rowtblsub['order_sub_variety'];
+		}
+		else
+		{*/
+		$variety=$rowtblsub['order_sub_variety'];	
+		//}
+		$quer4=mysqli_query($link,"SELECT varietyid, popularname FROM tblvariety where varietyid='$variety' and actstatus='Active'"); 
+		$row_dept4=mysqli_fetch_array($quer4);
+		$variet=$row_dept4['popularname'];
+		/*if($lotno!="")
+		{
+			$lotno=$lotno."<br>".$rowtblsub['lotno'];
+		}
+		else
+		{
+			$lotno=$rowtblsub['lotno'];
+		}
+		if($bags!="")
+		{
+			$bags=$bags."<br>".$acn;
+		}
+		else
+		{
+			$bags=$acn;
+		}
+		if($qty!="")
+		{
+			$qty=$qty."<br>".$ac;
+		}
+		else
+		{
+			$qty=$ac;
+		}
+		if($qc!="")
+		{
+			$qc=$qc."<br>".$rowtblsub['qc'];
+		}
+		else
+		{
+			$qc=$rowtblsub['qc'];
+		}
+		if($got!="")
+		{
+			$got=$got."<br>".$rowtblsub['got'];
+		}
+		else
+		{
+			$got=$rowtblsub['got'];
+		}
+		if($stage!="")
+		{
+			$stage=$stage."<br>".$rowtblsub['order_sub_totbal_qty'];
+		}
+		else
+		{
+			$stage=$rowtblsub['order_sub_totbal_qty'];
+		}
+		if($per!="")
+		{
+			$per=$per."<br>".$rowtblsub['pper'];
+		}
+		else
+		{
+			$per=$rowtblsub['pper'];
+		}*/
+		
+
+$sql_sloc=mysqli_query($link,"select * from tbl_order_sub_sub where plantcode='".$plantcode."' and  orderm_id in($arrivalid) and order_sub_id='".$rowtblsub['order_sub_id']."' and order_sub_sub_ups='".$rowsloc['order_sub_sub_ups']."' order by order_sub_sub_id") or die(mysqli_error($link));
+while($row_sloc=mysqli_fetch_array($sql_sloc))
+{
+
+	$zz=explode(" ",$row_sloc['order_sub_sub_ups']);
+	$dq=explode(".",$zz[0]);
+	$xfd=count($dq);
+	if($upstyp=="NST")
+	{
+		//$dq[1]="000";
+		//if($dq[1]==000){$qt1=$dq[0];}else{$qt1=$dq[0].".".$dq[1];}
+		if($xfd>1)$qt1=$dq[0].".".$dq[1]; else $qt1=$dq[0].".000";
+	}
+	else
+	{
+		if($dq[1]==000){$qt1=$dq[0].".".$dq[1];}else{$qt1=$dq[0].".".$dq[1];}
+	}
+	$up1=$qt1." ".$zz[1];
+	
+	/*if($up!="")
+		$up=$up.$up1."<br/>";
+	else*/
+		$up=$up1;
+
+	$dq=explode(".",$row_sloc['order_sub_subbal_qty']);
+	if($dq[1]==000){$qt1=$dq[0];}else{$qt1=$row_sloc['order_sub_subbal_qty'];}
+	
+	/*if($qt!="")
+	$qt=$qt.$qt1."<br/>";
+	else*/
+	$qt=$qt+$qt1;
+	/*if($sstatus!="")
+	{
+		$sstatus=$sstatus."<br>".$row_sloc['order_sub_sub_nop'];
+	}
+	else
+	{
+		$sstatus=$row_sloc['order_sub_sub_nop'];
+	}*/
+	$sstatus=$sstatus+$row_sloc['order_sub_sub_nop'];
+	 //$rowtblsub['arrsub_id'];
+}
+}
+}
+//}
+if($ordnos!="")
+{
+	$ordnos=$ordnos.",".$ordno;
+}
+else
+{
+	$ordnos=$ordno;
+}
+
+if($veridno!="")
+{
+	$veridno=$veridno.",".$variety;
+}
+else
+{
+	$veridno=$variety;
+}
+if($upsnos!="")
+{
+	$upsnos=$upsnos.",".$up1;
+}
+else
+{
+	$upsnos=$up1;
+}
+if($qt > 0)	 
+{
+
+$quer5=mysqli_query($link,"SELECT cropid, cropname FROM tblcrop where cropname='$cro'"); 
+$row_dept5=mysqli_fetch_array($quer5);
+$cp=$row_dept5['cropid'];
+$quer4=mysqli_query($link,"SELECT varietyid, popularname FROM tblvariety where popularname='$variet' and actstatus='Active'"); 
+$row_dept4=mysqli_fetch_array($quer4);
+$vt=$row_dept4['varietyid'];		
+
+$sq3=mysqli_query($link,"Select * from tbl_disp_sub where plantcode='".$plantcode."' and  disps_crop='$cro' and disps_variety='$variet' and disps_ups='$up1' and disps_flg!=1 and disp_id='$tid'") or die(mysqli_error($link));
+if($to3=mysqli_num_rows($sq3) > 0)
+{
+	$ro3=mysqli_fetch_array($sq3);
+	$sid3=$ro3['disps_id'];
+	$sq23=mysqli_query($link,"Select * from tbl_dispsub_sub where plantcode='".$plantcode."' and  disps_id='$sid3' and disp_id='$tid'") or die(mysqli_error($link));
+	while($row_23=mysqli_fetch_array($sq23))
+	{
+		if($totbarcs!="")
+			$totbarcs=$totbarcs.",".$row_23['dpss_barcode'];
+		else
+			$totbarcs=$row_23['dpss_barcode'];		
+	}
+}
+//echo $subtid;
+if($subtid!=0)
+$sq24="Select * from tbl_disp_sub where plantcode='".$plantcode."' and  disps_crop='$cro' and disps_variety='$variet' and disps_ups='$up1' and disps_id='$subtid' and disps_upstype='$upstyp' and disps_flg!=1 and disp_id='$tid'";
+else
+$sq24="Select * from tbl_disp_sub where plantcode='".$plantcode."' and  disps_crop='$cro' and disps_variety='$variet' and disps_ups='$up1' and disps_upstype='$upstyp' and disps_flg!=1 and disp_id='$tid'";
+
+$sq=mysqli_query($link,$sq24) or die(mysqli_error($link));
+$nups=""; $nnob=0; $nqty=0; $nbqty=$qt;  $dbsflg=0; $barcds="";
+$to=mysqli_num_rows($sq);
+if($to > 0)
+{
+$ro=mysqli_fetch_array($sq);
+$nups=$ro['disps_ups']; 
+$nnob=$ro['disps_nob']; 
+$nqty=$ro['disps_qty']; 
+//$nbqty=$ro['disps_bqty'];
+$nbqty=$qt-$nqty;
+$crpnm=$cp; 
+$vernm=$vt;
+$sid=$ro['disps_id'];
+$sn24=$sn;
+$dbsflg=$ro['disps_flg'];
+$euptp=$ro['disps_upstype'];
+
+$sq2=mysqli_query($link,"Select * from tbl_dispsub_sub where plantcode='".$plantcode."' and  disps_id='$sid' and disp_id='$tid' order by dpss_id ASC") or die(mysqli_error($link));
+$totrec=mysqli_num_rows($sq2);
+while($row_2=mysqli_fetch_array($sq2))
+{
+	if($barcds!="")
+		$barcds=$barcds.",".$row_2['dpss_barcode'];
+	else
+		$barcds=$row_2['dpss_barcode'];
+}
+?>
+<tr class="Dark" height="30">
+	<td width="205"  align="center"  valign="middle" class="smalltbltext"><?php echo $sn;?></td>
+	
+	<td width="275" align="center"  valign="middle" class="smalltbltext"><?php echo $cro?><input type="hidden" name="ecrop<?php echo $sn;?>" id="ecrop_<?php echo $sn;?>" value="<?php echo $cro;?>" /></td>
+	<td width="275" align="center"  valign="middle" class="smalltbltext"><?php echo $variet?><input type="hidden" name="evariety<?php echo $sn;?>" id="evariety_<?php echo $sn;?>" value="<?php echo $variet;?>" /></td>
+	<td width="275" align="center"  valign="middle" class="smalltbltext"><?php echo $upstyp?><input type="hidden" name="eupstyp<?php echo $sn;?>" id="eupstyp_<?php echo $sn;?>" value="<?php echo $upstyp;?>" /></td>
+	<td width="275" align="center"  valign="middle" class="smalltbltext"><?php echo $up1?><input type="hidden" name="eups<?php echo $sn;?>" id="eups_<?php echo $sn;?>" value="<?php echo $up1;?>" /></td>
+	<td width="275" align="center"  valign="middle" class="smalltbltext"><?php echo $sstatus;?><input type="hidden" name="enop<?php echo $sn;?>" id="enop_<?php echo $sn;?>" value="<?php echo $sstatus;?>" /></td>
+	<td width="275" align="center"  valign="middle" class="smalltbltext"><?php echo $qt;?><input type="hidden" name="eqty<?php echo $sn;?>" id="eqty_<?php echo $sn;?>" value="<?php echo $qt;?>" /></td>
+	<td width="275" align="center"  valign="middle" class="smalltbltext" title="<?php echo $ordno ?>"><?php echo $ordno;?><input type="hidden" name="eordno<?php echo $sn;?>" id="eordno_<?php echo $sn;?>" value="<?php echo $ordno;?>" /></td>
+	<td width="275" align="center"  valign="middle" class="smalltbltext"><?php echo $totrec;?><input type="hidden" name="upstp<?php echo $sn;?>" id="upstp_<?php echo $sn;?>" value="<?php echo $totrec;?>" /></td>
+	<td width="275" align="center"  valign="middle" class="smalltbltext"><?php if($barcds!=""){?><a href="Javascript:void(0);" onclick="showmbarcodes('<?php echo $barcds;?>')">Details</a><?php } ?><input type="hidden" name="rnob<?php echo $sn;?>" id="rnob_<?php echo $sn;?>" value="<?php echo $barcds;?>" /></td>
+	<td width="275" align="center"  valign="middle" class="smalltbltext"><?php echo $nqty;?><input type="hidden" name="rqty<?php echo $sn;?>" id="rqty_<?php echo $sn;?>" value="<?php echo $nqty;?>" /></td>
+	<td width="275" align="center"  valign="middle" class="smalltbltext"><?php echo $nbqty;?><input type="hidden" name="bnop<?php echo $sn;?>" id="bnop_<?php echo $sn;?>" value="<?php echo $nbqty;?>" /></td>
+	<td width="275" align="center"  valign="middle" class="smalltbltext"><?php if($nbqty>0 && $dbsflg==0){ $dflg=0;?><input type="radio" name="selsh<?php echo $sn;?>" id="selsh_<?php echo $sn;?>" onclick="selshow('<?php echo $sn;?>','<?php echo $cro?>','<?php echo $variet?>','<?php echo $ordno ?>','<?php echo $upstyp;?>')" value="<?php echo $sn;?>" <?php if($to=mysqli_num_rows($sq) > 0) {echo "checked"; $sn24=$sn;} ?> /><?php } else { $dflg=1;?><img border="0" src="../images/edit.png"  style="display:inline;cursor:pointer;" onclick="editrecmain('<?php echo $sid;?>','<?php echo $tid?>','<?php echo $sn;?>')" /><input type="hidden" name="selsh<?php echo $sn;?>" id="selsh_<?php echo $sn;?>" onclick="selitm('<?php echo $sn;?>','<?php echo $variety?>','<?php echo $up1 ?>','<?php echo $qt?>','<?php echo $ordno?>','<?php echo $upstyp;?>');"  /><?php } ?></td>
+</tr>
+<input type="hidden" name="mchksel" value="<?php echo $sn24?>" /><input type="hidden" name="txtornos" value="<?php echo $ordno;?>" /><input type="hidden" name="txtveridno" value="<?php echo $vt;?>" /><input type="hidden" name="txtupsnos" value="<?php echo $up1;?>" /><input type="hidden" name="txteqty" value="<?php echo $qt;?>" />
+<?php
+$sn++;
+//}
+//}
+}
+}
+}
+}
+}
+}
+?>
+<input type="hidden" name="sn" value="<?php echo $sn;?>" /><input type="hidden" name="totbarcs" value="<?php echo $totbarcs;?>" />
+</table>
+</div>	
+<br />
+<div id="showorsel">
+<table align="center" border="1" width="950" cellspacing="0" cellpadding="0" bordercolor="#378b8b" style="border-collapse:collapse" >
+<tr class="tblsubtitle" height="20">
+  <td colspan="13" align="center" class="tblheading">Loading IN-Progress</td>
+</tr>
+<tr class="Dark" height="30">
+	<td width="67" align="center"  valign="middle" class="smalltblheading">Crop</td>
+	<td width="100" align="center"  valign="middle" class="smalltblheading">Variety</td>
+	<td width="150" align="center"  valign="middle" class="smalltblheading">PSDN Variety</td>
+	<td width="40" align="center"  valign="middle" class="smalltblheading">UPS Type</td>
+	<td width="65" align="center"  valign="middle" class="smalltblheading">UPS</td>
+	<td width="65" align="center"  valign="middle" class="smalltblheading">NoP</td>
+	<td width="65" align="center"  valign="middle" class="smalltblheading">Qty</td>
+	<td width="45" align="center"  valign="middle" class="smalltblheading">No. of Lots</td>
+	<td width="65" align="center"  valign="middle" class="smalltblheading">Ordered NoMP</td>
+	<td width="65" align="center"  valign="middle" class="smalltblheading">To Load NoMP</td>
+	<td width="65" align="center"  valign="middle" class="smalltblheading">Loaded NoMP</td>
+	<td width="65" align="center"  valign="middle" class="smalltblheading">To be Loaded NoMP</td>
+	<td width="65" align="center"  valign="middle" class="smalltblheading">Balance Ordered NoMP</td>
+</tr>
+<?php
+$totre=0; $nolots=0;
+$sq=mysqli_query($link,"Select * from tbl_disp_sub where plantcode='".$plantcode."' and  disps_id='$sid' and disps_flg!=1 and disp_id='$tid'") or die(mysqli_error($link));
+if($to=mysqli_num_rows($sq) > 0)
+{
+while($ro=mysqli_fetch_array($sq))
+{
+$sid=$ro['disps_id'];
+$cro=$ro['disps_crop'];
+$variet=$ro['disps_variety'];
+$newvariet=$ro['disps_nvariety'];
+$orn=$ro['disps_ordno'];
+$upstyp=$ro['disps_upstype'];
+$up=$ro['disps_ups'];
+$sstatus=$ro['disps_onop'];
+$qt=$ro['disps_oqty'];
+$onpmp=$ro['disps_onomp'];
+$tnomp=$ro['disps_tnomp'];
+$bnomp=$ro['disps_bnomp'];
+$nomp=$ro['disps_nomp'];
+$tlnomp=$tnomp-$nomp;
+
+	$sq23=mysqli_query($link,"Select distinct dpss_lotno from tbl_dispsub_sub where plantcode='".$plantcode."' and  disps_id='$sid' and disp_id='$tid'") or die(mysqli_error($link));
+	$totre=mysqli_num_rows($sq23);
+	while($row23=mysqli_fetch_array($sq23))
+	{
+		$nolots++;
+	}
+?>
+
+<tr class="Dark" height="30">
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $cro?><input type="hidden" name="txtecrop" id="txtecrop" value="<?php echo $cro;?>" /></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $variet?><input type="hidden" name="txtevariety" id="txtevariety" value="<?php echo $variet;?>" /></td>
+	<td align="center"  valign="middle" class="smalltbltext"><input type="text" size="20" class="smalltbltext" maxlength="30" name="txtpvariety" id="txtpvariety" value="<?php echo $newvariet;?>" /></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $upstyp?><input type="hidden" name="txteupstyp" id="txteupstyp" value="<?php echo $upstyp;?>" /></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $up?><input type="hidden" name="txteups" id="txteups" value="<?php echo $up;?>" /></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $sstatus;?><input type="hidden" name="txtenop" id="txtenop" value="<?php echo $sstatus;?>" /></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $qt;?><input type="hidden" name="txteqty" id="txteqty" value="<?php echo $qt;?>" /></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $nolots;?><input type="hidden" name="txteordno" id="txteordno" value="<?php echo $orn;?>" /></td>
+	<td align="center"  valign="middle" class="smalltbltext"><input type="text" name="txtornomp" size="5" id="txtornomp" value="<?php echo $onpmp;?>" readonly="true" style="background-color:#CCCCCC" /></td>
+	<td align="center"  valign="middle" class="smalltbltext"><input type="text" size="5" maxlength="5" name="txtnomp" id="txtnomp" value="<?php echo $tnomp;?>" onchange="nompchk(this.value);" /></td>
+	<td align="center"  valign="middle" class="smalltbltext"><input type="text" size="5" name="txtlonomp" id="txtlonomp" value="<?php echo $nomp;?>" readonly="true" style="background-color:#CCCCCC" /></td>
+	<td align="center"  valign="middle" class="smalltbltext"><input type="text" size="5" name="txttlonomp" id="txttlonomp" value="<?php echo $tlnomp;?>" readonly="true" style="background-color:#CCCCCC" /></td>
+	
+	<td align="center"  valign="middle" class="smalltbltext"><input type="text" size="5" name="txtorblnomp" id="txtorblnomp" value="<?php echo $bnomp;?>" readonly="true" style="background-color:#CCCCCC" /></td>
+</tr>
+<?php
+}
+}
+?>
+</table>
+</div>
+<?php 
+if($totre==0)
+{
+?>
+<table align="center" width="950" cellpadding="5" cellspacing="5" border="0" >
+<tr >
+<td valign="top" align="right"><img src="../images/back.gif" border="0"style="display:inline;cursor:Pointer;" onClick="backupform();" />&nbsp;&nbsp;</td>
+</tr>
+</table>
+<?php
+}
+?>
+<br />
+<div id="postingsubtable" style="display:block">
+<div id="barupdetails" >
+<table align="center" border="0" width="950" cellspacing="0" cellpadding="0" bordercolor="#378b8b" style="border-collapse:collapse" > 
+<tr class="tblsubtitle" height="20">
+  <td colspan="14" align="center" class="tblheading">Lot wise Loading IN-Progress View</td>
+</tr>
+<tr class="tblsubtitle" height="25">
+	<td width="28" align="center" class="smalltblheading">#</td>
+	<td width="99" align="center" class="smalltblheading">Crop</td>
+	<td width="134" align="center" class="smalltblheading">Variety</td>
+	<td width="92" align="center" class="smalltblheading">UPS</td>
+	<td width="117" align="center" class="smalltblheading">Lot No.</td>
+	<td width="74" align="center" class="smalltblheading">QC Status</td>
+	<td width="79" align="center" class="smalltblheading">DoT</td>
+	<td width="89" align="center" class="smalltblheading">DoV</td>
+	<td width="54" align="center" class="smalltblheading">NoMP</td>
+	<td width="82" align="center" class="smalltblheading">Qty</td>
+	<td width="102" align="center" class="smalltblheading">Barcodes</td>
+</tr>
+</table>
+<?php
+$sno2=0; $totrec=0; $bchnflg=0;
+$sq2=mysqli_query($link,"Select distinct dpss_lotno from tbl_dispsub_sub where plantcode='".$plantcode."' and  disps_id='$sid' and disp_id='$tid'") or die(mysqli_error($link));
+$totrec=mysqli_num_rows($sq2);
+?>
+<div id="table-wrapper" style=" <?php if($totrec<=4) {?>height:auto; width:945px; overflow:hidden;<?php } else{?>height:101px; width:970px; overflow:auto;<?php } ?>">
+<table align="center" border="1" width="950" cellspacing="0" cellpadding="0" bordercolor="#378b8b" style="border-collapse:collapse;" > 
+<?php
+if($totrec=mysqli_num_rows($sq2) > 0)
+{
+	while($ro2=mysqli_fetch_array($sq2))
+	{
+		$lot2=$ro2['dpss_lotno']; 
+		$nompt=0; $nqty2=0; $barc="";
+		$sq3=mysqli_query($link,"Select * from tbl_dispsub_sub where plantcode='".$plantcode."' and  dpss_lotno='$lot2' and disps_id='$sid' and disp_id='$tid'") or die(mysqli_error($link));
+		while($ro3=mysqli_fetch_array($sq3))
+		{
+			$crps=$ro3['dpss_crop']; 
+			$vers=$ro3['dpss_variety']; 
+			$upss=$ro3['dpss_ups']; 
+			$dovs=$ro3['dpss_dov']; 
+			$qcss=$ro3['dpss_qc']; 
+			$dots=$ro3['dpss_dot']; 
+			
+			$quer5=mysqli_query($link,"SELECT cropid, cropname FROM tblcrop where cropid='$crps'"); 
+			$row_dept5=mysqli_fetch_array($quer5);
+			$cps=$row_dept5['cropname'];
+			$quer4=mysqli_query($link,"SELECT varietyid, popularname FROM tblvariety where varietyid='$vers' and actstatus='Active'"); 
+			$row_dept4=mysqli_fetch_array($quer4);
+			$vts=$row_dept4['popularname'];
+			
+			$tdate=$dovs;
+			$tyear=substr($tdate,0,4);
+			$tmonth=substr($tdate,5,2);
+			$tday=substr($tdate,8,2);
+			$dov=$tday."-".$tmonth."-".$tyear;
+			
+			$tdate=$dots;
+			$tyear=substr($tdate,0,4);
+			$tmonth=substr($tdate,5,2);
+			$tday=substr($tdate,8,2);
+			$dot=$tday."-".$tmonth."-".$tyear;
+			
+			$nompt=$nompt+1;
+			$nqty2=$nqty2+$ro3['dpss_qty'];
+			if($barc!="") 
+				$barc=$barc.",".$ro3['dpss_barcode'];
+			else
+				$barc=$ro3['dpss_barcode'];
+				
+			$bchnflg++;
+		}
+$sno2++; 		
+?>
+<tr class="Light" height="25">
+	<td width="28" align="center" class="smalltbltext"><?php echo $sno2;?></td>
+	<td width="97" align="center" class="smalltbltext"><?php echo $cps;?></td>
+	<td width="131" align="center" class="smalltbltext"><?php echo $vts;?></td>
+	<td width="90" align="center" class="smalltbltext"><?php echo $upss;?></td>
+	<td width="115" align="center" class="smalltbltext"><?php echo $lot2;?></td>
+	<td width="73" align="center" class="smalltbltext"><?php echo $qcss;?></td>
+	<td width="80" align="center" class="smalltbltext"><?php echo $dot;?></td>
+	<td width="87" align="center" class="smalltbltext"><?php echo $dov;?></td>
+	<td width="53" align="center" class="smalltbltext"><?php echo $nompt;?></td>
+	<td width="80" align="center" class="smalltbltext"><?php echo $nqty2;?></td>
+	<td width="92" align="center" class="smalltbltext"><?php if($barc!=""){?><a href="Javascript:void(0);" onclick="showmbarcodes('<?php echo $barc;?>')">Details</a><?php } ?></td>
+</tr>
+<?php
+}
+}
+?>
+</table>
+</div>
+</div><br />
+
+<table align="center" border="1" width="950" cellspacing="0" cellpadding="0" bordercolor="#378b8b" style="border-collapse:collapse" > 
+<tr class="tblsubtitle" height="20">
+  <td colspan="14" align="center" class="tblheading">Latest Barcode View</td>
+</tr>
+<tr class="Light" height="25">
+	<!--<td width="20" align="center" class="smalltblheading">#</td>-->
+	<td width="96" align="center" class="smalltblheading">Barcode</td>
+	<td width="96" align="center" class="smalltblheading">Crop</td>
+	<td width="130" align="center" class="smalltblheading">Variety</td>
+	<td width="89" align="center" class="smalltblheading">UPS</td>
+	<td width="102" align="center" class="smalltblheading">Lot No.</td>
+	<!--<td width="40" align="center" class="smalltblheading">NoMP</td>-->
+	<td width="67" align="center" class="smalltblheading">QC Status</td>
+	<td width="90" align="center" class="smalltblheading">DoT</td>
+	<td width="90" align="center" class="smalltblheading">DoV</td>
+	<td width="80" align="center" class="smalltblheading">Net Weight</td>
+	<td width="88" align="center" class="smalltblheading">Gross Weight</td>
+	<!--<td width="119" align="center" class="smalltblheading">SLOC</td>
+	<td colspan="2" align="center" class="smalltblheading">Allocate</td>-->
+</tr>
+<?php 
+$sno=1;
+$sq6=mysqli_query($link,"Select * from tbl_dispsub_sub where plantcode='".$plantcode."' and  disps_id='$sid' and disp_id='$tid' and dpss_barcode='$barcode'") or die(mysqli_error($link));
+$sq62=mysqli_query($link,"Select * from tbl_dispsub_sub where plantcode='".$plantcode."' and  disps_id='$sid' and disp_id='$tid' and dpss_barcode='$barcodet'") or die(mysqli_error($link));
+if($to6=mysqli_num_rows($sq6) > 0)
+{
+while($ro6=mysqli_fetch_array($sq6))
+{
+	$lot6=$ro6['dpss_lotno']; 
+	$crps2=$ro6['dpss_crop']; 
+	$vers2=$ro6['dpss_variety']; 
+	$upss2=$ro6['dpss_ups']; 
+	$dovs2=$ro6['dpss_dov']; 
+	$qcss2=$ro6['dpss_qc']; 
+	$dots2=$ro6['dpss_dot']; 
+	$grwts2=$ro6['dpss_grosswt']; 
+	$nqty6=$ro6['dpss_qty'];
+	
+	$quer5=mysqli_query($link,"SELECT cropid, cropname FROM tblcrop where cropid='$crps2'"); 
+	$row_dept5=mysqli_fetch_array($quer5);
+	$cps2=$row_dept5['cropname'];
+	$quer4=mysqli_query($link,"SELECT varietyid, popularname FROM tblvariety where varietyid='$vers2' and actstatus='Active'"); 
+	$row_dept4=mysqli_fetch_array($quer4);
+	$vts2=$row_dept4['popularname'];
+		
+	$tdate=$dovs2;
+	$tyear=substr($tdate,0,4);
+	$tmonth=substr($tdate,5,2);
+	$tday=substr($tdate,8,2);
+	$dov2=$tday."-".$tmonth."-".$tyear;
+	
+	$tdate=$dots2;
+	$tyear=substr($tdate,0,4);
+	$tmonth=substr($tdate,5,2);
+	$tday=substr($tdate,8,2);
+	$dot2=$tday."-".$tmonth."-".$tyear;
+	
+	
+?>
+<tr class="Dark" height="30">
+	<!--<td align="center"  valign="middle" class="smalltbltext"><?php echo $sno;?></td>-->
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $barcode;?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $cps2;?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $vts2?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $upss2?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $lot6?></td>
+	<!--<td align="center"  valign="middle" class="smalltbltext"><?php echo $nob;?></td>-->
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $qcss2;?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $dot2;?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $dov2;?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $nqty6;?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $grwts2;?></td>
+	<!--<td align="center"  valign="middle" class="smalltbltext"><?php echo $sloc;?></td>-->
+</tr>
+<?php
+$sno++;
+}
+while($ro6=mysqli_fetch_array($sq62))
+{
+	$lot6=$ro6['dpss_lotno']; 
+	$crps2=$ro6['dpss_crop']; 
+	$vers2=$ro6['dpss_variety']; 
+	$upss2=$ro6['dpss_ups']; 
+	$dovs2=$ro6['dpss_dov']; 
+	$qcss2=$ro6['dpss_qc']; 
+	$dots2=$ro6['dpss_dot']; 
+	$grwts2=$ro6['dpss_grosswt']; 
+	$nqty6=$ro6['dpss_qty'];
+	
+	$quer5=mysqli_query($link,"SELECT cropid, cropname FROM tblcrop where cropid='$crps2'"); 
+	$row_dept5=mysqli_fetch_array($quer5);
+	$cps2=$row_dept5['cropname'];
+	$quer4=mysqli_query($link,"SELECT varietyid, popularname FROM tblvariety where varietyid='$vers2' and actstatus='Active'"); 
+	$row_dept4=mysqli_fetch_array($quer4);
+	$vts2=$row_dept4['popularname'];
+		
+	$tdate=$dovs2;
+	$tyear=substr($tdate,0,4);
+	$tmonth=substr($tdate,5,2);
+	$tday=substr($tdate,8,2);
+	$dov2=$tday."-".$tmonth."-".$tyear;
+	
+	$tdate=$dots2;
+	$tyear=substr($tdate,0,4);
+	$tmonth=substr($tdate,5,2);
+	$tday=substr($tdate,8,2);
+	$dot2=$tday."-".$tmonth."-".$tyear;
+	
+	
+?>
+<tr class="Dark" height="30">
+	<!--<td align="center"  valign="middle" class="smalltbltext"><?php echo $sno;?></td>-->
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $barcodet;?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $cps2;?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $vts2?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $upss2?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $lot6?></td>
+	<!--<td align="center"  valign="middle" class="smalltbltext"><?php echo $nob;?></td>-->
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $qcss2;?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $dot2;?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $dov2;?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $nqty6;?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $grwts2;?></td>
+	<!--<td align="center"  valign="middle" class="smalltbltext"><?php echo $sloc;?></td>-->
+</tr>
+<?php
+$sno++;
+}
+}
+else
+{
+$sqlbarc1=mysqli_query($link,"Select * from tbl_mpmain where plantcode='".$plantcode."' and  mpmain_barcode='".$barcode."'") or die(mysqli_error($link));
+$totbarc1=mysqli_num_rows($sqlbarc1);
+$rowbarc1=mysqli_fetch_array($sqlbarc1);
+if($totbarc1>0)
+{
+	$sqlbarcode=mysqli_query($link,"Select bar_grosswt from tbl_barcodes where plantcode='".$plantcode."' and  bar_barcode='".$barcode."'") or die(mysqli_error($link));
+	$totbarcode=mysqli_num_rows($sqlbarcode);
+	$rowbarcode=mysqli_fetch_array($sqlbarcode);
+	$grwts2=$rowbarcode['bar_grosswt'];
+	
+	$lotno=$rowbarc1['mpmain_lotno'];
+	$vr1=$rowbarc1['mpmain_variety'];
+	$ui1=$rowbarc1['mpmain_upssize'];
+	$nqty6=$rowbarc1['mpmain_wtmp'];
+	
+	
+	$sql_lot2=mysqli_query($link,"Select max(lotdgp_id) from tbl_lot_ldg_pack where plantcode='".$plantcode."' and  lotno='$lotno' and packtype='$ui1' and lotldg_rvflg=0 and lotldg_dispflg!=1 order by lotdgp_id DESC") or die(mysqli_error($link));
+	$tot_lot2=mysqli_num_rows($sql_lot2);
+	$row_lot2=mysqli_fetch_array($sql_lot2);
+	
+	$sql_lot=mysqli_query($link,"Select * from tbl_lot_ldg_pack where plantcode='".$plantcode."' and  lotdgp_id='".$row_lot2[0]."' and lotldg_rvflg=0 and lotldg_dispflg!=1") or die(mysqli_error($link));
+	$tot_lot=mysqli_num_rows($sql_lot);
+	$row_lot=mysqli_fetch_array($sql_lot);
+	
+	$qcss2=$row_lot['lotldg_qc'];
+	$vers=$row_lot['lotldg_variety'];
+	$crps=$row_lot['lotldg_crop'];
+	
+	$quer5=mysqli_query($link,"SELECT cropid, cropname FROM tblcrop where cropid='$crps'"); 
+	$row_dept5=mysqli_fetch_array($quer5);
+	$cps2=$row_dept5['cropname'];
+	$quer4=mysqli_query($link,"SELECT varietyid, popularname FROM tblvariety where varietyid='$vers' and actstatus='Active'"); 
+	$row_dept4=mysqli_fetch_array($quer4);
+	$vts2=$row_dept4['popularname'];
+			
+	$tdate=$row_lot['lotldg_valupto'];
+	$tyear=substr($tdate,0,4);
+	$tmonth=substr($tdate,5,2);
+	$tday=substr($tdate,8,2);
+	$dov2=$tday."-".$tmonth."-".$tyear;
+	
+	$tdate=$row_lot['lotldg_qctestdate'];
+	$tyear=substr($tdate,0,4);
+	$tmonth=substr($tdate,5,2);
+	$tday=substr($tdate,8,2);
+	$dot2=$tday."-".$tmonth."-".$tyear;
+?>
+<tr class="Dark" height="30">
+	<!--<td align="center"  valign="middle" class="smalltbltext"><?php echo $sno;?></td>-->
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $barcode;?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $cps2;?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $vts2?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $ui1?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $lotno?></td>
+	<!--<td align="center"  valign="middle" class="smalltbltext"><?php echo $nob;?></td>-->
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $qcss2;?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $dot2;?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $dov2;?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $nqty6;?></td>
+	<td align="center"  valign="middle" class="smalltbltext"><?php echo $grwts2;?></td>
+	<!--<td align="center"  valign="middle" class="smalltbltext"><?php echo $sloc;?></td>-->
+</tr>
+<?php	
+}
+}
+
+if($brflg!=0)
+{
+	if($brflg==1)
+	$msgs="Barcode $barcode cannot be Dispatched. Reason: Barcode not present in System";
+	if($brflg==2)
+	$msgs="Barcode $barcode cannot be Dispatched. Reason: Barcode already Dispatched";
+	if($brflg==3)
+	$msgs="Barcode $barcode cannot be Dispatched. Reason: Barcode already Loaded in current OR other Operator's Transaction";
+	if($brflg==4)
+	$msgs="Barcode $barcode cannot be Dispatched. Reason: Variety not matching with Selected Line Item in Consolidated Pending Orders";
+	if($brflg==5)
+	$msgs="Barcode $barcode cannot be Dispatched. Reason: UPS not matching with Selected Line Item in Consolidated Pending Orders";
+	if($brflg==6)
+	$msgs="Barcode $barcode cannot be Dispatched. Reason: This Lot's current QC/GOT Status is FAIL";
+	if($brflg==7)
+	$msgs="Barcode $barcode cannot be Dispatched. Reason: This Lot's current QC/GOT Status is UT and Soft Release is not activated";
+	if($brflg==8)
+	$msgs="Barcode $barcode cannot be Dispatched. Reason: Date of Validity(DoV) of this Lot is Less than or Equal to 1 Month from todays Date";
+	if($brflg==9)
+	$msgs="Barcode $barcode cannot be Dispatched. Reason: This Barcode is already Unpackaged";
+	if($brflg==10)
+	$msgs="Barcode $barcode cannot be Dispatched. Reason: Lot is under Reserve Status";
+?>
+<tr class="Dark" height="30">
+	<td align="center"  valign="middle" class="tblheading" colspan="10"><font color="#FF0000"><?php echo $msgs;?></td>
+</tr>
+<?php
+}
+?>
+</table>
+<table align="center" border="0" width="950" cellspacing="0" cellpadding="0" bordercolor="#378b8b" style="border-collapse:collapse" > 
+<tr class="light">
+  <td align="center" class="tblheading"><font size="+4" color="<?php if($to6==0){ echo '#FF0000'; } else { if($bchnflg%2==0) echo '#0000FF'; else echo '#009900';}?>"><?php echo $barcode;?> - <?php echo $barcodet;?></font></td>
+</tr>
+</table>
+<input type="hidden" name="maintrid" value="<?php echo $tid;?>" /><input type="hidden" name="subtrid" value="<?php echo $sid;?>" /><input type="hidden" name="subsubtrid" value="<?php echo $subsubtid;?>" />
+<table align="center" width="950" cellpadding="2" cellspacing="2" border="0" >
+<tr >
+<td valign="top" align="right"><img src="../images/next.gif" border="0"style="display:inline;cursor:Pointer;" onClick="bform();" />&nbsp;&nbsp;</td>
+</tr>
+</table>
+
+<table align="center" border="1" width="950" cellspacing="0" cellpadding="0" bordercolor="#378b8b" style="border-collapse:collapse" > 
+<tr class="tblsubtitle" height="25">
+<td align="center"  valign="middle" class="tblheading" colspan="6">Enter Barcode for Loading</td></tr>
+<tr class="Dark" height="25">
+<td width="230"  align="right"  valign="middle" class="smalltblheading">Scan/Add Barcode Range &raquo;&nbsp;From&nbsp;</td>
+<td width="107" align="left"  valign="middle" class="smalltbltext">&nbsp;<input type="text" name="barcode" id="txtbarcod" size="11" maxlength="11" class="smalltbltext"  onkeypress="return isNumberKey24(event)" onChange="chkbarcode1(this.value)" value="" /></td>
+<td width="67"  align="right"  valign="middle" class="smalltblheading">To&nbsp;</td>
+<td width="536" align="left"  valign="middle" class="smalltbltext">&nbsp;<input type="text" name="barcodet" id="txtbarcodt" size="11" maxlength="11" class="smalltbltext"  onkeypress="return isNumberKey24(event)" onChange="chkbarcode2(this.value)" value="" /></td>
+</tr>
+</table><br />
+<div id="barchk"><input type="hidden" name="brflg" value="" /><input type="hidden" name="brchflg" value="0" /></div>
+<br />
+<table align="center" border="1" width="950" cellspacing="0" cellpadding="0" bordercolor="#378b8b" style="border-collapse:collapse" > 
+<tr class="tblsubtitle" height="25">
+<td align="center"  valign="middle" class="tblheading" colspan="4">Delete Barcode during In-Progress Loading (Unloading) </tr>
+
+<tr class="Dark" height="25">
+<td width="230"  align="right"  valign="middle" class="tblheading">Delete Barcode&nbsp;</td>
+<td width="714" colspan="3" align="left"  valign="middle" class="smalltbltext">&nbsp;<input type="text" name="delbarcode" id="txtdelbarcod" size="11" maxlength="11" class="smalltbltext"  onkeypress="return isNumberKey24(event)" onChange="chkbarcode(this.value)" tabindex="1" />&nbsp;<font color="#FF0000">*  Deleted Barcode will be stored back to its original SLOC Bin</font></td></tr>
+
+</table><br />
+</div>

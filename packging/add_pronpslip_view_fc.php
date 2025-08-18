@@ -1,0 +1,463 @@
+<?php
+	session_start();
+	if(!isset($_SESSION['sessionadmin']))
+	{
+		echo '<script language="JavaScript" type="text/JavaScript">';
+		echo "window.location='../login.php' ";
+		echo '</script>';
+	}
+	else
+	{
+		$year1=$_SESSION['ayear1'];
+		$year2=$_SESSION['ayear2'];
+		$username= $_SESSION['username'];
+		$yearid_id=$_SESSION['yearid_id'];
+		$role=$_SESSION['role'];
+		$loginid=$_SESSION['loginid'];
+		$logid=$_SESSION['logid'];
+		$lgnid=$_SESSION['logid'];
+	$plantcode=$_SESSION['plantcode'];
+	$plantcode1=$_SESSION['plantcode1'];
+	$plantcode2=$_SESSION['plantcode2'];
+	$plantcode3=$_SESSION['plantcode3'];
+	$plantcode4=$_SESSION['plantcode4'];
+	}
+	
+	require_once("../include/config.php");
+	require_once("../include/connection.php");
+
+	if(isset($_REQUEST['p_id']))
+	{
+    	$pid = $_REQUEST['p_id'];
+	}
+	if(isset($_POST['frm_action'])=='submit')
+	{
+		echo "<script>window.location='home_pronpslip.php'</script>";	
+	}
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<script type="text/javascript" src="../include/animatedcollapse.js"></script>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Packaging -Transaction - Online Processing and Packing Slip- View</title>
+<link href="../include/main_pack.css" rel="stylesheet" type="text/css" />
+<link href="../include/vnrtrac_pack.css" rel="stylesheet" type="text/css" />
+
+</head>
+<script src="trading.js"></script>
+<script type="text/javascript">
+//SuckerTree Horizontal Menu (Sept 14th, 06)
+//By Dynamic Drive: http://www.dynamicdrive.com/style/
+var menuids=["nav"] //Enter id(s) of SuckerTree UL menus, separated by commas
+function buildsubmenus_horizontal(){
+for (var i=0; i<menuids.length; i++){
+  var ultags=document.getElementById(menuids[i]).getElementsByTagName("ul")
+    for (var t=0; t<ultags.length; t++){
+		if (ultags[t].parentNode.parentNode.id==menuids[i]){ //if this is a first level submenu
+			ultags[t].style.top=ultags[t].parentNode.offsetHeight+"px" //dynamically position first level submenus to be height of main menu item
+			ultags[t].parentNode.getElementsByTagName("a")[0].className="mainfoldericon"
+		}
+		else{ //else if this is a sub level menu (ul)
+		  ultags[t].style.left=ultags[t-1].getElementsByTagName("a")[0].offsetWidth+"px" //position menu to the right of menu item that activated it
+    	ultags[t].parentNode.getElementsByTagName("a")[0].className="subfoldericon"
+		}
+    ultags[t].parentNode.onmouseover=function(){
+    this.getElementsByTagName("ul")[0].style.visibility="visible"
+    }
+    ultags[t].parentNode.onmouseout=function(){
+  this.getElementsByTagName("ul")[0].style.visibility="hidden"
+    }
+    }
+  }
+}
+
+if (window.addEventListener)
+window.addEventListener("load", buildsubmenus_horizontal, false)
+else if (window.attachEvent)
+window.attachEvent("onload", buildsubmenus_horizontal)
+
+</script>
+<script language="javascript" type="text/javascript">
+
+
+function formPost(top_element){
+	var inputs=top_element.getElementsByTagName('*');
+	var qstring=new Array();
+	for(var i=0;i<inputs.length;i++){
+		if(!inputs[i].disabled&&inputs[i].getAttribute('name')!=""&&inputs[i].getAttribute('name')){
+			qs_str=inputs[i].getAttribute('name')+"="+encodeURIComponent(inputs[i].value);
+			switch(inputs[i].tagName.toLowerCase()){
+				case "select":
+					if(inputs[i].getAttribute("multiple")){
+						var len2=inputs[i].length;
+						for(var j=0;j<len2;j++){
+							if(inputs[i].options[j].selected){
+								var targ=(inputs[i].options[j].value) ? inputs[i].options[j].value : inputs[i].options[j].text;
+								qstring[qstring.length]=inputs[i].getAttribute('name')+"="+encodeURIComponent(targ);
+							}
+						}
+					}
+					else{
+						var len2=inputs[i].length;
+						for(var j=0;j<len2;j++){
+							if(inputs[i].options[j].selected){
+								var targ=(inputs[i].options[j].value) ? inputs[i].options[j].value : inputs[i].options[j].text;
+								qstring[qstring.length]=inputs[i].getAttribute('name')+"="+encodeURIComponent(targ);
+							}
+						}
+						//var targ=(inputs[i].options[inputs[i].selectedIndex].value) ? inputs[i].options[inputs[i].selectedIndex].value : inputs[i].options[inputs[i].selectedIndex].text
+						//qstring[qstring.length]=inputs[i].getAttribute('name')+"="+encodeURIComponent(targ);
+					}
+				break;
+				case "textarea":
+					qstring[qstring.length]=qs_str;
+				break;
+				case "input":
+					switch(inputs[i].getAttribute("type").toLowerCase()){
+						case "radio":
+							if(inputs[i].checked){
+								qstring[qstring.length]=qs_str;
+							}
+						break;
+						case "checkbox":
+							if(inputs[i].value!=""){
+								if(inputs[i].checked){
+									qstring[qstring.length]=qs_str;
+								}
+							}
+							else{
+								var stat=(inputs[i].checked) ? "true" : "false"
+								qstring[qstring.length]=inputs[i].getAttribute('name')+"="+stat;
+							}
+						break;
+						case "text":
+							qstring[qstring.length]=qs_str;
+						break;
+						case "password":
+							qstring[qstring.length]=qs_str;
+						break;
+						case "hidden":
+							qstring[qstring.length]=qs_str;
+						break;
+					}
+				break;
+			}
+		}
+	}
+	return qstring.join("&");
+}
+
+
+function openslocpopprint()
+{
+//alert(txtcrop);
+if(document.frmaddDepartment.txtitem.value!="")
+{
+var itm=document.frmaddDepartment.txtitem.value;
+winHandle=window.open('pronpslip_print.php?itmid='+itm,'WelCome','top=170,left=180,width=820,height=350,scrollbars=yes');
+if(winHandle==null){
+alert("While Launching New Window...\nYour browser maybe blocking up Popup windows. \n\n  Please check your Popup Blocker Settings or ..\n Please hold Ctrl Key and Click on link to open new Browser"); }
+}
+else
+{
+alert("Please Select Crop first.");
+document.frmaddDepartment.txtcrop.focus();
+}
+}
+function openpackdetails(subtid,tid)
+{
+winHandle=window.open('packdetails_pnpslip_trn.php?subid='+subtid+'&itmid='+tid,'WelCome','top=170,left=180,width=820,height=450,scrollbars=yes');
+if(winHandle==null){
+alert("While Launching New Window...\nYour browser maybe blocking up Popup windows. \n\n  Please check your Popup Blocker Settings or ..\n Please hold Ctrl Key and Click on link to open new Browser"); }
+
+}
+function mySubmit()
+{ 
+		if(confirm('Have You completed the Transaction?\nDo You wish to Final Submit it?')==true)
+	{
+	return true;	 
+	}
+	else
+	{
+	return false;
+	} 
+}
+</script>
+
+<body>
+<table width="1003" height="600" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
+
+    <td valign="top"><table width="1003" height="72" border="0" cellspacing="0" cellpadding="0" align="center">
+        <tr>
+         <tr>
+           <td valign="top"><?php require_once("../include/arr_pack.php");?></td>
+         </tr>
+        </tr>
+      </table>
+      <table width="100%" style=" z-index:-1;" height="auto" align="center" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="100%" valign="top" align="center"><img src="../images/arr_curvetop.gif" /></td>
+        </tr>
+        <tr>
+          <td width="100%" valign="top" height="auto" align="center"  class="midbgline">
+		  <!-- actual page start--->	
+  
+ <table  width="974" border="0" cellpadding="0" cellspacing="0" bordercolor="#1dbe03" >
+  <tr><td>
+   <table  width="974" border="0" cellpadding="0" cellspacing="0" bordercolor="#1dbe03" >
+	   <tr style="padding:0px 0px 0px 0px" >
+	  <td width="32" height="25"><img src="../images/rupee1.jpg" align="right" width="30" height="30" />&nbsp;</td>
+	  <td width="940" class="Mainheading" height="25">
+	  <table width="940" border="0" cellpadding="0" cellspacing="0" bordercolor="#F1B01E" style="border-bottom:solid; border-bottom-color:#1dbe03" >
+	    <tr >
+	      <td width="813" height="25" class="Mainheading">&nbsp;Transaction - Processing and Packing slip FC - View </td>
+	    </tr></table></td>
+	           
+	  </tr>
+	  </table></td></tr>
+   <?php
+   $tid=$pid;
+$sql_tbl=mysqli_query($link,"select * from tbl_pnpslipmain where plantcode='$plantcode' and pnpslipmain_id='".$tid."'") or die(mysqli_error($link));
+$row_tbl=mysqli_fetch_array($sql_tbl);
+
+$tot=mysqli_num_rows($sql_tbl);		
+$arrival_id=$row_tbl['pnpslipmain_id'];
+
+$tdate=$row_tbl['pnpslipmain_date'];
+	$tyear=substr($tdate,0,4);
+	$tmonth=substr($tdate,5,2);
+	$tday=substr($tdate,8,2);
+	$tdate=$tday."-".$tmonth."-".$tyear;
+
+	$tdate2=$row_tbl['pnpslipmain_doindent'];
+	$tyear2=substr($tdate2,0,4);
+	$tmonth2=substr($tdate2,5,2);
+	$tday2=substr($tdate2,8,2);
+	$tdate2=$tday2."-".$tmonth2."-".$tyear2;
+?>
+ 	  
+	  <td align="center" colspan="4" >
+	  
+<form name="frmaddDepartment" method="post" action="<?php $_SERVER['PHP_SELF']; ?>"   > 
+	 <input name="frm_action" value="submit" type="hidden"> 
+	 	<input type="hidden" name="logid" value="<?php echo $logid?>" />
+		<input type="Hidden" name="txtitem" value="<?php echo $pid?>" />
+		<input type="hidden" name="remarks" value="<?php echo $remarks?>" />
+		</br>
+<table border="0" cellspacing="0" cellpadding="0" align="center" width="970"  style="border-collapse:collapse">
+<tr height="7"><td height="7"></td></tr>
+<tr>
+<td width="30">	 </td><td>
+<table align="center" border="1" width="970" cellspacing="0" cellpadding="0" bordercolor="#1dbe03" style="border-collapse:collapse" > 
+<tr class="tblsubtitle" height="20">
+  <td colspan="8" align="center" class="tblheading">Processing Slip and Packing View FC</td>
+</tr>
+ <tr class="Light" height="30">
+<td width="319" align="right" valign="middle" class="smalltblheading">&nbsp;Transaction ID &nbsp;</td>
+<td width="319"  align="left" valign="middle" class="smalltbltext">&nbsp;<?php echo "PS".$row_tbl['pnpslipmain_tcode']."/".$yearid_id."/".$lgnid;?></td>
+
+<td width="157" align="right" valign="middle" class="smalltblheading">&nbsp;Date&nbsp;</td>
+<td width="165" align="left" valign="middle" class="smalltbltext">&nbsp;<input name="date" type="text" size="10" class="smalltbltext" tabindex="0" readonly="true"  style="background-color:#CCCCCC" value="<?php echo $tdate;?>" maxlength="10"/>&nbsp;</td>
+</tr>
+ <tr class="Light" height="30">
+<td width="319" align="right" valign="middle" class="smalltblheading">&nbsp;Date of Indent&nbsp;</td>
+<td width="319" align="left" valign="middle" class="smalltbltext">&nbsp;<input name="dopc" id="dopc" type="text" size="10" class="smalltbltext" tabindex="0" value="<?php echo $tdate2;?>" maxlength="10" readonly="true"  style="background-color:#CCCCCC"/>&nbsp;<font color="#FF0000">*</font></td>
+
+<td width="157" align="right"  valign="middle" class="smalltblheading">Indent No.&nbsp;</td>
+    <td width="165" align="left"  valign="middle" class="smalltbltext">&nbsp;<input name="txtpsrno" type="text" size="15" class="smalltbltext" tabindex="" value="<?php echo $row_tbl['pnpslipmain_indentsrn'];?>" maxlength="15" readonly="true"  style="background-color:#CCCCCC"/>&nbsp;<font color="#FF0000">*</font>&nbsp;</td>
+</tr></table>
+<table align="center" border="1" width="970" cellspacing="0" cellpadding="0" bordercolor="#1dbe03" style="border-collapse:collapse" > 
+<tr class="Light" height="30">
+ <?php
+$quer3=mysqli_query($link,"SELECT cropid, cropname FROM tblcrop where cropid='".$row_tbl['pnpslipmain_crop']."' order by cropname Asc");
+$noticia = mysqli_fetch_array($quer3);
+?>
+
+<td width="152" align="right"  valign="middle" class="smalltblheading">Crop&nbsp;</td>
+<td width="166" align="left"  valign="middle" class="smalltbltext" >&nbsp;<?php echo $noticia['cropname'];?></td>
+			   <?php
+$quer4=mysqli_query($link,"SELECT varietyid, popularname FROM tblvariety where varietyid='".$row_tbl['pnpslipmain_variety']."' and actstatus='Active' order by popularname Asc"); 
+$noticia_item = mysqli_fetch_array($quer4);
+?>
+	<td width="107" align="right"  valign="middle" class="smalltblheading" >Variety&nbsp;</td>
+    <td width="209" align="left"  valign="middle" class="smalltbltext" id="vitem">&nbsp;<?php echo $noticia_item['popularname'];?></td>
+	
+	<td width="157" align="right"  valign="middle" class="smalltblheading" >Seed Stage&nbsp;</td>
+    <td width="165" align="left"  valign="middle" class="smalltbltext" id="vitem">&nbsp;<?php echo $row_tbl['pnpslipmain_stage'];?></td>
+	
+  </tr>
+    <?php
+$sql_sel1="select * from tbl_rm_promac where promac_id='".$row_tbl['pnpslipmain_promachcode']."' order by promac_type";
+$res1=mysqli_query($link,$sql_sel1) or die (mysqli_error($link));
+$total1=mysqli_num_rows($res1);
+$noticia_item1 = mysqli_fetch_array($res1);  $num=$noticia_item1['promac_mac'].$noticia_item1['promac_macid'];
+
+$query_popr=mysqli_query($link,"SELECT * FROM tbl_rm_proopr where plantcode='$plantcode' and proopr_id='".$row_tbl['pnpslipmain_proopr']."'") or die("Error: " . mysqli_error($link));
+$numofrecords=mysqli_num_rows($query_popr);
+$row_popr=mysqli_fetch_array($query_popr);
+?> 
+<tr class="Dark" height="30">
+<td align="right"  valign="middle" class="smalltblheading">Proc. Mach. Code&nbsp;</td>
+    <td align="left"  valign="middle" class="smalltbltext" >&nbsp;<?php echo $num?></td>
+	<td align="right"  valign="middle" class="smalltblheading">Operator&nbsp;Name&nbsp;</td>
+    <td align="left"  valign="middle" class="smalltbltext" >&nbsp;<?php echo $row_popr['proopr_fname']?> <?php echo $row_popr['proopr_lname']?></td>
+	<td align="right"  valign="middle" class="smalltblheading">Treatment Schema&nbsp;</td>
+    <td align="left"  valign="middle" class="smalltbltext" >&nbsp;<?php echo $row_tbl['pnpslipmain_treattype']?></td>
+	</tr>
+
+</table>
+<?php
+$arrival_id;
+$sql_tbl_sub=mysqli_query($link,"select * from tbl_pnpslipsub where plantcode='$plantcode' and pnpslipmain_id='".$arrival_id."'") or die(mysqli_error($link));
+$subtbltot=mysqli_num_rows($sql_tbl_sub);
+$subtid=0;
+?>
+<table align="center" border="1" cellspacing="0" cellpadding="0" width="970" bordercolor="#1dbe03" style="border-collapse:collapse">
+<tr class="tblsubtitle" height="20">
+	<td width="1%"align="center" valign="middle" class="smalltblheading">#</td>
+	<td width="12%" align="center" valign="middle" class="smalltblheading">Lot No.</td>
+	<td width="4%" align="center" valign="middle" class="smalltblheading">NoB</td>
+	<td width="5%" align="center" valign="middle" class="smalltblheading">Qty</td>
+	<td width="5%" align="center" valign="middle" class="smalltblheading">Pack E/P</td>
+	<td width="8%" align="center" valign="middle" class="smalltblheading">Qty for Packing</td>
+	<td width="7%" align="center" valign="middle" class="smalltblheading">UPS</td>
+	<td width="7%" align="center" valign="middle" class="smalltblheading">Total Pouches</td>
+	<td width="7%" align="center" valign="middle" class="smalltblheading">Max NoMP</td>
+	<td width="5%" align="center" valign="middle" class="smalltblheading">MPWT</td>
+	<td width="8%" align="center" valign="middle" class="smalltblheading">Remarks</td>
+</tr>
+  <?php
+$srno=1;  $slcnt=0;
+ $total_tbl=mysqli_num_rows($sql_tbl);
+if($total_tbl > 0)
+{
+while($row_tbl_sub=mysqli_fetch_array($sql_tbl_sub))
+{
+$difq="";$difq1="";
+$sloc=""; $sloc1=""; $cnt++; 
+$tot_barcnomp=0;
+
+$pnplotno=$row_tbl_sub['pnpslipsub_plotno'];
+$pnpnob=$row_tbl_sub['pnpslipsub_availpnob'];
+$pnpqty=$row_tbl_sub['pnpslipsub_availpqty'];
+$pnpprocesstype=$row_tbl_sub['pnpslipsub_packtype'];
+$pickpqty=$row_tbl_sub['pnpslipsub_pickpqty'];
+
+$pnpnomp=$row_tbl_sub['pnpslipsub_nomp'];
+$pnpwtmp=$row_tbl_sub['pnpslipsub_wtmp'];
+$pnpups=$row_tbl_sub['pnpslipsub_ups'];
+$pnppackloss=$row_tbl_sub['pnpslipsub_packloss'];
+$pnpcc=$row_tbl_sub['pnpslipsub_packcc'];
+
+$sql_ups=mysqli_query($link,"select * from tblups where CONCAT(ups,' ',wt)='".$pnpups."'") or die(mysqli_error($link));
+$row_ups=mysqli_fetch_array($sql_ups);
+$pnpuom=$row_ups['uom'];
+
+
+$diq=explode(".",$pnpconqty);
+if($diq[1]==000){$difq=$diq[0];}else{$difq=$pnpconqty;}
+$pnpconqty=$difq;
+$diq=explode(".",$pnprm);
+if($diq[1]==000){$difq=$diq[0];}else{$difq=$pnprm;}
+$pnprm=$difq;
+$diq=explode(".",$pnpim);
+if($diq[1]==000){$difq=$diq[0];}else{$difq=$pnpim;}
+$pnpim=$difq;
+$diq=explode(".",$pnppl);
+if($diq[1]==000){$difq=$diq[0];}else{$difq=$pnppl;}
+$pnppl=$difq;
+$diq=explode(".",$pnptlqty);
+if($diq[1]==000){$difq=$diq[0];}else{$difq=$pnptlqty;}
+$pnptlqty=$difq;
+$diq=explode(".",$pnppackloss);
+if($diq[1]==000){$difq=$diq[0];}else{$difq=$pnppackloss;}
+$pnppackloss=$difq;
+$diq=explode(".",$pnpcc);
+if($diq[1]==000){$difq=$diq[0];}else{$difq=$pnpcc;}
+$pnpcc=$difq;
+
+$balpch=0;
+$totpch=floor($pickpqty*$pnpuom);
+
+$pnppackqty=$pnpconqty-($pnppackloss+$pnpcc);
+
+$ltnomp=$pnppackqty/$pnpwtmp;
+$ltnomp=intval($ltnomp);
+$totnompqty=$ltnomp*$pnpwtmp;
+$toblqty=$pnppackqty-$totnompqty;
+$balpch=$toblqty*$pnpuom;
+
+if($srno%2!=0)
+{
+?>
+<tr class="Light" height="20">
+	<td width="18" align="center" valign="middle" class="smalltbltext"><?php echo $srno;?></td>
+	<td align="center"  valign="middle" class="smalltbltext" ><?php echo $pnplotno;?><input type="hidden" name="pnplotno" id="pnplotno_<?php echo $srno;?>" value="<?php echo $pnplotno;?>" /></td>
+	<td align="center"  valign="middle" class="smalltbltext" ><?php echo $pnpnob;?></td>
+	<td align="center"  valign="middle" class="smalltbltext" ><?php echo $pnpqty;?></td>
+	<td align="center"  valign="middle" class="smalltbltext" ><?php echo $pnpprocesstype;?></td>
+	<td width="47" align="center" valign="middle" class="smalltbltext"><?php echo $pickpqty;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $pnpups;?></td>
+	<td width="37" align="center" valign="middle" class="smalltbltext"><?php echo $totpch;?></td>
+	<td width="37" align="center" valign="middle" class="smalltbltext"><?php echo $pnpnomp;?></td>
+	<td width="37" align="center" valign="middle" class="smalltbltext"><?php echo $pnpwtmp;?></td>
+	<td width="54" align="center" valign="middle" class="smalltbltext"><?php if($row_tbl_sub['pnpslipsub_packremarks']!=""){ ?><a href="Javascript:void(0)" title="<?php echo $row_tbl_sub['pnpslipsub_packremarks'];?>" onmouseover="<?php echo $row_tbl_sub['pnpslipsub_packremarks'];?>">Details</a><?php } ?></td>
+</tr>
+  <?php
+}
+else
+{
+?>
+<tr class="Light" height="20">
+	<td width="18" align="center" valign="middle" class="smalltbltext"><?php echo $srno;?></td>
+	<td align="center"  valign="middle" class="smalltbltext" ><?php echo $pnplotno;?><input type="hidden" name="pnplotno" id="pnplotno_<?php echo $srno;?>" value="<?php echo $pnplotno;?>" /></td>
+	<td align="center"  valign="middle" class="smalltbltext" ><?php echo $pnpnob;?></td>
+	<td align="center"  valign="middle" class="smalltbltext" ><?php echo $pnpqty;?></td>
+	<td align="center"  valign="middle" class="smalltbltext" ><?php echo $pnpprocesstype;?></td>
+	<td width="47" align="center" valign="middle" class="smalltbltext"><?php echo $pickpqty;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $pnpups;?></td>
+	<td width="37" align="center" valign="middle" class="smalltbltext"><?php echo $totpch;?></td>
+	<td width="37" align="center" valign="middle" class="smalltbltext"><?php echo $pnpnomp;?></td>
+	<td width="37" align="center" valign="middle" class="smalltbltext"><?php echo $pnpwtmp;?></td>
+	<td width="54" align="center" valign="middle" class="smalltbltext"><?php if($row_tbl_sub['pnpslipsub_packremarks']!=""){ ?><a href="Javascript:void(0)" title="<?php echo $row_tbl_sub['pnpslipsub_packremarks'];?>" onmouseover="<?php echo $row_tbl_sub['pnpslipsub_packremarks'];?>">Details</a><?php } ?></td>
+</tr>
+ <?php
+}
+$srno++;
+}
+}
+?>
+</table>
+<table align="center" width="970" cellpadding="5" cellspacing="5" border="0" >
+<tr >
+<td valign="top" align="right"><a href="home_pronpslip_fc.php"><img src="../images/back.gif" border="0"style="display:inline;cursor:Pointer;" /></a></td>
+</tr>
+</table>
+</td><td width="30"></td>
+</tr>
+<tr><td colspan="4">&nbsp;</td></tr>
+</table>
+</form> 
+	  
+	  
+	  </td>
+	  </tr>
+	  </table>
+<!-- actual page end--->			  
+		  </td>
+        </tr>
+        <tr>
+          <td width="989" valign="top" align="center"  class="border_bottom">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="989" valign="top" align="left" ><div class="footer" ><img src="../images/istratlogo.gif"  align="left"/><img src="../images/vnrlogo.gif"  align="right"/></div></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>
+</body>
+</html>
+
+  

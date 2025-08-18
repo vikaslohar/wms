@@ -1,0 +1,64 @@
+<?php
+session_start();
+	if(!isset($_SESSION['sessionadmin']))
+	{
+	echo '<script language="JavaScript" type="text/JavaScript">';
+	echo "window.location='../login.php' ";
+	echo '</script>';
+	}
+	else
+	{
+	$year1=$_SESSION['ayear1'];
+	$year2=$_SESSION['ayear2'];
+	$username= $_SESSION['username'];
+	$yearid_id=$_SESSION['yearid_id'];
+	$role=$_SESSION['role'];
+    $loginid=$_SESSION['loginid'];
+    $logid=$_SESSION['logid'];
+	$lgnid=$_SESSION['logid'];
+	$plantcode=$_SESSION['plantcode'];
+	$plantcode1=$_SESSION['plantcode1'];
+	$plantcode2=$_SESSION['plantcode2'];
+	$plantcode3=$_SESSION['plantcode3'];
+	$plantcode4=$_SESSION['plantcode4'];
+	}require_once("../include/config.php");
+	require_once("../include/connection.php");
+
+if(isset($_GET['a']))
+	{
+	  $a = $_GET['a'];	 
+	}
+	/*if($a=="CandF")
+		{
+		 $a="C&F";
+		}*/
+/*if(isset($_GET['b']))
+	{
+	$b = $_GET['b'];	 
+	}
+*/
+
+	//if($a==1)
+	//{
+	//$a=13;
+	//}
+//$flag=0; 
+//echo $b;
+//$quer3=mysqli_query($link,"SELECT p_id, business_name FROM tbl_partymaser  where classification='Branch' or classification='C&F'"); 
+//$sql_month=mysqli_query($link,"select p_id, business_name FROM tbl_partymaser  where where classification='".$a."' order by orderm_party")or die(mysqli_error($link));
+
+//$row_month=mysqli_fetch_array($sql_month);
+ 
+ //$tt=mysqli_num_rows($sql_month);
+
+//$tt=mysqli_num_rows($sql_month);
+?>&nbsp;<select class="tbltext" id="itm1" name="txtstfp" style="width:220px;"  >
+<option value="ALL" selected="selected">--ALL--</option>
+	<?php //while($row_month = mysqli_fetch_array($sql_month)) { $cc=$row_month['orderm_party'];
+	$sql_month1=mysqli_query($link,"select  * from tbl_partymaser where p_id='".$a."'  order by business_name")or die(mysqli_error($link));
+	while($noticia = mysqli_fetch_array($sql_month1)) {?>
+		<option value="<?php echo $noticia['p_id'];?>" />   
+		<?php echo $noticia['business_name'];?>
+		<?php } ?>
+	</select>&nbsp;&nbsp;<font color="#FF0000">*</font>&nbsp;
+

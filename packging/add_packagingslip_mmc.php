@@ -1,0 +1,3896 @@
+<?php
+	session_start();
+	if(!isset($_SESSION['sessionadmin']))
+	{
+		echo '<script language="JavaScript" type="text/JavaScript">';
+		echo "window.location='../login.php' ";
+		echo '</script>';
+	}
+	else
+	{
+		$year1=$_SESSION['ayear1'];
+		$year2=$_SESSION['ayear2'];
+		$username= $_SESSION['username'];
+		$yearid_id=$_SESSION['yearid_id'];
+		$role=$_SESSION['role'];
+		$loginid=$_SESSION['loginid'];
+		$logid=$_SESSION['logid'];
+		$lgnid=$_SESSION['logid'];
+	$plantcode=$_SESSION['plantcode'];
+	$plantcode1=$_SESSION['plantcode1'];
+	$plantcode2=$_SESSION['plantcode2'];
+	$plantcode3=$_SESSION['plantcode3'];
+	$plantcode4=$_SESSION['plantcode4'];
+	}
+	
+	require_once("../include/config.php");
+	require_once("../include/connection.php");
+	
+	if(isset($_POST['frm_action'])=='submit')
+	{
+		exit;
+		$txtid=trim($_POST['txtid']);
+		$plantcodes=trim($_POST['plantcodes']);
+		$yearcodes=trim($_POST['yearcodes']);
+		$cdate=trim($_POST['cdate']);
+		$date=trim($_POST['date']);
+		$dopc=trim($_POST['dopc']);
+		$txtpsrn=trim($_POST['txtpsrn']);
+		$txtcrop=trim($_POST['txtcrop']);
+		$txtvariety=trim($_POST['txtvariety']);
+		$txtups=trim($_POST['txtups']);
+		$barcode=trim($_POST['barcode']);
+		$bardupchk=trim($_POST['bardupchk']);
+		$weight=trim($_POST['weight']);
+		$txtstage=trim($_POST['txtstage']);
+		$txtlot2=trim($_POST['txtlot2']);
+		$txtlot1=trim($_POST['txtlot1']);
+		$maintrid=trim($_POST['maintrid']);
+		$subtrid=trim($_POST['subtrid']);
+		$lotno_1=trim($_POST['lotno_1']);
+		$softstatus=trim($_POST['softstatus']);
+		$upssize=trim($_POST['upssize']);
+		$wtnopkg_1=trim($_POST['wtnopkg_1']);
+		$upsname_1=trim($_POST['upsname_1']);
+		$txtonob=trim($_POST['txtonob']);
+		$txtoqty=trim($_POST['txtoqty']);
+		$nomp_1=trim($_POST['nomp_1']);
+		$wtmp_1=trim($_POST['wtmp_1']);
+		$wtnop_1=trim($_POST['wtnop_1']);
+		$noofpacks_1=trim($_POST['noofpacks_1']);
+		$nowb_1=trim($_POST['nowb_1']);
+		$exwh1_1=trim($_POST['exwh1_1']);
+		$exbin1_1=trim($_POST['exbin1_1']);
+		$exsubbin1_1=trim($_POST['exsubbin1_1']);
+		$extnomphs1_1=trim($_POST['extnomphs1_1']);
+		$extnophs1_1=trim($_POST['extnophs1_1']);
+		$nophs1_1=trim($_POST['nophs1_1']);
+		$balnophs1_1=trim($_POST['balnophs1_1']);
+		$sno33_1=trim($_POST['sno33_1']);
+		$lotno_2=trim($_POST['lotno_2']);
+		$softstatus=trim($_POST['softstatus']);
+		$upssize=trim($_POST['upssize']);
+		$wtnopkg_2=trim($_POST['wtnopkg_2']);
+		$upsname_2=trim($_POST['upsname_2']);
+		$txtonob=trim($_POST['txtonob']);
+		$txtoqty=trim($_POST['txtoqty']);
+		$nomp_2=trim($_POST['nomp_2']);
+		$wtmp_2=trim($_POST['wtmp_2']);
+		$wtnop_2=trim($_POST['wtnop_2']);
+		$noofpacks_2=trim($_POST['noofpacks_2']);
+		$nowb_2=trim($_POST['nowb_2']);
+		$exwh2_1=trim($_POST['exwh2_1']);
+		$exbin2_1=trim($_POST['exbin2_1']);
+		$exsubbin2_1=trim($_POST['exsubbin2_1']);
+		$extnomphs2_1=trim($_POST['extnomphs2_1']);
+		$extnophs2_1=trim($_POST['extnophs2_1']);
+		$nophs2_1=trim($_POST['nophs2_1']);
+		$balnophs2_1=trim($_POST['balnophs2_1']);
+		$sno33_2=trim($_POST['sno33_2']);
+		$sno=trim($_POST['sno']);
+		$detmpbno=trim($_POST['detmpbno']);
+		$upsidno=trim($_POST['upsidno']);
+		$nopks=trim($_POST['nopks']);
+		$extwh=trim($_POST['extwh']);
+		$extbin=trim($_POST['extbin']);
+		$extsubbin=trim($_POST['extsubbin']);
+		$sno3=trim($_POST['sno3']);
+		$tsno=trim($_POST['tsno']);
+		$txtwhg1=trim($_POST['txtwhg1']);
+		$txtbing1=trim($_POST['txtbing1']);
+		$txtsubbg1=trim($_POST['txtsubbg1']);
+		$existview1=trim($_POST['existview1']);
+		$trflg1=trim($_POST['trflg1']);
+		$tpflg1=trim($_POST['tpflg1']);
+		$tflg1=trim($_POST['tflg1']);
+		$tpmflg1=trim($_POST['tpmflg1']);
+		$nopmpcs_1=trim($_POST['nopmpcs_1']);
+		$noppchs_1=trim($_POST['noppchs_1']);
+		$noptpchs_1=trim($_POST['noptpchs_1']);
+		$noptqtys_1=trim($_POST['noptqtys_1']);
+		$txtremarks=trim($_POST['txtremarks']);
+	
+		$ttype="MMC";
+		
+		$zz=str_split($txtlot1);
+		$orlot=$zz[0].$zz[1].$zz[2].$zz[3].$zz[4].$zz[5].$zz[6].$zz[7].$zz[8].$zz[9].$zz[10].$zz[11].$zz[12].$zz[13].$zz[14].$zz[15];
+		
+		$tdate11=explode("-",$date);
+		$tdate1=$tdate11[2]."-".$tdate11[1]."-".$tdate11[0];
+			
+		$tdate12=explode("-",$dopc);
+		$tdate2=$tdate12[2]."-".$tdate12[1]."-".$tdate12[0];
+		
+   		$sql_main="insert into tbl_packaging (packaging_type, packaging_tdate, packaging_code,  packaging_date, packaging_slipno, packaging_remarks, packaging_yearid, packaging_logid, plantcode) values ('$ttype', '$tdate1', '$txtid', '$tdate2', '$txtpsrn', '$txtremarks', '$yearid_id', '$logid', '$plantcode')";
+		if(mysqli_query($link,$sql_main) or die(mysqli_error($link)))
+		{
+			$mainid=mysqli_insert_id($link);
+			
+			$sql_sub="insert into tbl_packaging_sub (packaging_id, packagingsub_crop, packagingsub_variety, plantcode) values ('$mainid', '$txtcrop', '$txtvariety', '$plantcode')";
+			if(mysqli_query($link,$sql_sub) or die(mysqli_error($link)))
+			{
+				$suid=mysqli_insert_id($link);
+				
+				for($i=1; $i<=$sno; $i++)
+				{
+					$ltno24=""; 
+					$ltno24=trim($_POST["lotno_".$i]);
+					$ssno33=trim($_POST["sno33_".$i]);
+					for($x=1; $x<=$ssno33; $x++)
+					{
+						$exwh=""; $exbin=""; $exsubbin=""; $extnomphs=""; $extnophs=""; $nophs=""; $balnophs=""; $detmpbno24=0; 
+						$txtremarks24="";
+						$exwh24=trim($_POST["exwh".$i."_".$x]);
+						$exbin24=trim($_POST["exbin".$i."_".$x]);
+						$exsubbin24=trim($_POST["exsubbin".$i."_".$x]);
+						$extnomphs24=trim($_POST["extnomphs".$i."_".$x]);
+						$extnophs24=trim($_POST["extnophs".$i."_".$x]);
+						$nophs24=trim($_POST["nophs".$i."_".$x]);
+						$balnophs24=trim($_POST["balnophs".$i."_".$x]);
+						if($nophs!="")
+						{
+							$detmpbno24=1; 
+							$txtremarks24=$txtremarks;
+						}
+				
+						$sql_subsub="insert into tbl_packagingsub_sub (packagingsub_id, packaging_id, packagingsubsub_lotno, packagingsubsub_upssize, extwh, extbin, extsubbin, packagingsubsub_extnop, packagingsubsub_extqty, packagingsubsub_nop, packagingsubsub_balpch, packagingsubsub_barcodes, packagingsubsub_remarks, plantcode) values ('$suid', '$mainid', '$ltno24', '$upssize', '$exwh24', '$exbin24', '$exsubbin24', '$extnophs24', '$txtoqty', '$nophs24', '$balnophs24', '$detmpbno24', '$txtremarks24', '$plantcode')";
+						mysqli_query($link,$sql_subsub) or die(mysqli_error($link));
+						
+						$sql_barcode="insert into tbl_barcodestmp (bar_tid, bar_subid, bar_barcodes, bar_lotno, bar_logid, bar_psrn, bar_grosswt, bar_wtdate, plantcode) values ('$mainid', '$suid', '$barcode', '$ltno24', '$logid', '$txtpsrn', '$weight', '$tdate2', '$plantcode')";
+						mysqli_query($link,$sql_barcode) or die(mysqli_error($link));
+					}
+				}
+				for($j=1; $j<=1; $j++)
+				{
+					$txtwhgx="txtwhg".$j;
+					$txtbingx="txtbing".$j;
+					$txtsubbgx="txtsubbg".$j;
+					$existviewx="existview".$j;
+					$nopmpcsx="nopmpcs_".$j;
+					$noppchsx="noppchs_".$j;
+					$noptpchsx="noptpchs_".$j;
+					$noptqtysx="noptqtys_".$j;
+					if(isset($_POST[$txtwhgx])) { $txtwhg= $_POST[$txtwhgx]; }
+					if(isset($_POST[$txtbingx])) { $txtbing= $_POST[$txtbingx]; }
+					if(isset($_POST[$txtsubbgx])) { $txtsubbg= $_POST[$txtsubbgx]; }
+					if(isset($_POST[$existviewx])) { $existview= $_POST[$existviewx]; }
+					if(isset($_POST[$nopmpcsx])) { $nopmpcs= $_POST[$nopmpcsx]; }
+					if(isset($_POST[$noppchsx])) { $noppchs= $_POST[$noppchsx]; }
+					if(isset($_POST[$noptpchsx])) { $noptpchs= $_POST[$noptpchsx]; }
+					if(isset($_POST[$noptqtysx])) { $noptqtys= $_POST[$noptqtysx]; }
+					
+					if($noptqtys!="" || $noptqtys>0)
+					{
+						$sql_subsub4="insert into tbl_packagingsub_sub2 (packagingsub_id, packaging_id, packagingsubsub_lotno, packagingsubsub_upssize, packagingsubsub_wh, packagingsubsub_bin, packagingsubsub_subbin, packagingsubsub_nomp, packagingsubsub_nopch, packagingsubsub_totpch, packagingsubsub_totqty, plantcode) values ('$suid', '$mainid', '$txtlot1', '$upssize', '$txtwhg', '$txtbing', '$txtsubbg', '$nopmpcs', '$noppchs', '$noptpchs', '$noptqtys', '$plantcode')";
+						mysqli_query($link,$sql_subsub4) or die(mysqli_error($link));
+					}
+				}
+			}	
+		
+		//exit;
+		$p_id=$mainid;
+		echo "<script>window.location='add_packagingslipmmc_preview.php?p_id=$p_id'</script>";	
+		}
+	}
+
+	$sql_code="SELECT MAX(packaging_code) FROM tbl_packaging where packaging_yearid='$yearid_id'  ORDER BY packaging_code DESC";
+	$res_code=mysqli_query($link,$sql_code)or die(mysqli_error($link));
+		
+	if(mysqli_num_rows($res_code) > 0)
+	{
+		$row_code=mysqli_fetch_row($res_code);
+		$t_code=$row_code['0'];
+		$code=$t_code+1;
+		$code1="TPS".$code."/".$yearid_id."/".$lgnid;
+	}
+	else
+	{
+		$code=1;
+		$code1="TPS".$code."/".$yearid_id."/".$lgnid;
+	}
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<script type="text/javascript" src="../include/animatedcollapse.js"></script>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Packaging - Transaction - Packaging slip</title>
+<link href="../include/main_pack.css" rel="stylesheet" type="text/css" />
+<link href="../include/vnrtrac_pack.css" rel="stylesheet" type="text/css" />
+</head>
+<script src="packagingsliplmc.js"></script>
+<script src="../include/validation.js"></script>
+
+<!--- Calender code --->
+<link href="../calendar/calendar-blue.css" rel="stylesheet" />
+<script type="text/javascript" src="../calendar/calendar.js"></script>
+<script type="text/javascript" src="../calendar/calendar-en.js"></script>
+<!--- Calender code --->
+
+<script type="text/javascript">
+
+//SuckerTree Horizontal Menu (Sept 14th, 06)
+//By Dynamic Drive: http://www.dynamicdrive.com/style/
+
+var menuids=["nav"] //Enter id(s) of SuckerTree UL menus, separated by commas
+
+function buildsubmenus_horizontal(){
+for (var i=0; i<menuids.length; i++){
+  var ultags=document.getElementById(menuids[i]).getElementsByTagName("ul")
+    for (var t=0; t<ultags.length; t++){
+		if (ultags[t].parentNode.parentNode.id==menuids[i]){ //if this is a first level submenu
+			ultags[t].style.top=ultags[t].parentNode.offsetHeight+"px" //dynamically position first level submenus to be height of main menu item
+			ultags[t].parentNode.getElementsByTagName("a")[0].className="mainfoldericon"
+		}
+		else{ //else if this is a sub level menu (ul)
+		  ultags[t].style.left=ultags[t-1].getElementsByTagName("a")[0].offsetWidth+"px" //position menu to the right of menu item that activated it
+    	ultags[t].parentNode.getElementsByTagName("a")[0].className="subfoldericon"
+		}
+    ultags[t].parentNode.onmouseover=function(){
+    this.getElementsByTagName("ul")[0].style.visibility="visible"
+    }
+    ultags[t].parentNode.onmouseout=function(){
+  this.getElementsByTagName("ul")[0].style.visibility="hidden"
+    }
+    }
+  }
+}
+
+if (window.addEventListener)
+window.addEventListener("load", buildsubmenus_horizontal, false)
+else if (window.attachEvent)
+window.attachEvent("onload", buildsubmenus_horizontal)
+
+</script>
+<script language="javascript" type="text/javascript">
+
+function formPost(top_element){
+	var inputs=top_element.getElementsByTagName('*');
+	var qstring=new Array();
+	for(var i=0;i<inputs.length;i++){
+		if(!inputs[i].disabled&&inputs[i].getAttribute('name')!=""&&inputs[i].getAttribute('name')){
+			qs_str=inputs[i].getAttribute('name')+"="+encodeURIComponent(inputs[i].value);
+			switch(inputs[i].tagName.toLowerCase()){
+				case "select":
+					if(inputs[i].getAttribute("multiple")){
+						var len2=inputs[i].length;
+						for(var j=0;j<len2;j++){
+							if(inputs[i].options[j].selected){
+								var targ=(inputs[i].options[j].value) ? inputs[i].options[j].value : inputs[i].options[j].text;
+								qstring[qstring.length]=inputs[i].getAttribute('name')+"="+encodeURIComponent(targ);
+							}
+						}
+					}
+					else{
+						var targ=(inputs[i].options[inputs[i].selectedIndex].value) ? inputs[i].options[inputs[i].selectedIndex].value : inputs[i].options[inputs[i].selectedIndex].text
+						qstring[qstring.length]=inputs[i].getAttribute('name')+"="+encodeURIComponent(targ);
+					}
+				break;
+				case "textarea":
+					qstring[qstring.length]=qs_str;
+				break;
+				case "input":
+					switch(inputs[i].getAttribute("type").toLowerCase()){
+						case "radio":
+							if(inputs[i].checked){
+								qstring[qstring.length]=qs_str;
+							}
+						break;
+						case "checkbox":
+							if(inputs[i].value!=""){
+								if(inputs[i].checked){
+									qstring[qstring.length]=qs_str;
+								}
+							}
+							else{
+								var stat=(inputs[i].checked) ? "true" : "false"
+								qstring[qstring.length]=inputs[i].getAttribute('name')+"="+stat;
+							}
+						break;
+						case "text":
+							qstring[qstring.length]=qs_str;
+						break;
+						case "password":
+							qstring[qstring.length]=qs_str;
+						break;
+						case "hidden":
+							qstring[qstring.length]=qs_str;
+						break;
+					}
+				break;
+			}
+		}
+	}
+	return qstring.join("&");
+}
+
+function isNumberKey1(evt)
+{
+         var charCode = (evt.which) ? evt.which : evt.keyCode;
+         if (charCode > 31 && charCode != 8 && charCode != 9 && charCode != 127 && (charCode < 45 || charCode == 47 || charCode > 57) && evt.keyCode!=35 && evt.keyCode!=36 && evt.keyCode!=37 && evt.keyCode!=39)
+            return false;
+
+         return true;
+}
+function isNumberKey(evt)
+{
+	var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && charCode != 8 && charCode != 9 && charCode != 13 && charCode != 127 && (charCode < 48 || charCode > 57) && evt.keyCode!=35 && evt.keyCode!=36 && evt.keyCode!=37 && evt.keyCode!=39)
+    return false;
+
+    return true;
+}
+function isNumberKey24(evt)
+{
+	var charCode = (evt.which) ? evt.which : evt.keyCode;
+	if (charCode > 31 && charCode != 8 && charCode != 9 && charCode != 127 && (charCode < 47 || charCode > 57) && (charCode < 65 || charCode > 90) && (charCode < 97 || charCode > 122) && evt.keyCode!=35 && evt.keyCode!=36 && evt.keyCode!=37 && evt.keyCode!=39)
+	return false;
+
+	return true;
+}
+function isChar_o(Char) // This function accepts only alphabetic characters with no space, no special chars.
+{
+		var CharToChk = new String(Char);
+		var LengthOfChar = CharToChk.length;
+		var flag = true;
+		for(var i=0;i<LengthOfChar;i++)
+		{
+			if((CharToChk.charCodeAt(i)<65 || CharToChk.charCodeAt(i)>90) && (CharToChk.charCodeAt(i)<97 || CharToChk.charCodeAt(i)>122)) {
+			flag = false;
+			break;
+			}	
+		}
+		return flag;
+}
+	  
+function qtychk1(qtyval1,srno)
+{
+		var sbin="txtbalnobp"+srno;
+		var nob="txtextnob"+srno;
+	if(document.frmaddDepartment.protype.value=="")
+	{
+		alert("Please Select Entire/Partial to Process");
+		var actnob="recnobp"+srno;
+		document.getElementById(actnob).value="";
+		return false;
+	}	
+	else if(parseFloat(qtyval1)>parseFloat(document.getElementById(nob).value))
+	{
+		alert("NoB entered for Packing can be Equal to or Less than Existing NoB in Bin");
+		var actnob="recnobp"+srno;
+		document.getElementById(actnob).value="";
+		return false;
+	}
+	else
+	{
+		document.getElementById(sbin).value=parseFloat(document.getElementById(nob).value)-parseFloat(qtyval1);
+	}
+}
+
+function Bagschk1(qtyval1,srno)
+{
+	var actnob="txtbalnobp"+srno;
+	var sbin="txtbalqtyp"+srno;
+	var nob="txtextqty"+srno;
+	/*if(document.getElementById(actnob).value=="")
+	{
+		alert("Please enter NoB");
+		var actqty="recqtyp"+srno;
+		document.getElementById(actqty).value="";
+		return false;
+	}
+	else*/ 
+	if(parseFloat(qtyval1)>parseFloat(document.getElementById(nob).value))
+	{
+		alert("Qty entered for Packing can be Equal to or Less than Existing Qty in Bin");
+		var actnob="recqtyp"+srno;
+		document.getElementById(actnob).value="";
+		return false;
+	}
+	else
+	{
+		document.getElementById(sbin).value=parseFloat(document.getElementById(nob).value)-parseFloat(qtyval1);
+		document.getElementById('picqtyp').value=qtyval1
+		document.getElementById(actnob).value="";
+		document.getElementById(actnob).readOnly=false;
+		document.getElementById(actnob).style.backgroundColor="#FFFFFF";
+	}
+}
+
+function pform()
+{	
+	var f=0;
+	dt1=getDateObject(document.frmaddDepartment.date.value,"-");
+	dt2=getDateObject(document.frmaddDepartment.dopc.value,"-");
+	if(dt2 > dt1)
+	{
+		alert("Date of Packing cannot be more than Transaction Date.");
+		f=1;
+		return false;
+	}
+	if(document.frmaddDepartment.txtpsrn.value=="")
+	{
+		alert("Please enter Packaging Slip number.");
+		document.frmaddDepartment.txtpsrn.focus();
+		f=1;
+		return false;
+	}
+	if(document.frmaddDepartment.barcode.value=="")
+	{
+		alert("Please enter Barcode Number");
+		document.frmaddDepartment.barcode.focus();
+		f=1;
+		return false;
+	}
+	if(document.frmaddDepartment.weight.value=="")
+	{
+		alert("Please enter Gross Weight of Master Pack");
+		document.frmaddDepartment.weight.focus();
+		f=1;
+		return false;
+	}	
+	if(document.frmaddDepartment.txtcrop.value=="")
+	{
+		alert("Please Select Crop.");
+		document.frmaddDepartment.txtcrop.focus();
+		f=1;
+		return false;
+	}		
+	if(document.frmaddDepartment.txtvariety.value=="")
+	{
+		alert("Please Select Variety.");
+		document.frmaddDepartment.txtvariety.focus();
+		f=1;
+		return false;
+	}		
+	if(document.frmaddDepartment.txtstage.value=="")
+	{
+		alert("Please Select Stage");
+		document.frmaddDepartment.txtstage.focus();
+		f=1;
+		return false;
+	}
+	if(document.frmaddDepartment.txtups.value=="")
+	{
+		alert("Please Select UPS");
+		document.frmaddDepartment.txtups.focus();
+		f=1;
+		return false;
+	}
+		
+	if(document.frmaddDepartment.txtlot1.value=="")
+	{
+		alert("Please enter Lot No.");
+		document.frmaddDepartment.txtlot1.focus();
+		f=1;
+		return false;
+	}	
+	if(f==1)
+	{
+		return false;
+	}
+	else
+	{	
+		var zzz=document.frmaddDepartment.sno.value;
+		var ycc=0; var xcc=0; var tqty=0;
+		for(var l=1; l<=zzz; l++)
+		{
+			var acc="wtmp_"+l;
+			var nomp="nomp_"+l;
+			if(document.getElementById(nomp).value!="")
+			{
+				ycc++;
+			}
+			tqty=parseFloat(document.getElementById(acc).value);
+		}
+		if(ycc==0)
+		{
+			alert("Please select UPS for Pack Seed");
+			f=1;
+			return false;
+		}
+		/*var x=1; var y=0; var zx=0;
+			var a="noptqtys_1";
+			if(document.getElementById(a).value=="")
+			{y++;}
+			else
+			{zx=parseFloat(zx)+parseFloat(document.getElementById(a).value)}
+		if(y>0)
+		{
+			alert("Please select SLOC for Pack Seed");
+			f=1;
+			return false;
+		}
+		else
+		{
+			if(parseFloat(zx)!=parseFloat(tqty))
+			{
+				alert("Please check. Quantity in Pack Seed is not matching with Quantity distributed in Bins");
+				return false;
+				f=1;
+			}
+		}*/
+		if(f==1)
+		{
+			return false;
+		}
+		else
+		{
+		var a=formPost(document.getElementById('mainform'));
+		alert(a);
+		showUser(a,'postingtable','mformmmc','','','','','');
+		//showUser(a,'postingsubtable','mform','','','','','');
+		}  
+	}
+}
+
+function pformedtup()
+{	
+	var f=0;
+	dt1=getDateObject(document.frmaddDepartment.date.value,"-");
+	dt2=getDateObject(document.frmaddDepartment.dopc.value,"-");
+	if(dt2 > dt1)
+	{
+		alert("Date of Packing cannot be more than Transaction Date.");
+		f=1;
+		return false;
+	}
+	if(document.frmaddDepartment.txtpsrn.value=="")
+	{
+		alert("Please enter Packaging Slip number.");
+		document.frmaddDepartment.txtpsrn.focus();
+		f=1;
+		return false;
+	}
+	if(document.frmaddDepartment.barcode.value=="")
+	{
+		alert("Please enter Barcode Number");
+		document.frmaddDepartment.barcode.focus();
+		f=1;
+		return false;
+	}
+	if(document.frmaddDepartment.weight.value=="")
+	{
+		alert("Please enter Gross Weight of Master Pack");
+		document.frmaddDepartment.weight.focus();
+		f=1;
+		return false;
+	}	
+	if(document.frmaddDepartment.txtcrop.value=="")
+	{
+		alert("Please Select Crop.");
+		document.frmaddDepartment.txtcrop.focus();
+		f=1;
+		return false;
+	}		
+	if(document.frmaddDepartment.txtvariety.value=="")
+	{
+		alert("Please Select Variety.");
+		document.frmaddDepartment.txtvariety.focus();
+		f=1;
+		return false;
+	}		
+	if(document.frmaddDepartment.txtstage.value=="")
+	{
+		alert("Please Select Stage");
+		document.frmaddDepartment.txtstage.focus();
+		f=1;
+		return false;
+	}
+	if(document.frmaddDepartment.txtups.value=="")
+	{
+		alert("Please Select UPS");
+		document.frmaddDepartment.txtups.focus();
+		f=1;
+		return false;
+	}
+		
+	if(document.frmaddDepartment.txtlot1.value=="")
+	{
+		alert("Please enter Lot No.");
+		document.frmaddDepartment.txtlot1.focus();
+		f=1;
+		return false;
+	}	
+	if(f==1)
+	{
+		return false;
+	}
+	else
+	{	
+		var zzz=document.frmaddDepartment.sno.value;
+		var ycc=0; var xcc=0; var tqty=0;
+		for(var l=1; l<=zzz; l++)
+		{
+			var acc="wtmp_"+l;
+			var nomp="nomp_"+l;
+			if(document.getElementById(nomp).value!="")
+			{
+				ycc++;
+			}
+			tqty=parseFloat(document.getElementById(acc).value);
+		}
+		if(ycc==0)
+		{
+			alert("Please select UPS for Pack Seed");
+			f=1;
+			return false;
+		}
+		/*var x=1; var y=0; var zx=0;
+			var a="noptqtys_1";
+			if(document.getElementById(a).value=="")
+			{y++;}
+			else
+			{zx=parseFloat(zx)+parseFloat(document.getElementById(a).value)}
+		if(y>0)
+		{
+			alert("Please select SLOC for Pack Seed");
+			f=1;
+			return false;
+		}
+		else
+		{
+			if(parseFloat(zx)!=parseFloat(tqty))
+			{
+				alert("Please check. Quantity in Pack Seed is not matching with Quantity distributed in Bins");
+				return false;
+				f=1;
+			}
+		}*/
+		if(f==1)
+		{
+			return false;
+		}
+		else
+		{
+		var a=formPost(document.getElementById('mainform'));
+		//alert(a);
+		showUser(a,'postingtable','mformsubedtmmc','','','','','');
+		}
+	}
+}
+
+function modetchk(classval)
+{
+	if(document.frmaddDepartment.weight.value=="")
+	{
+		 alert("Please enter weight of Master Pack");
+		 document.frmaddDepartment.weight.focus();
+		  document.frmaddDepartment.txtcrop.selectedIndex=0;
+		 return false;
+	}
+	else
+	{
+		document.getElementById("postingsubsubtable").innerHTML="";
+		document.frmaddDepartment.txtlot1.value="";
+		showUser(classval,'vitem','item','','','','','');
+	}
+}
+
+function modetchk1(classval)
+{
+	if(document.frmaddDepartment.txtcrop.value=="")
+	{
+		 alert("Please Select Crop");
+		 document.frmaddDepartment.txtvariety.selectedIndex=0;
+		 document.frmaddDepartment.txtcrop.focus();
+		 return false;
+	}
+	else
+	{
+		document.getElementById("postingsubsubtable").innerHTML="";
+		document.frmaddDepartment.txtlot1.value="";
+		showUser(classval,'upstp','uspsl','','','','','');
+	}
+}
+
+function modetchk2(classval)
+{
+	if(document.frmaddDepartment.txtvariety.value=="")
+	{
+		 alert("Please Select Variety");
+		 document.frmaddDepartment.txtups.selectedIndex=0;
+		 document.frmaddDepartment.txtvariety.focus();
+		 return false;
+	}
+	else
+	{
+		document.getElementById("postingsubsubtable").innerHTML="";
+		document.frmaddDepartment.txtlot1.value="";
+		var variety=document.frmaddDepartment.txtvariety.value;
+		showUser(classval,'tnopinmp','tnopinmp1',variety,'','','','');
+	}
+}
+
+function barcheck(mltval)
+{
+	if(document.frmaddDepartment.txtpsrn.value=="")
+	{
+		 alert("Please Select Packing Slip Reference Number");
+		 document.frmaddDepartment.txtpsrn.focus();
+		  document.frmaddDepartment.txtcrop.selectedIndex=0;
+		 return false;
+	}
+	if(mltval.length >= 9)
+	{
+		if(document.frmaddDepartment.bardupchk.value>0)
+		{
+			alert("Invalid / Duplicate Barcode.");
+			document.frmaddDepartment.barcode.value="";
+			document.frmaddDepartment.barcode.focus();
+			return false;
+		}
+	}
+	/*else
+	{
+		var f=0;
+		var z=mltval.split("");
+		var a=z[0];
+		var b=z[1];
+		if(isChar_o(a)==false)
+		{
+			alert("Invalid Barcode");
+			document.frmaddDepartment.barcode.value="";
+			document.frmaddDepartment.barcode.focus();
+			f=1;
+			return false;
+		}
+		if(isChar_o(b)==false)
+		{
+			alert("Invalid Barcode");
+			document.frmaddDepartment.barcode.value="";
+			document.frmaddDepartment.barcode.focus();
+			f=1;
+			return false;
+		}
+		for(var i=2; i<z.length; i++)
+		{
+			if(isChar_o(z[i])==true)
+			{
+				alert("Invalid Barcode");
+				document.frmaddDepartment.barcode.value="";
+				document.frmaddDepartment.barcode.focus();
+				f=1;
+				return false;
+			}
+		}
+		
+		var pcode=document.frmaddDepartment.plantcodes.value.split(",");
+		var ycode=document.frmaddDepartment.yearcodes.value.split(",");
+		var x=0
+		var y=0;
+		for(var i=0; i<pcode.length; i++)
+		{
+			if(pcode[i]==a)
+			{
+				x++;
+			}
+		}
+		if(x==0)
+		{
+			alert("Invalid Barcode");
+			document.frmaddDepartment.barcode.value="";
+			document.frmaddDepartment.barcode.focus();
+			f=1;
+			return false;
+		}
+		for(var i=0; i<ycode.length; i++)
+		{
+			if(ycode[i]==b)
+			{
+				y++;
+			}
+		}
+		if(y==0)
+		{
+			alert("Invalid Barcode");
+			document.frmaddDepartment.barcode.value="";
+			document.frmaddDepartment.barcode.focus();
+			f=1;
+			return false;
+		}
+		if(f==0)
+		{
+			
+			document.frmaddDepartment.weight.focus();
+		}
+	}*/
+}
+function searchbarcode(searchval)
+{
+//alert(searchval.length);
+	if(searchval.length >= 9)
+	{//alert(searchval.length);
+		var f=0;
+		var z=searchval.split("");
+		var a=z[0];
+		var b=z[1];
+		if(isChar_o(a)==false)
+		{
+			alert("Invalid Barcode");
+			document.frmaddDepartment.barcode.value="";
+			document.frmaddDepartment.barcode.focus();
+			f=1;
+			return false;
+		}
+		if(isChar_o(b)==false)
+		{
+			alert("Invalid Barcode");
+			document.frmaddDepartment.barcode.value="";
+			document.frmaddDepartment.barcode.focus();
+			f=1;
+			return false;
+		}
+		for(var i=2; i<z.length; i++)
+		{
+			if(isChar_o(z[i])==true)
+			{
+				alert("Invalid Barcode");
+				document.frmaddDepartment.barcode.value="";
+				document.frmaddDepartment.barcode.focus();
+				f=1;
+				return false;
+			}
+		}
+		
+		var pcode=document.frmaddDepartment.plantcodes.value.split(",");
+		var ycode=document.frmaddDepartment.yearcodes.value.split(",");
+		var x=0
+		var y=0;
+		for(var i=0; i<pcode.length; i++)
+		{
+			if(pcode[i]==a)
+			{
+				x++;
+			}
+		}
+		if(x==0)
+		{
+			alert("Invalid Barcode");
+			document.frmaddDepartment.barcode.value="";
+			document.frmaddDepartment.barcode.focus();
+			f=1;
+			return false;
+		}
+		for(var i=0; i<ycode.length; i++)
+		{
+			if(ycode[i]==b)
+			{
+				y++;
+			}
+		}
+		if(y==0)
+		{
+			alert("Invalid Barcode");
+			document.frmaddDepartment.barcode.value="";
+			document.frmaddDepartment.barcode.focus();
+			f=1;
+			return false;
+		}
+		//alert(f);
+		if(f==0)
+		{
+			//alert("HI");
+			showUser(searchval,"barserch","barsearch",'','','','');
+			//searchUser1(searchval,"barserch","barsearch",tno,finar,dupnos,xz);
+			document.frmaddDepartment.weight.focus();
+		}
+	}
+
+}
+function chkmlt1(mltval)
+{
+	if(document.frmaddDepartment.barcode.value=="")
+	{
+		alert("Please enter Barcode first.");
+		document.frmaddDepartment.weight.value="";
+		document.frmaddDepartment.barcode.focus();
+		return false;
+	}
+	if(document.frmaddDepartment.barcode.value.length<9)
+	{
+		alert("Invalid Barcode. Please enter Barcode first.");
+		document.frmaddDepartment.weight.value="";
+		document.frmaddDepartment.barcode.focus();
+		return false;
+	}
+	if(document.frmaddDepartment.bardupchk.value>0)
+	{
+		alert("Invalid / Duplicate Barcode.");
+		document.frmaddDepartment.barcode.value="";
+		document.frmaddDepartment.bardupchk.value=0;
+		document.frmaddDepartment.weight.value="";
+		document.frmaddDepartment.barcode.focus();
+		return false;
+	}
+}
+
+function openslocpop()
+{
+if(document.frmaddDepartment.weight.value!="")
+{
+	document.getElementById("postingsubsubtable").innerHTML="";
+	document.frmaddDepartment.txtlot1.value="";
+	var crop=document.frmaddDepartment.txtcrop.value;
+	var variety=document.frmaddDepartment.txtvariety.value;
+	var stage=document.frmaddDepartment.txtstage.value;
+	var tid=document.frmaddDepartment.maintrid.value;
+	var dop=document.frmaddDepartment.dopc.value;
+	var ups=document.frmaddDepartment.txtups.value;
+	//alert(variety);
+	winHandle=window.open('getuser_packagingslipmmc_lotno.php?crop='+crop+'&variety='+variety+'&stage='+stage+'&tid='+tid+'&dop='+dop+'&ups='+ups,'WelCome','top=170,left=180,width=420,height=350,scrollbars=yes');
+	if(winHandle==null){
+	alert("While Launching New Window...\nYour browser maybe blocking up Popup windows. \n\n  Please check your Popup Blocker Settings or ..\n Please hold Ctrl Key and Click on link to open new Browser"); }
+}
+else
+{
+	alert("Please enter Weight first");
+	document.getElementById("postingsubsubtable").innerHTML="";
+	document.frmaddDepartment.txtlot1.value="";
+	document.frmaddDepartment.weight.focus();
+}
+}
+
+function openslocpop1()
+{
+if(document.frmaddDepartment.qc.value=="")
+{
+ alert("Please Select QC.");
+ //document.frmaddDepartment.txt1.focus();
+}
+else
+{
+var itm=document.frmaddDepartment.sstatus.value;
+winHandle=window.open('getuser_status.php?tp='+itm,'WelCome','top=170,left=180,width=420,height=350,scrollbars=yes');
+if(winHandle==null){
+alert("While Launching New Window...\nYour browser maybe blocking up Popup windows. \n\n  Please check your Popup Blocker Settings or ..\n Please hold Ctrl Key and Click on link to open new Browser"); }
+}
+
+}
+
+function wh1(wh1val)
+{ //alert(wh1val);
+if(document.frmaddDepartment.txtconqty.value > 0)
+	{
+		showUser(wh1val,'bing1','wh','bing1','1','','','');
+	}
+	else
+	{
+		alert("Please enter Condition Seed Quantity");
+		document.frmaddDepartment.txtslwhg1.selectedIndex=0;
+	}
+}
+
+function wh2(wh2val)
+{   
+	if(document.frmaddDepartment.txtconqty.value > 0)
+	{
+		showUser(wh2val,'bing2','wh','bing2','2','','','');
+	}
+	else
+	{
+		alert("Please enter Condition Seed Quantity");
+		document.frmaddDepartment.txtslwhg2.selectedIndex=0;
+	}
+}
+
+function bin1(bin1val)
+{
+	if(document.frmaddDepartment.txtslwhg1.value!="")
+	{
+		showUser(bin1val,'sbing1','bin','txtslsubbg1','1','','','');
+	}
+	else
+	{
+		alert("Please select Warehouse");
+	}
+}
+
+function bin2(bin2val)
+{
+	if(document.frmaddDepartment.txtslwhg2.value!="")
+	{
+		showUser(bin2val,'sbing2','bin','txtslsubbg2','2','','','');
+	}
+	else
+	{
+		alert("Please select Warehouse");
+	}
+}
+
+function subbin1(subbin1val)
+{	
+	var itemv=document.frmaddDepartment.txtvariety.value;
+	if(document.frmaddDepartment.txtslbing1.value!="")
+	{	//alert("subbin");
+		var slocnogood="Condition";
+		var trid=document.frmaddDepartment.maintrid.value;
+		//var slocnodamage=document.frmaddDepartment.tblslocnod.value;
+		if(document.frmaddDepartment.txtconslnob1.value!="")
+		var Bagsv1=document.frmaddDepartment.txtconslnob1.value;
+		else
+		var Bagsv1="";
+		if(document.frmaddDepartment.txtconslqty1.value!="")
+		var qtyv1=document.frmaddDepartment.txtconslqty1.value;
+		else
+		var qtyv1="";
+		showUser(subbin1val,'slocrow1','subbin',itemv,'txtslsubbg1',slocnogood,Bagsv1,qtyv1,trid);
+	}
+	else
+	{
+		alert("Please select Bin");
+		document.frmaddDepartment.txtslbing1.focus();
+	}
+}
+
+function subbin2(subbin2val)
+{	
+	var itemv=document.frmaddDepartment.txtvariety.value;
+	if(document.frmaddDepartment.txtslbing2.value!="")
+	{	
+		var w1=document.frmaddDepartment.txtslwhg1.value+document.frmaddDepartment.txtslbing1.value+document.frmaddDepartment.txtslsubbg1.value;
+		var w2=document.frmaddDepartment.txtslwhg2.value+document.frmaddDepartment.txtslbing2.value+document.frmaddDepartment.txtslsubbg2.value;
+		if(w1==w2)
+		{
+		alert("Please check, No two Bin information can be similar in a given transaction");
+		document.getElementById('sb2').selectedIndex=0;
+		document.frmaddDepartment.txtslbing2.focus();
+		}
+		
+		if(document.frmaddDepartment.txtslsubbg1.value!="")
+		
+		var slocnogood="Condition";
+		var trid=document.frmaddDepartment.maintrid.value;
+		if(document.frmaddDepartment.txtconslnob2.value!="")
+		var Bagsv2=document.frmaddDepartment.txtconslnob2.value;
+		else
+		var Bagsv2="";
+		if(document.frmaddDepartment.txtconslqty2.value!="")
+		var qtyv2=document.frmaddDepartment.txtconslqty2.value;
+		else
+		var qtyv2="";
+		showUser(subbin2val,'slocrow2','subbin',itemv,'txtslsubbg2',slocnogood,Bagsv2,qtyv2,trid);
+		//showUser(subbin2val,'slocrow2','subbin',itemv,'txtslsubbg2','','','');
+	}
+	else
+	{
+		alert("Please select Bin");
+		document.frmaddDepartment.txtslbing2.focus();
+	}
+}
+
+function qtyf1(qtyval, sval)
+{
+	var sbbin="txtconslnob"+sval;
+	var nobb="txtconslqty"+sval;
+	if(document.getElementById(sbbin).value=="")
+	{
+		alert("Please Enter NoB");
+		document.getElementById(nobb).value="";
+		document.getElementById(sbbin).focus();
+	}
+	if(document.getElementById(nobb).value!="")
+	{
+		if(parseInt(document.getElementById(nobb).value)==0 || document.getElementById(nobb).value=="")
+		{
+			alert("Qty can not be ZERO");
+			document.getElementById(nobb).value="";
+		}
+	}
+}
+function Bagsf1(Bags1val, sval)
+{
+	var sbbin="sb"+sval;
+	var nobb="txtconslnob"+sval;
+	if(document.getElementById(sbbin).value=="")
+	{
+		alert("Please select Sub Bin");
+		document.getElementById(nobb).value="";
+		document.getElementById(sbbin).focus();
+	}
+	if(document.getElementById(nobb).value!="")
+	{
+		if(parseInt(document.getElementById(nobb).value)==0 || document.getElementById(nobb).value=="")
+		{
+			alert("NoB can not be ZERO");
+			document.getElementById(nobb).value="";
+		}
+	}
+}
+
+function editrec(edtrecid)
+{
+//alert(edtrecid);
+showUser(edtrecid,'postingsubtable','subformedtmmc','','','','','');
+}
+function getdetails(stage)
+{
+	var get=document.frmaddDepartment.txtlot1.value;
+	var crop=document.frmaddDepartment.txtcrop.value;
+	var variety=document.frmaddDepartment.txtvariety.value;
+	var stage=document.frmaddDepartment.txtstage.value;
+	
+	if(document.frmaddDepartment.txtlot1.value=="")
+	{
+		alert("Please Select Lot No.");
+		//document.frmaddDepartment.txtlot1.focus();
+		return false;
+	}
+	var crop=document.frmaddDepartment.txtcrop.value;
+	var variety=document.frmaddDepartment.txtvariety.value;					
+	var tid=document.frmaddDepartment.maintrid.value;
+	var lotid=document.frmaddDepartment.subtrid.value;
+	var dsrn="";
+	var stage=document.frmaddDepartment.txtstage.value;
+	//alert(tid);
+	//alert(lotid);
+			
+	//document.getElementById("postingsubtable").style.display="block";
+	showUser(get,'postingsubsubtable','getmmc',crop,variety,tid,lotid,dsrn,stage);
+	//showUser(get,'postingsubtable','get',crop,variety,stage,'','');
+}
+function deleterec(v1,v2)
+{
+	if(confirm('Do u wish to delete this item?')==true)
+	{
+		showUser(v1,'postingtable','deletemmc',v2,'','','','');
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+function mySubmit()
+{ 
+	return false;
+	var f=0;
+	dt1=getDateObject(document.frmaddDepartment.date.value,"-");
+	dt2=getDateObject(document.frmaddDepartment.dopc.value,"-");
+	if(dt2 > dt1)
+	{
+		alert("Date of Packing cannot be more than Transaction Date.");
+		f=1;
+		return false;
+	}
+	if(document.frmaddDepartment.txtpsrn.value=="")
+	{
+		alert("Please enter Packaging Slip number.");
+		document.frmaddDepartment.txtpsrn.focus();
+		f=1;
+		return false;
+	}	
+	if(document.frmaddDepartment.barcode.value=="")
+	{
+		alert("Please enter Barcode Number");
+		document.frmaddDepartment.barcode.focus();
+		f=1;
+		return false;
+	}
+	if(document.frmaddDepartment.weight.value=="")
+	{
+		alert("Please enter Gross Weight of Master Pack");
+		document.frmaddDepartment.weight.focus();
+		f=1;
+		return false;
+	}	
+	if(document.frmaddDepartment.maintrid.value=="")
+	{
+		alert("You have not posted ay record.");
+		f=1;
+		return false;
+	}
+	if(document.frmaddDepartment.noptqtys_1.value=="")
+	{
+		alert("Please enter SLOC of Master Pack");
+		f=1;
+		return false;
+	}
+	if(parseFloat(document.frmaddDepartment.noptqtys_1.value)>parseFloat(document.frmaddDepartment.weight.value))
+	{
+		alert("Qty in Master SLOC cannot be more than Gross MMC Weight");
+		f=1;
+		return false;
+	}
+	//document.frmaddDepartment.txtwhg1.value+document.frmaddDepartment.txtbing1.value+document.frmaddDepartment.txtsubbg1.value;
+	
+	if(f==1)
+	{
+		return false;
+	}
+	else
+	{
+		if(parseFloat(document.frmaddDepartment.totpcqty.value)>parseFloat(document.frmaddDepartment.weight.value))
+		{
+			alert("Total Qty cannot be more than Gross MMC Weight");
+			f=1;
+			return false;
+		}
+		if(f==1)
+		{
+			return false;
+		}
+		else
+		{
+			return false;	 
+		}
+	}
+}
+
+function prochktyp(protypval)
+{
+	dt1=getDateObject(document.frmaddDepartment.dopc.value,"-");
+	dt2=getDateObject(document.frmaddDepartment.qctestdate.value,"-");
+	if(dt2 > dt1)
+	{
+		alert("Date of QC Test (DoT) cannot be more than Date of Packing.");
+		for( var i=0; i<document.frmaddDepartment.protyp.length; i++)
+		{
+			document.getElementById('protyp').checked=false;
+		}
+		document.frmaddDepartment.protype.value="";
+		return false;
+	}
+	else
+	{
+		document.frmaddDepartment.protype.value=protypval;
+		if(protypval!="")
+		{
+			if(protypval=="E")
+			{
+				document.getElementById('recnobp1').value=document.frmaddDepartment.txtextnob1.value;
+				document.getElementById('recnobp1').readOnly=true;
+				document.getElementById('recnobp1').style.backgroundColor="#CCCCCC";
+				document.getElementById('txtbalnobp1').value=0;
+				document.getElementById('recqtyp1').value=document.frmaddDepartment.txtextqty1.value;
+				document.getElementById('recqtyp1').readOnly=true;
+				document.getElementById('recqtyp1').style.backgroundColor="#CCCCCC";
+				document.getElementById('txtbalqtyp1').value=0;
+				if (document.frmaddDepartment.srno2.value==2)
+				{
+					document.getElementById('recnobp2').value=document.frmaddDepartment.txtextnob2.value;
+					document.getElementById('recnobp2').readOnly=true;
+					document.getElementById('recnobp2').style.backgroundColor="#CCCCCC";
+					document.getElementById('txtbalnobp2').value=0;
+					document.getElementById('recqtyp2').value=document.frmaddDepartment.txtextqty2.value;
+					document.getElementById('recqtyp2').readOnly=true;
+					document.getElementById('recqtyp2').style.backgroundColor="#CCCCCC";
+					document.getElementById('txtbalqtyp2').value=0;
+				}
+				
+				document.frmaddDepartment.txtconnob.value="";
+				document.frmaddDepartment.txtconqty.value="";
+				document.frmaddDepartment.txtconrem.value="";
+				document.frmaddDepartment.txtconim.value="";
+				document.frmaddDepartment.txtconpl.value="";
+				document.frmaddDepartment.txtconloss.value="";
+				document.frmaddDepartment.txtconper.value="";
+			}
+			else if(protypval=="P")
+			{
+				document.getElementById('recnobp1').value="";
+				document.getElementById('recnobp1').readOnly=false;
+				document.getElementById('recnobp1').style.backgroundColor="#FFFFFF";
+				document.getElementById('txtbalnobp1').value="";
+				document.getElementById('recqtyp1').value="";
+				document.getElementById('recqtyp1').readOnly=false;
+				document.getElementById('recqtyp1').style.backgroundColor="#FFFFFF";
+				document.getElementById('txtbalqtyp1').value="";
+				if (document.frmaddDepartment.srno2.value==2)
+				{
+					document.getElementById('recnobp2').value="";
+					document.getElementById('recnobp2').readOnly=false;
+					document.getElementById('recnobp2').style.backgroundColor="#FFFFFF";
+					document.getElementById('txtbalnobp2').value="";
+					document.getElementById('recqtyp2').value="";
+					document.getElementById('recqtyp2').readOnly=false;
+					document.getElementById('recqtyp2').style.backgroundColor="#FFFFFF";
+					document.getElementById('txtbalqtyp2').value="";
+				}
+				document.frmaddDepartment.txtconnob.value="";
+				document.frmaddDepartment.txtconqty.value="";
+				document.frmaddDepartment.txtconrem.value="";
+				document.frmaddDepartment.txtconim.value="";
+				document.frmaddDepartment.txtconpl.value="";
+				document.frmaddDepartment.txtconloss.value="";
+				document.frmaddDepartment.txtconper.value="";
+			}
+			else
+			{
+				document.getElementById('recnobp1').value="";
+				document.getElementById('recnobp1').readOnly=true;
+				document.getElementById('recnobp1').style.backgroundColor="#CCCCCC";
+				document.getElementById('txtbalnobp1').value="";
+				document.getElementById('recqtyp1').value="";
+				document.getElementById('recqtyp1').readOnly=true;
+				document.getElementById('recqtyp1').style.backgroundColor="#CCCCCC";
+				document.getElementById('txtbalqtyp1').value="";
+				if (document.frmaddDepartment.srno2.value==2)
+				{
+					document.getElementById('recnobp2').value="";
+					document.getElementById('recnobp2').readOnly=true;
+					document.getElementById('recnobp2').style.backgroundColor="#CCCCCC";
+					document.getElementById('txtbalnobp2').value="";
+					document.getElementById('recqtyp2').value="";
+					document.getElementById('recqtyp2').readOnly=true;
+					document.getElementById('recqtyp2').style.backgroundColor="#CCCCCC";
+					document.getElementById('txtbalqtyp2').value="";
+				}
+				document.frmaddDepartment.txtconnob.value="";
+				document.frmaddDepartment.txtconqty.value="";
+				document.frmaddDepartment.txtconrem.value="";
+				document.frmaddDepartment.txtconim.value="";
+				document.frmaddDepartment.txtconpl.value="";
+				document.frmaddDepartment.txtconloss.value="";
+				document.frmaddDepartment.txtconper.value="";
+			}
+		}
+		else
+		{
+				document.getElementById('recnobp1').value="";
+				document.getElementById('recnobp1').readOnly=true;
+				document.getElementById('recnobp1').style.backgroundColor="#CCCCCC";
+				document.getElementById('txtbalnobp1').value="";
+				document.getElementById('recqtyp1').value="";
+				document.getElementById('recqtyp1').readOnly=true;
+				document.getElementById('recqtyp1').style.backgroundColor="#CCCCCC";
+				document.getElementById('txtbalqtyp1').value="";
+				if (document.frmaddDepartment.srno2.value==2)
+				{
+					document.getElementById('recnobp2').value="";
+					document.getElementById('recnobp2').readOnly=true;
+					document.getElementById('recnobp2').style.backgroundColor="#CCCCCC";
+					document.getElementById('txtbalnobp2').value="";
+					document.getElementById('recqtyp2').value="";
+					document.getElementById('recqtyp2').readOnly=true;
+					document.getElementById('recqtyp2').style.backgroundColor="#CCCCCC";
+					document.getElementById('txtbalqtyp2').value="";
+				}
+				document.frmaddDepartment.txtconnob.value="";
+				document.frmaddDepartment.txtconqty.value="";
+				document.frmaddDepartment.txtconrem.value="";
+				document.frmaddDepartment.txtconim.value="";
+				document.frmaddDepartment.txtconpl.value="";
+				document.frmaddDepartment.txtconloss.value="";
+				document.frmaddDepartment.txtconper.value="";
+		}
+		document.getElementById('avlqtypck').value="";
+		//alert(document.frmaddDepartment.paceptyp.length);
+		for(q=1; q<=document.frmaddDepartment.paceptyp.length; q++)
+		{
+			//var fet="paceptyp"+q;
+			document.getElementById("paceptyp").checked=false;
+		}
+			
+		document.getElementById('picqtyp').value="";
+		document.getElementById('picqtyp').readOnly=true;
+		document.getElementById('picqtyp').style.backgroundColor="#cccccc";
+		document.getElementById('balcnob').readOnly=true;
+		document.getElementById('balcnob').style.backgroundColor="#cccccc";
+		document.getElementById('balcnob').value="";
+		document.getElementById('balcqty').value="";
+		document.getElementById('conditionsloc').style.display="none";
+		document.getElementById('pcktype').value="";
+		
+		var sno=document.frmaddDepartment.sno.value;
+		for(var i=1; i<=sno; i++)
+		{
+			var fet="fetchk_"+i;
+			var det="dtail_"+i;
+			document.getElementById(fet).checked=false;
+			document.getElementById(det).innerHTML="Fill";
+		}
+		for(var j=1; j<=sno; j++)
+		{
+			//alert(j);
+			var a="packqty_"+j;
+			var b="nopc_"+j;
+			var c="domcs_"+j;
+			var d="lbls_"+j;
+			var e="domce_"+j;
+			var f="lble_"+j;
+			var g="mpck_"+j;
+			var h="nomp_"+j;
+			var i="noofpacks_"+j;
+			var det="dtail_"+j;
+			//alert(det);
+			document.getElementById(a).value="";
+			document.getElementById(b).value="";
+			document.getElementById(c).value="";
+			document.getElementById(d).value="";
+			document.getElementById(e).value="";
+			document.getElementById(f).value="";
+			document.getElementById(g).checked=false;
+			document.getElementById(h).value="";
+			document.getElementById(i).value="";
+			document.getElementById(det).innerHTML="Fill";
+			
+			document.getElementById(a).disabled=true;
+			document.getElementById(b).disabled=true;
+			document.getElementById(c).disabled=true;
+			document.getElementById(d).disabled=true;
+			document.getElementById(e).disabled=true;
+			document.getElementById(f).disabled=true;
+			document.getElementById(g).disabled=true;
+			document.getElementById(h).disabled=true;
+			document.getElementById(i).disabled=true;
+		}
+		document.getElementById('txtwhg1').value="";
+		document.getElementById('txtbing1').value="";
+		document.getElementById('txtsubbg1').value="";
+		document.getElementById('txtwhg2').value="";
+		document.getElementById('txtbing2').value="";
+		document.getElementById('txtsubbg2').value="";
+		document.getElementById('txtwhg3').value="";
+		document.getElementById('txtbing3').value="";
+		document.getElementById('txtsubbg3').value="";
+		document.getElementById('txtwhg4').value="";
+		document.getElementById('txtbing4').value="";
+		document.getElementById('txtsubbg4').value="";
+		document.getElementById('txtwhg5').value="";
+		document.getElementById('txtbing5').value="";
+		document.getElementById('txtsubbg5').value="";
+		document.getElementById('txtwhg6').value="";
+		document.getElementById('txtbing6').value="";
+		document.getElementById('txtsubbg6').value="";
+		document.getElementById('txtwhg7').value="";
+		document.getElementById('txtbing7').value="";
+		document.getElementById('txtsubbg7').value="";
+		document.getElementById('txtwhg8').value="";
+		document.getElementById('txtbing8').value="";
+		document.getElementById('txtsubbg8').value="";
+		
+		document.getElementById('nopmpcs_1').readOnly=true;
+		document.getElementById('nopmpcs_1').value="";
+		document.getElementById('nopmpcs_1').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_2').readOnly=true;
+		document.getElementById('nopmpcs_2').value="";
+		document.getElementById('nopmpcs_2').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_3').readOnly=true;
+		document.getElementById('nopmpcs_3').value="";
+		document.getElementById('nopmpcs_3').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_4').readOnly=true;
+		document.getElementById('nopmpcs_4').value="";
+		document.getElementById('nopmpcs_4').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_5').readOnly=true;
+		document.getElementById('nopmpcs_5').value="";
+		document.getElementById('nopmpcs_5').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_6').readOnly=true;
+		document.getElementById('nopmpcs_6').value="";
+		document.getElementById('nopmpcs_6').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_7').readOnly=true;
+		document.getElementById('nopmpcs_7').value="";
+		document.getElementById('nopmpcs_7').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_8').readOnly=true;
+		document.getElementById('nopmpcs_8').value="";
+		document.getElementById('nopmpcs_8').style.backgroundColor="#cccccc";
+		
+		document.getElementById('noppchs_1').readOnly=true;
+		document.getElementById('noppchs_1').value="";
+		document.getElementById('noppchs_1').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_2').readOnly=true;
+		document.getElementById('noppchs_2').value="";
+		document.getElementById('noppchs_2').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_3').readOnly=true;
+		document.getElementById('noppchs_3').value="";
+		document.getElementById('noppchs_3').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_4').readOnly=true;
+		document.getElementById('noppchs_4').value="";
+		document.getElementById('noppchs_4').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_5').readOnly=true;
+		document.getElementById('noppchs_5').value="";
+		document.getElementById('noppchs_5').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_6').readOnly=true;
+		document.getElementById('noppchs_6').value="";
+		document.getElementById('noppchs_6').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_7').readOnly=true;
+		document.getElementById('noppchs_7').value="";
+		document.getElementById('noppchs_7').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_8').readOnly=true;
+		document.getElementById('noppchs_8').value="";
+		document.getElementById('noppchs_8').style.backgroundColor="#cccccc";
+		
+		document.getElementById('noptpchs_1').readOnly=true;
+		document.getElementById('noptpchs_1').value="";
+		document.getElementById('noptpchs_1').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_2').readOnly=true;
+		document.getElementById('noptpchs_2').value="";
+		document.getElementById('noptpchs_2').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_3').readOnly=true;
+		document.getElementById('noptpchs_3').value="";
+		document.getElementById('noptpchs_3').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_4').readOnly=true;
+		document.getElementById('noptpchs_4').value="";
+		document.getElementById('noptpchs_4').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_5').readOnly=true;
+		document.getElementById('noptpchs_5').value="";
+		document.getElementById('noptpchs_5').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_6').readOnly=true;
+		document.getElementById('noptpchs_6').value="";
+		document.getElementById('noptpchs_6').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_7').readOnly=true;
+		document.getElementById('noptpchs_7').value="";
+		document.getElementById('noptpchs_7').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_8').readOnly=true;
+		document.getElementById('noptpchs_8').value="";
+		document.getElementById('noptpchs_8').style.backgroundColor="#cccccc";
+		
+		document.getElementById('noptqtys_1').readOnly=true;
+		document.getElementById('noptqtys_1').value="";
+		document.getElementById('noptqtys_1').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_2').readOnly=true;
+		document.getElementById('noptqtys_2').value="";
+		document.getElementById('noptqtys_2').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_3').readOnly=true;
+		document.getElementById('noptqtys_3').value="";
+		document.getElementById('noptqtys_3').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_4').readOnly=true;
+		document.getElementById('noptqtys_4').value="";
+		document.getElementById('noptqtys_4').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_5').readOnly=true;
+		document.getElementById('noptqtys_5').value="";
+		document.getElementById('noptqtys_5').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_6').readOnly=true;
+		document.getElementById('noptqtys_6').value="";
+		document.getElementById('noptqtys_6').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_7').readOnly=true;
+		document.getElementById('noptqtys_7').value="";
+		document.getElementById('noptqtys_7').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_8').readOnly=true;
+		document.getElementById('noptqtys_8').value="";
+		document.getElementById('noptqtys_8').style.backgroundColor="#cccccc";
+	}
+}
+
+function chkpronob(nobval)
+{
+	if(document.frmaddDepartment.srno2.value==2)
+	{
+		if(document.getElementById('recqtyp1').value=="" && document.getElementById('recqtyp2').value=="")
+		{
+			alert("Enter Packing Qty");
+			return false;
+		}
+	}
+	else
+	{
+		if(document.getElementById('recqtyp1').value=="")
+		{
+			alert("Enter Packing Qty");
+			return false;
+		}
+	}
+	if(nobval!="")
+	document.getElementById('avlnobpck').value=nobval;
+	else
+	document.getElementById('avlnobpck').value="";
+}
+
+function chkproqty(qtyval)
+{
+	if(document.frmaddDepartment.txtconnob.value=="")
+	{
+		alert("Enter Condition Seed NoB");
+		document.frmaddDepartment.txtconqty.value="";
+		return false;
+	}
+	else
+	{
+		document.getElementById('avlqtypck').value=qtyval;
+		for(q=1; q<=document.frmaddDepartment.paceptyp.length; q++)
+		{
+		//var fet="paceptyp"+q;
+		document.getElementById("paceptyp").checked=false;
+		}
+		
+		document.getElementById('picqtyp').value="";
+		document.getElementById('picqtyp').readOnly=true;
+		document.getElementById('picqtyp').style.backgroundColor="#cccccc";
+		document.getElementById('balcnob').readOnly=true;
+		document.getElementById('balcnob').style.backgroundColor="#cccccc";
+		document.getElementById('balcnob').value="";
+		document.getElementById('balcqty').value="";
+		document.getElementById('conditionsloc').style.display="none";
+		document.getElementById('pcktype').value="";
+		
+		var sno=document.frmaddDepartment.sno.value;
+		for(var i=1; i<=sno; i++)
+		{
+			var fet="fetchk_"+i;
+			var det="dtail_"+i;
+			document.getElementById(fet).checked=false;
+			document.getElementById(det).innerHTML="Fill";
+		}
+		for(var j=1; j<=sno; j++)
+		{
+			//alert(j);
+			var a="packqty_"+j;
+			var b="nopc_"+j;
+			var c="domcs_"+j;
+			var d="lbls_"+j;
+			var e="domce_"+j;
+			var f="lble_"+j;
+			var g="mpck_"+j;
+			var h="nomp_"+j;
+			var i="noofpacks_"+j;
+			var det="dtail_"+j;
+			//alert(det);
+			document.getElementById(a).value="";
+			document.getElementById(b).value="";
+			document.getElementById(c).value="";
+			document.getElementById(d).value="";
+			document.getElementById(e).value="";
+			document.getElementById(f).value="";
+			document.getElementById(g).checked=false;
+			document.getElementById(h).value="";
+			document.getElementById(i).value="";
+			document.getElementById(det).innerHTML="Fill";
+			
+			document.getElementById(a).disabled=true;
+			document.getElementById(b).disabled=true;
+			document.getElementById(c).disabled=true;
+			document.getElementById(d).disabled=true;
+			document.getElementById(e).disabled=true;
+			document.getElementById(f).disabled=true;
+			document.getElementById(g).disabled=true;
+			document.getElementById(h).disabled=true;
+			document.getElementById(i).disabled=true;
+		}
+		document.getElementById('txtwhg1').value="";
+		document.getElementById('txtbing1').value="";
+		document.getElementById('txtsubbg1').value="";
+		document.getElementById('txtwhg2').value="";
+		document.getElementById('txtbing2').value="";
+		document.getElementById('txtsubbg2').value="";
+		document.getElementById('txtwhg3').value="";
+		document.getElementById('txtbing3').value="";
+		document.getElementById('txtsubbg3').value="";
+		document.getElementById('txtwhg4').value="";
+		document.getElementById('txtbing4').value="";
+		document.getElementById('txtsubbg4').value="";
+		document.getElementById('txtwhg5').value="";
+		document.getElementById('txtbing5').value="";
+		document.getElementById('txtsubbg5').value="";
+		document.getElementById('txtwhg6').value="";
+		document.getElementById('txtbing6').value="";
+		document.getElementById('txtsubbg6').value="";
+		document.getElementById('txtwhg7').value="";
+		document.getElementById('txtbing7').value="";
+		document.getElementById('txtsubbg7').value="";
+		document.getElementById('txtwhg8').value="";
+		document.getElementById('txtbing8').value="";
+		document.getElementById('txtsubbg8').value="";
+		
+		document.getElementById('nopmpcs_1').readOnly=true;
+		document.getElementById('nopmpcs_1').value="";
+		document.getElementById('nopmpcs_1').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_2').readOnly=true;
+		document.getElementById('nopmpcs_2').value="";
+		document.getElementById('nopmpcs_2').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_3').readOnly=true;
+		document.getElementById('nopmpcs_3').value="";
+		document.getElementById('nopmpcs_3').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_4').readOnly=true;
+		document.getElementById('nopmpcs_4').value="";
+		document.getElementById('nopmpcs_4').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_5').readOnly=true;
+		document.getElementById('nopmpcs_5').value="";
+		document.getElementById('nopmpcs_5').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_6').readOnly=true;
+		document.getElementById('nopmpcs_6').value="";
+		document.getElementById('nopmpcs_6').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_7').readOnly=true;
+		document.getElementById('nopmpcs_7').value="";
+		document.getElementById('nopmpcs_7').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_8').readOnly=true;
+		document.getElementById('nopmpcs_8').value="";
+		document.getElementById('nopmpcs_8').style.backgroundColor="#cccccc";
+		
+		document.getElementById('noppchs_1').readOnly=true;
+		document.getElementById('noppchs_1').value="";
+		document.getElementById('noppchs_1').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_2').readOnly=true;
+		document.getElementById('noppchs_2').value="";
+		document.getElementById('noppchs_2').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_3').readOnly=true;
+		document.getElementById('noppchs_3').value="";
+		document.getElementById('noppchs_3').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_4').readOnly=true;
+		document.getElementById('noppchs_4').value="";
+		document.getElementById('noppchs_4').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_5').readOnly=true;
+		document.getElementById('noppchs_5').value="";
+		document.getElementById('noppchs_5').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_6').readOnly=true;
+		document.getElementById('noppchs_6').value="";
+		document.getElementById('noppchs_6').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_7').readOnly=true;
+		document.getElementById('noppchs_7').value="";
+		document.getElementById('noppchs_7').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_8').readOnly=true;
+		document.getElementById('noppchs_8').value="";
+		document.getElementById('noppchs_8').style.backgroundColor="#cccccc";
+		
+		document.getElementById('noptpchs_1').readOnly=true;
+		document.getElementById('noptpchs_1').value="";
+		document.getElementById('noptpchs_1').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_2').readOnly=true;
+		document.getElementById('noptpchs_2').value="";
+		document.getElementById('noptpchs_2').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_3').readOnly=true;
+		document.getElementById('noptpchs_3').value="";
+		document.getElementById('noptpchs_3').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_4').readOnly=true;
+		document.getElementById('noptpchs_4').value="";
+		document.getElementById('noptpchs_4').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_5').readOnly=true;
+		document.getElementById('noptpchs_5').value="";
+		document.getElementById('noptpchs_5').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_6').readOnly=true;
+		document.getElementById('noptpchs_6').value="";
+		document.getElementById('noptpchs_6').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_7').readOnly=true;
+		document.getElementById('noptpchs_7').value="";
+		document.getElementById('noptpchs_7').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_8').readOnly=true;
+		document.getElementById('noptpchs_8').value="";
+		document.getElementById('noptpchs_8').style.backgroundColor="#cccccc";
+		
+		document.getElementById('noptqtys_1').readOnly=true;
+		document.getElementById('noptqtys_1').value="";
+		document.getElementById('noptqtys_1').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_2').readOnly=true;
+		document.getElementById('noptqtys_2').value="";
+		document.getElementById('noptqtys_2').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_3').readOnly=true;
+		document.getElementById('noptqtys_3').value="";
+		document.getElementById('noptqtys_3').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_4').readOnly=true;
+		document.getElementById('noptqtys_4').value="";
+		document.getElementById('noptqtys_4').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_5').readOnly=true;
+		document.getElementById('noptqtys_5').value="";
+		document.getElementById('noptqtys_5').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_6').readOnly=true;
+		document.getElementById('noptqtys_6').value="";
+		document.getElementById('noptqtys_6').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_7').readOnly=true;
+		document.getElementById('noptqtys_7').value="";
+		document.getElementById('noptqtys_7').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_8').readOnly=true;
+		document.getElementById('noptqtys_8').value="";
+		document.getElementById('noptqtys_8').style.backgroundColor="#cccccc";
+	}
+}
+function chkconqty()
+{
+	var abc=0;
+	if(document.frmaddDepartment.txtconqty.value=="")
+	{
+		alert("Enter Condition Seed Qty");
+		document.frmaddDepartment.txtconrem.value="";
+		document.frmaddDepartment.txtconloss.value="";
+		document.frmaddDepartment.txtconper.value="";
+		return false;
+	}
+	if(document.frmaddDepartment.srno2.value==2)
+	{
+		abc=parseFloat(document.getElementById('recqtyp1').value)+ parseFloat(document.getElementById('recqtyp2').value);
+	}
+	else
+	{
+		abc=parseFloat(document.getElementById('recqtyp1').value);
+	}	
+	if(parseFloat(document.frmaddDepartment.txtconqty.value)> abc)
+	{
+		alert("Condition Seed Qty cannot be more than Total Quantity picked for Packing");
+		document.frmaddDepartment.txtconrem.value="";
+		return false;
+	}
+}
+function chkrm()
+{
+	if(document.frmaddDepartment.txtconrem.value=="")
+	{
+		alert("Enter Remnant (RM)");
+		document.frmaddDepartment.txtconim.value="";
+		document.frmaddDepartment.txtconloss.value="";
+		document.frmaddDepartment.txtconper.value="";
+		return false;
+	}
+}
+
+function chkim(plval)
+{
+	if(document.frmaddDepartment.txtconim.value=="")
+	{
+		alert("Enter Inert Material (IM)");
+		document.frmaddDepartment.txtconpl.value="";
+		document.frmaddDepartment.txtconloss.value="";
+		document.frmaddDepartment.txtconper.value="";
+		return false;
+	}
+	else
+	{
+	var tpl=parseFloat(document.frmaddDepartment.txtconrem.value)+parseFloat(document.frmaddDepartment.txtconim.value)+parseFloat(plval);
+	var plper=parseFloat(document.getElementById('recqtyp1').value);
+	if(document.frmaddDepartment.srno2.value==2)
+	{
+		plper=parseFloat(plper)+parseFloat(document.getElementById('recqtyp2').value);
+	}
+	
+	//alert(tpl);
+	//alert(document.frmaddDepartment.txtconqty.value);
+	//alert(plper);
+	var totalval=parseFloat(tpl)+parseFloat(document.frmaddDepartment.txtconqty.value);
+	//alert((Math.round(totalval*1000)/1000));
+	totalval=Math.round(totalval*1000)/1000;
+	if((parseFloat(totalval))!=parseFloat(plper))
+	{
+		alert("Quantity Mismatch. Please check\nTotal Quantity picked for Packing is not eual to sum total of Condition Seed & Total Condition Loss");
+		document.frmaddDepartment.txtconpl.value="";
+		document.frmaddDepartment.txtconpl.focus();
+		document.frmaddDepartment.txtconloss.value="";
+		document.frmaddDepartment.txtconper.value="";
+		return false;
+	}
+	else
+	{
+	document.frmaddDepartment.txtconloss.value=tpl;
+	var vaal=parseFloat(document.frmaddDepartment.txtconloss.value)/parseFloat(plper)*100;
+	document.frmaddDepartment.txtconper.value=Math.round((vaal)*100)/100;
+	}
+	}
+}
+
+function sschk1()
+{
+	if(document.frmaddDepartment.txtvariety.value=="")
+	{
+		alert("Select Variety");
+		document.frmaddDepartment.txtstage.selectedIndex=0;
+		document.frmaddDepartment.txtvariety.focus();
+		return false;
+	}
+	else
+	{
+		document.getElementById("postingsubsubtable").innerHTML="";
+		document.frmaddDepartment.txtlot1.value="";
+	}
+}
+
+function sschk2()
+{
+	if(document.frmaddDepartment.txtstage.value=="")
+	{
+		alert("Select Stage");
+		document.frmaddDepartment.txtpromech.selectedIndex=0;
+		document.frmaddDepartment.txtstage.focus();
+		return false;
+	}
+}
+
+function sschk3()
+{
+	if(document.frmaddDepartment.txtpromech.value=="")
+	{
+		alert("Select Processing Machine Code");
+		document.frmaddDepartment.txtoprname.selectedIndex=0;
+		document.frmaddDepartment.txtpromech.focus();
+		return false;
+	}
+}
+
+function sschk4()
+{
+	if(document.frmaddDepartment.txtoprname.value=="")
+	{
+		alert("Select Operator");
+		document.frmaddDepartment.txttreattyp.selectedIndex=0;
+		document.frmaddDepartment.txtoprname.focus();
+		return false;
+	}
+}
+
+function mpchk(val1, val12)
+{
+	if(document.getElementById('lble_'+[val12]).value=="")
+	{
+		alert("Please enter Label No.");
+		document.getElementById('mpck_'+[val12]).checked=false
+		document.getElementById('lble_'+[val12]).focus()
+		return false;
+	}
+	else
+	{
+		if(document.getElementById('mpck_'+[val12]).checked == true)
+		{
+			document.getElementById('nomp_'+[val12]).readOnly=false;
+			document.getElementById('nomp_'+[val12]).style.backgroundColor="#ffffff";
+			//alert(document.getElementById('packqty_'+[val12]).value);
+			//alert(document.getElementById('wtmp_'+[val12]).value);
+			document.getElementById('nomp_'+[val12]).value=Math.floor(parseFloat(document.getElementById('packqty_'+[val12]).value)/parseFloat(document.getElementById('wtmp_'+[val12]).value));
+			
+			var balnop=parseInt(document.getElementById('nomp_'+[val12]).value)*parseInt(document.getElementById('wtnop_'+[val12]).value);
+			//alert(document.getElementById('nopc_'+[val12]).value);
+			//alert(balnop);
+			document.getElementById('noofpacks_'+[val12]).value=parseInt(document.getElementById('nopc_'+[val12]).value)-parseInt(balnop);
+			document.frmaddDepartment.nopks.value=document.getElementById('noofpacks_'+[val12]).value;
+			document.getElementById('dtail_'+[val12]).innerHTML="<a href='Javascript:void(0)' onclick='detailspop()'>Fill</a>";
+			
+			document.getElementById('txtwhg1').value="";
+			document.getElementById('txtbing1').value="";
+			document.getElementById('txtsubbg1').value="";
+			document.getElementById('txtwhg2').value="";
+			document.getElementById('txtbing2').value="";
+			document.getElementById('txtsubbg2').value="";
+			document.getElementById('txtwhg3').value="";
+			document.getElementById('txtbing3').value="";
+			document.getElementById('txtsubbg3').value="";
+			document.getElementById('txtwhg4').value="";
+			document.getElementById('txtbing4').value="";
+			document.getElementById('txtsubbg4').value="";
+			document.getElementById('txtwhg5').value="";
+			document.getElementById('txtbing5').value="";
+			document.getElementById('txtsubbg5').value="";
+			document.getElementById('txtwhg6').value="";
+			document.getElementById('txtbing6').value="";
+			document.getElementById('txtsubbg6').value="";
+			document.getElementById('txtwhg7').value="";
+			document.getElementById('txtbing7').value="";
+			document.getElementById('txtsubbg7').value="";
+			document.getElementById('txtwhg8').value="";
+			document.getElementById('txtbing8').value="";
+			document.getElementById('txtsubbg8').value="";
+			
+			document.getElementById('nopmpcs_1').readOnly=true;
+			document.getElementById('nopmpcs_1').value="";
+			document.getElementById('nopmpcs_1').style.backgroundColor="#cccccc";
+			document.getElementById('nopmpcs_2').readOnly=true;
+			document.getElementById('nopmpcs_2').value="";
+			document.getElementById('nopmpcs_2').style.backgroundColor="#cccccc";
+			document.getElementById('nopmpcs_3').readOnly=true;
+			document.getElementById('nopmpcs_3').value="";
+			document.getElementById('nopmpcs_3').style.backgroundColor="#cccccc";
+			document.getElementById('nopmpcs_4').readOnly=true;
+			document.getElementById('nopmpcs_4').value="";
+			document.getElementById('nopmpcs_4').style.backgroundColor="#cccccc";
+			document.getElementById('nopmpcs_5').readOnly=true;
+			document.getElementById('nopmpcs_5').value="";
+			document.getElementById('nopmpcs_5').style.backgroundColor="#cccccc";
+			document.getElementById('nopmpcs_6').readOnly=true;
+			document.getElementById('nopmpcs_6').value="";
+			document.getElementById('nopmpcs_6').style.backgroundColor="#cccccc";
+			document.getElementById('nopmpcs_7').readOnly=true;
+			document.getElementById('nopmpcs_7').value="";
+			document.getElementById('nopmpcs_7').style.backgroundColor="#cccccc";
+			document.getElementById('nopmpcs_8').readOnly=true;
+			document.getElementById('nopmpcs_8').value="";
+			document.getElementById('nopmpcs_8').style.backgroundColor="#cccccc";
+			
+			document.getElementById('noppchs_1').readOnly=true;
+			document.getElementById('noppchs_1').value="";
+			document.getElementById('noppchs_1').style.backgroundColor="#cccccc";
+			document.getElementById('noppchs_2').readOnly=true;
+			document.getElementById('noppchs_2').value="";
+			document.getElementById('noppchs_2').style.backgroundColor="#cccccc";
+			document.getElementById('noppchs_3').readOnly=true;
+			document.getElementById('noppchs_3').value="";
+			document.getElementById('noppchs_3').style.backgroundColor="#cccccc";
+			document.getElementById('noppchs_4').readOnly=true;
+			document.getElementById('noppchs_4').value="";
+			document.getElementById('noppchs_4').style.backgroundColor="#cccccc";
+			document.getElementById('noppchs_5').readOnly=true;
+			document.getElementById('noppchs_5').value="";
+			document.getElementById('noppchs_5').style.backgroundColor="#cccccc";
+			document.getElementById('noppchs_6').readOnly=true;
+			document.getElementById('noppchs_6').value="";
+			document.getElementById('noppchs_6').style.backgroundColor="#cccccc";
+			document.getElementById('noppchs_7').readOnly=true;
+			document.getElementById('noppchs_7').value="";
+			document.getElementById('noppchs_7').style.backgroundColor="#cccccc";
+			document.getElementById('noppchs_8').readOnly=true;
+			document.getElementById('noppchs_8').value="";
+			document.getElementById('noppchs_8').style.backgroundColor="#cccccc";
+			
+			document.getElementById('noptpchs_1').readOnly=true;
+			document.getElementById('noptpchs_1').value="";
+			document.getElementById('noptpchs_1').style.backgroundColor="#cccccc";
+			document.getElementById('noptpchs_2').readOnly=true;
+			document.getElementById('noptpchs_2').value="";
+			document.getElementById('noptpchs_2').style.backgroundColor="#cccccc";
+			document.getElementById('noptpchs_3').readOnly=true;
+			document.getElementById('noptpchs_3').value="";
+			document.getElementById('noptpchs_3').style.backgroundColor="#cccccc";
+			document.getElementById('noptpchs_4').readOnly=true;
+			document.getElementById('noptpchs_4').value="";
+			document.getElementById('noptpchs_4').style.backgroundColor="#cccccc";
+			document.getElementById('noptpchs_5').readOnly=true;
+			document.getElementById('noptpchs_5').value="";
+			document.getElementById('noptpchs_5').style.backgroundColor="#cccccc";
+			document.getElementById('noptpchs_6').readOnly=true;
+			document.getElementById('noptpchs_6').value="";
+			document.getElementById('noptpchs_6').style.backgroundColor="#cccccc";
+			document.getElementById('noptpchs_7').readOnly=true;
+			document.getElementById('noptpchs_7').value="";
+			document.getElementById('noptpchs_7').style.backgroundColor="#cccccc";
+			document.getElementById('noptpchs_8').readOnly=true;
+			document.getElementById('noptpchs_8').value="";
+			document.getElementById('noptpchs_8').style.backgroundColor="#cccccc";
+			
+			document.getElementById('noptqtys_1').readOnly=true;
+			document.getElementById('noptqtys_1').value="";
+			document.getElementById('noptqtys_1').style.backgroundColor="#cccccc";
+			document.getElementById('noptqtys_2').readOnly=true;
+			document.getElementById('noptqtys_2').value="";
+			document.getElementById('noptqtys_2').style.backgroundColor="#cccccc";
+			document.getElementById('noptqtys_3').readOnly=true;
+			document.getElementById('noptqtys_3').value="";
+			document.getElementById('noptqtys_3').style.backgroundColor="#cccccc";
+			document.getElementById('noptqtys_4').readOnly=true;
+			document.getElementById('noptqtys_4').value="";
+			document.getElementById('noptqtys_4').style.backgroundColor="#cccccc";
+			document.getElementById('noptqtys_5').readOnly=true;
+			document.getElementById('noptqtys_5').value="";
+			document.getElementById('noptqtys_5').style.backgroundColor="#cccccc";
+			document.getElementById('noptqtys_6').readOnly=true;
+			document.getElementById('noptqtys_6').value="";
+			document.getElementById('noptqtys_6').style.backgroundColor="#cccccc";
+			document.getElementById('noptqtys_7').readOnly=true;
+			document.getElementById('noptqtys_7').value="";
+			document.getElementById('noptqtys_7').style.backgroundColor="#cccccc";
+			document.getElementById('noptqtys_8').readOnly=true;
+			document.getElementById('noptqtys_8').value="";
+			document.getElementById('noptqtys_8').style.backgroundColor="#cccccc";
+		}
+		else
+		{
+			document.getElementById('nomp_'+[val12]).readOnly=true;
+			document.getElementById('nomp_'+[val12]).value="";
+			document.getElementById('nomp_'+[val12]).style.backgroundColor="#cccccc";
+			document.getElementById('nomp_'+[val12]).value="";
+			document.getElementById('noofpacks_'+[val12]).value="";
+			document.getElementById('dtail_'+[val12]).innerHTML="Fill";
+			document.frmaddDepartment.detmpbno.value="";
+			
+			document.getElementById('txtwhg1').value="";
+			document.getElementById('txtbing1').value="";
+			document.getElementById('txtsubbg1').value="";
+			document.getElementById('txtwhg2').value="";
+			document.getElementById('txtbing2').value="";
+			document.getElementById('txtsubbg2').value="";
+			document.getElementById('txtwhg3').value="";
+			document.getElementById('txtbing3').value="";
+			document.getElementById('txtsubbg3').value="";
+			document.getElementById('txtwhg4').value="";
+			document.getElementById('txtbing4').value="";
+			document.getElementById('txtsubbg4').value="";
+			document.getElementById('txtwhg5').value="";
+			document.getElementById('txtbing5').value="";
+			document.getElementById('txtsubbg5').value="";
+			document.getElementById('txtwhg6').value="";
+			document.getElementById('txtbing6').value="";
+			document.getElementById('txtsubbg6').value="";
+			document.getElementById('txtwhg7').value="";
+			document.getElementById('txtbing7').value="";
+			document.getElementById('txtsubbg7').value="";
+			document.getElementById('txtwhg8').value="";
+			document.getElementById('txtbing8').value="";
+			document.getElementById('txtsubbg8').value="";
+			
+			document.getElementById('nopmpcs_1').readOnly=true;
+			document.getElementById('nopmpcs_1').value="";
+			document.getElementById('nopmpcs_1').style.backgroundColor="#cccccc";
+			document.getElementById('nopmpcs_2').readOnly=true;
+			document.getElementById('nopmpcs_2').value="";
+			document.getElementById('nopmpcs_2').style.backgroundColor="#cccccc";
+			document.getElementById('nopmpcs_3').readOnly=true;
+			document.getElementById('nopmpcs_3').value="";
+			document.getElementById('nopmpcs_3').style.backgroundColor="#cccccc";
+			document.getElementById('nopmpcs_4').readOnly=true;
+			document.getElementById('nopmpcs_4').value="";
+			document.getElementById('nopmpcs_4').style.backgroundColor="#cccccc";
+			document.getElementById('nopmpcs_5').readOnly=true;
+			document.getElementById('nopmpcs_5').value="";
+			document.getElementById('nopmpcs_5').style.backgroundColor="#cccccc";
+			document.getElementById('nopmpcs_6').readOnly=true;
+			document.getElementById('nopmpcs_6').value="";
+			document.getElementById('nopmpcs_6').style.backgroundColor="#cccccc";
+			document.getElementById('nopmpcs_7').readOnly=true;
+			document.getElementById('nopmpcs_7').value="";
+			document.getElementById('nopmpcs_7').style.backgroundColor="#cccccc";
+			document.getElementById('nopmpcs_8').readOnly=true;
+			document.getElementById('nopmpcs_8').value="";
+			document.getElementById('nopmpcs_8').style.backgroundColor="#cccccc";
+			
+			document.getElementById('noppchs_1').readOnly=true;
+			document.getElementById('noppchs_1').value="";
+			document.getElementById('noppchs_1').style.backgroundColor="#cccccc";
+			document.getElementById('noppchs_2').readOnly=true;
+			document.getElementById('noppchs_2').value="";
+			document.getElementById('noppchs_2').style.backgroundColor="#cccccc";
+			document.getElementById('noppchs_3').readOnly=true;
+			document.getElementById('noppchs_3').value="";
+			document.getElementById('noppchs_3').style.backgroundColor="#cccccc";
+			document.getElementById('noppchs_4').readOnly=true;
+			document.getElementById('noppchs_4').value="";
+			document.getElementById('noppchs_4').style.backgroundColor="#cccccc";
+			document.getElementById('noppchs_5').readOnly=true;
+			document.getElementById('noppchs_5').value="";
+			document.getElementById('noppchs_5').style.backgroundColor="#cccccc";
+			document.getElementById('noppchs_6').readOnly=true;
+			document.getElementById('noppchs_6').value="";
+			document.getElementById('noppchs_6').style.backgroundColor="#cccccc";
+			document.getElementById('noppchs_7').readOnly=true;
+			document.getElementById('noppchs_7').value="";
+			document.getElementById('noppchs_7').style.backgroundColor="#cccccc";
+			document.getElementById('noppchs_8').readOnly=true;
+			document.getElementById('noppchs_8').value="";
+			document.getElementById('noppchs_8').style.backgroundColor="#cccccc";
+			
+			document.getElementById('noptpchs_1').readOnly=true;
+			document.getElementById('noptpchs_1').value="";
+			document.getElementById('noptpchs_1').style.backgroundColor="#cccccc";
+			document.getElementById('noptpchs_2').readOnly=true;
+			document.getElementById('noptpchs_2').value="";
+			document.getElementById('noptpchs_2').style.backgroundColor="#cccccc";
+			document.getElementById('noptpchs_3').readOnly=true;
+			document.getElementById('noptpchs_3').value="";
+			document.getElementById('noptpchs_3').style.backgroundColor="#cccccc";
+			document.getElementById('noptpchs_4').readOnly=true;
+			document.getElementById('noptpchs_4').value="";
+			document.getElementById('noptpchs_4').style.backgroundColor="#cccccc";
+			document.getElementById('noptpchs_5').readOnly=true;
+			document.getElementById('noptpchs_5').value="";
+			document.getElementById('noptpchs_5').style.backgroundColor="#cccccc";
+			document.getElementById('noptpchs_6').readOnly=true;
+			document.getElementById('noptpchs_6').value="";
+			document.getElementById('noptpchs_6').style.backgroundColor="#cccccc";
+			document.getElementById('noptpchs_7').readOnly=true;
+			document.getElementById('noptpchs_7').value="";
+			document.getElementById('noptpchs_7').style.backgroundColor="#cccccc";
+			document.getElementById('noptpchs_8').readOnly=true;
+			document.getElementById('noptpchs_8').value="";
+			document.getElementById('noptpchs_8').style.backgroundColor="#cccccc";
+			
+			document.getElementById('noptqtys_1').readOnly=true;
+			document.getElementById('noptqtys_1').value="";
+			document.getElementById('noptqtys_1').style.backgroundColor="#cccccc";
+			document.getElementById('noptqtys_2').readOnly=true;
+			document.getElementById('noptqtys_2').value="";
+			document.getElementById('noptqtys_2').style.backgroundColor="#cccccc";
+			document.getElementById('noptqtys_3').readOnly=true;
+			document.getElementById('noptqtys_3').value="";
+			document.getElementById('noptqtys_3').style.backgroundColor="#cccccc";
+			document.getElementById('noptqtys_4').readOnly=true;
+			document.getElementById('noptqtys_4').value="";
+			document.getElementById('noptqtys_4').style.backgroundColor="#cccccc";
+			document.getElementById('noptqtys_5').readOnly=true;
+			document.getElementById('noptqtys_5').value="";
+			document.getElementById('noptqtys_5').style.backgroundColor="#cccccc";
+			document.getElementById('noptqtys_6').readOnly=true;
+			document.getElementById('noptqtys_6').value="";
+			document.getElementById('noptqtys_6').style.backgroundColor="#cccccc";
+			document.getElementById('noptqtys_7').readOnly=true;
+			document.getElementById('noptqtys_7').value="";
+			document.getElementById('noptqtys_7').style.backgroundColor="#cccccc";
+			document.getElementById('noptqtys_8').readOnly=true;
+			document.getElementById('noptqtys_8').value="";
+			document.getElementById('noptqtys_8').style.backgroundColor="#cccccc";
+		}
+	}
+}
+
+function balnopcheck(balval, val12)
+{
+	if(parseInt(balval) > 0)
+	{
+		var upssize="upssize_"+val12;
+		var ups=document.getElementById(upssize).value.split(' ');
+		var ptp=0; var nopinmp=0; var nnoopp="";
+		var packnop=document.getElementById('nomp_'+[val12]).value;
+		var wtinmp=document.getElementById('wtmp_'+[val12]).value;
+		if(ups[1]=="Gms")
+		{
+			ptp=((parseFloat(ups[0])*parseFloat(packnop))/1000);
+			nnoopp=parseFloat(ups[0]);
+			nopinmp=parseFloat(wtinmp)*(1000/parseFloat(nnoopp));
+		}
+		else
+		{
+			ptp=(parseFloat(ups[0])*parseFloat(packnop));
+			nnoopp=(parseFloat(ups[0])*1000);
+			nopinmp=parseFloat(wtinmp)*(1000/parseFloat(ups[0]));
+		}
+		alert(ptp);
+		alert(nopinmp);
+		alert(document.getElementById('w').value);
+		if(parseInt(ptp) > parseInt(document.getElementById('w').value))
+		{
+			alert("Total Weight of NoP entered cannot be greater than Master Pack Size");
+			document.getElementById('nomp_'+[val12]).focus();
+			document.getElementById('noofpacks_'+[val12]).value="";
+			return false;
+		}
+		else
+		{
+			document.getElementById('noofpacks_'+[val12]).value=parseInt(document.getElementById('nopc_'+[val12]).value)-parseInt(balval);
+		}
+	}
+	else
+	{
+		alert("No. of Pouches cannot be Zero");
+		document.getElementById('nomp_'+[val12]).focus();
+		document.getElementById('noofpacks_'+[val12]).value="";
+		return false;
+	}
+}
+
+function pacpchk(pacpcval, snoval, sno33val)
+{
+	var nomp="nomp_"+snoval;
+	var nophs="nophs"+snoval+"_"+sno33val;
+	var balnophs="balnophs"+snoval+"_"+sno33val;
+	var extnophs="extnophs"+snoval+"_"+sno33val;
+	var sno33="sno33_"+snoval;
+	var tonop=0;
+	var f=0;
+	if(parseInt(document.getElementById(nophs).value)>parseInt(document.getElementById(nomp).value))
+	{
+		alert("NoP from SLOC cannot be more than NoP");
+		document.getElementById(nophs).value="";
+		document.getElementById(balnophs).value="";
+		document.getElementById(nophs).focus;
+		f=1;
+		return false;
+	}
+	for (var i=1; i<=document.getElementById(sno33).value; i++)
+	{
+		tonop=parseInt(tonop)+parseInt(document.getElementById(nophs).value);
+	}
+	if(parseInt(tonop)==0)
+	{
+		alert("Please enter NoP");
+		document.getElementById(nophs).value="";
+		document.getElementById(balnophs).value="";
+		document.getElementById(nophs).focus;
+		f=1;
+		return false;
+	}
+	if(parseInt(tonop)>parseInt(document.getElementById(nomp).value))
+	{
+		alert("Total of NoP from SLOC cannot be more than NoP");
+		document.getElementById(nophs).value="";
+		document.getElementById(balnophs).value="";
+		document.getElementById(nophs).focus;
+		f=1;
+		return false;
+	}
+	if(f==0)
+	{
+		document.getElementById(balnophs).value=parseInt(document.getElementById(extnophs).value)-parseInt(document.getElementById(nophs).value);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+function pcksel(pkselval)
+{ //alert(pkselval);
+	if(document.frmaddDepartment.validityupto.value=="")
+	{
+		alert("Select Validity Period");
+		document.frmaddDepartment.validityperiod.focus();
+		for( var i=0; i<document.frmaddDepartment.paceptyp.length; i++)
+		{
+			document.getElementById('paceptyp').checked=false;
+		}
+		document.frmaddDepartment.pcktype.value="";
+		return false;
+	}
+	else
+	{
+		if(pkselval=="P")
+		{
+			document.getElementById('txtbalnobp1').value="";
+			document.getElementById('recqtyp1').value="";
+			document.getElementById('recqtyp1').readOnly=false;
+			document.getElementById('recqtyp1').style.backgroundColor="#FFFFFF";
+			document.getElementById('txtbalqtyp1').value="";
+			if (document.frmaddDepartment.srno2.value==2)
+			{
+				document.getElementById('txtbalnobp2').value="";
+				document.getElementById('recqtyp2').value="";
+				document.getElementById('recqtyp2').readOnly=false;
+				document.getElementById('recqtyp2').style.backgroundColor="#FFFFFF";
+				document.getElementById('txtbalqtyp2').value="";
+			}
+			document.getElementById('picqtyp').value="";
+			document.getElementById('balpck').value="";
+		}
+		else
+		{
+			document.getElementById('txtbalnobp1').value=0;
+			document.getElementById('recqtyp1').value=document.getElementById('txtextqty1').value;
+			document.getElementById('recqtyp1').readOnly=true;
+			document.getElementById('recqtyp1').style.backgroundColor="#CCCCCC";
+			document.getElementById('txtbalqtyp1').value=0;
+			var val2=0.00;
+			if (document.frmaddDepartment.srno2.value==2)
+			{
+				document.getElementById('txtbalnobp2').value=0;
+				document.getElementById('recqtyp2').value=document.getElementById('txtextqty2').value;
+				document.getElementById('recqtyp2').readOnly=true;
+				document.getElementById('recqtyp2').style.backgroundColor="#CCCCCC";
+				document.getElementById('txtbalqtyp2').value=0;
+				val2=parseFloat(document.getElementById('txtextqty2').value);
+			}
+			document.getElementById('picqtyp').value=parseFloat(document.getElementById('txtextqty1').value)+parseFloat(val2);
+			document.getElementById('picqtyp').readOnly=true;
+			document.getElementById('picqtyp').style.backgroundColor="#cccccc";
+			var pckloss=document.getElementById('pckloss').value;
+			var ccloss=document.getElementById('ccloss').value;
+			if(pckloss=="")pckloss=0;
+			if(ccloss=="")ccloss=0;
+			document.getElementById('balpck').value=parseFloat(document.getElementById('picqtyp').value)-(parseFloat(pckloss)+parseFloat(ccloss))
+		}
+		document.getElementById('pcktype').value=pkselval;
+		
+		var sno=document.frmaddDepartment.sno.value;
+		for(var i=1; i<=sno; i++)
+		{
+			var fet="fetchk_"+i;
+			var det="dtail_"+i;
+			document.getElementById(fet).checked=false;
+			document.getElementById(det).innerHTML="Fill";
+		}
+		for(var j=1; j<=sno; j++)
+		{
+			//alert(j);
+			var a="packqty_"+j;
+			var b="nopc_"+j;
+			var c="domcs_"+j;
+			var d="lbls_"+j;
+			var e="domce_"+j;
+			var f="lble_"+j;
+			var g="mpck_"+j;
+			var h="nomp_"+j;
+			var i="noofpacks_"+j;
+			var det="dtail_"+j;
+			//alert(det);
+			document.getElementById(a).value="";
+			document.getElementById(b).value="";
+			document.getElementById(c).value="";
+			document.getElementById(d).value="";
+			document.getElementById(e).value="";
+			document.getElementById(f).value="";
+			document.getElementById(g).checked=false;
+			document.getElementById(h).value="";
+			document.getElementById(i).value="";
+			document.getElementById(det).innerHTML="Fill";
+			
+			document.getElementById(a).disabled=true;
+			document.getElementById(b).disabled=true;
+			document.getElementById(c).disabled=true;
+			document.getElementById(d).disabled=true;
+			document.getElementById(e).disabled=true;
+			document.getElementById(f).disabled=true;
+			document.getElementById(g).disabled=true;
+			document.getElementById(h).disabled=true;
+			document.getElementById(i).disabled=true;
+		}
+		document.getElementById('txtwhg1').value="";
+		document.getElementById('txtbing1').value="";
+		document.getElementById('txtsubbg1').value="";
+		document.getElementById('txtwhg2').value="";
+		document.getElementById('txtbing2').value="";
+		document.getElementById('txtsubbg2').value="";
+		document.getElementById('txtwhg3').value="";
+		document.getElementById('txtbing3').value="";
+		document.getElementById('txtsubbg3').value="";
+		document.getElementById('txtwhg4').value="";
+		document.getElementById('txtbing4').value="";
+		document.getElementById('txtsubbg4').value="";
+		document.getElementById('txtwhg5').value="";
+		document.getElementById('txtbing5').value="";
+		document.getElementById('txtsubbg5').value="";
+		document.getElementById('txtwhg6').value="";
+		document.getElementById('txtbing6').value="";
+		document.getElementById('txtsubbg6').value="";
+		document.getElementById('txtwhg7').value="";
+		document.getElementById('txtbing7').value="";
+		document.getElementById('txtsubbg7').value="";
+		document.getElementById('txtwhg8').value="";
+		document.getElementById('txtbing8').value="";
+		document.getElementById('txtsubbg8').value="";
+		
+		document.getElementById('nopmpcs_1').readOnly=true;
+		document.getElementById('nopmpcs_1').value="";
+		document.getElementById('nopmpcs_1').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_2').readOnly=true;
+		document.getElementById('nopmpcs_2').value="";
+		document.getElementById('nopmpcs_2').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_3').readOnly=true;
+		document.getElementById('nopmpcs_3').value="";
+		document.getElementById('nopmpcs_3').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_4').readOnly=true;
+		document.getElementById('nopmpcs_4').value="";
+		document.getElementById('nopmpcs_4').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_5').readOnly=true;
+		document.getElementById('nopmpcs_5').value="";
+		document.getElementById('nopmpcs_5').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_6').readOnly=true;
+		document.getElementById('nopmpcs_6').value="";
+		document.getElementById('nopmpcs_6').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_7').readOnly=true;
+		document.getElementById('nopmpcs_7').value="";
+		document.getElementById('nopmpcs_7').style.backgroundColor="#cccccc";
+		document.getElementById('nopmpcs_8').readOnly=true;
+		document.getElementById('nopmpcs_8').value="";
+		document.getElementById('nopmpcs_8').style.backgroundColor="#cccccc";
+		
+		document.getElementById('noppchs_1').readOnly=true;
+		document.getElementById('noppchs_1').value="";
+		document.getElementById('noppchs_1').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_2').readOnly=true;
+		document.getElementById('noppchs_2').value="";
+		document.getElementById('noppchs_2').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_3').readOnly=true;
+		document.getElementById('noppchs_3').value="";
+		document.getElementById('noppchs_3').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_4').readOnly=true;
+		document.getElementById('noppchs_4').value="";
+		document.getElementById('noppchs_4').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_5').readOnly=true;
+		document.getElementById('noppchs_5').value="";
+		document.getElementById('noppchs_5').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_6').readOnly=true;
+		document.getElementById('noppchs_6').value="";
+		document.getElementById('noppchs_6').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_7').readOnly=true;
+		document.getElementById('noppchs_7').value="";
+		document.getElementById('noppchs_7').style.backgroundColor="#cccccc";
+		document.getElementById('noppchs_8').readOnly=true;
+		document.getElementById('noppchs_8').value="";
+		document.getElementById('noppchs_8').style.backgroundColor="#cccccc";
+		
+		document.getElementById('noptpchs_1').readOnly=true;
+		document.getElementById('noptpchs_1').value="";
+		document.getElementById('noptpchs_1').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_2').readOnly=true;
+		document.getElementById('noptpchs_2').value="";
+		document.getElementById('noptpchs_2').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_3').readOnly=true;
+		document.getElementById('noptpchs_3').value="";
+		document.getElementById('noptpchs_3').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_4').readOnly=true;
+		document.getElementById('noptpchs_4').value="";
+		document.getElementById('noptpchs_4').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_5').readOnly=true;
+		document.getElementById('noptpchs_5').value="";
+		document.getElementById('noptpchs_5').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_6').readOnly=true;
+		document.getElementById('noptpchs_6').value="";
+		document.getElementById('noptpchs_6').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_7').readOnly=true;
+		document.getElementById('noptpchs_7').value="";
+		document.getElementById('noptpchs_7').style.backgroundColor="#cccccc";
+		document.getElementById('noptpchs_8').readOnly=true;
+		document.getElementById('noptpchs_8').value="";
+		document.getElementById('noptpchs_8').style.backgroundColor="#cccccc";
+		
+		document.getElementById('noptqtys_1').readOnly=true;
+		document.getElementById('noptqtys_1').value="";
+		document.getElementById('noptqtys_1').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_2').readOnly=true;
+		document.getElementById('noptqtys_2').value="";
+		document.getElementById('noptqtys_2').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_3').readOnly=true;
+		document.getElementById('noptqtys_3').value="";
+		document.getElementById('noptqtys_3').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_4').readOnly=true;
+		document.getElementById('noptqtys_4').value="";
+		document.getElementById('noptqtys_4').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_5').readOnly=true;
+		document.getElementById('noptqtys_5').value="";
+		document.getElementById('noptqtys_5').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_6').readOnly=true;
+		document.getElementById('noptqtys_6').value="";
+		document.getElementById('noptqtys_6').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_7').readOnly=true;
+		document.getElementById('noptqtys_7').value="";
+		document.getElementById('noptqtys_7').style.backgroundColor="#cccccc";
+		document.getElementById('noptqtys_8').readOnly=true;
+		document.getElementById('noptqtys_8').value="";
+		document.getElementById('noptqtys_8').style.backgroundColor="#cccccc";
+	}
+}
+
+function chktotpouches(qtyval, qtyno)
+{
+	if(parseFloat(document.frmaddDepartment.balpck.value)!=parseFloat(qtyval))
+	{
+		alert("Please check. Quantity selected for packing and Quantity entered in Pack Seed is not matching");
+		var packqty="packqty_"+qtyno;
+		var nopc="nopc_"+qtyno;
+		var domcs="domcs_"+qtyno;
+		var lbls="lbls_"+qtyno;
+		var domce="domce_"+qtyno;
+		var lble="lble_"+qtyno;
+		var mpck="mpck_"+qtyno;
+		var nomp="nomp_"+qtyno;
+		var noofpacks="noofpacks_"+qtyno;
+		var detmpbno="detmpbno";
+		
+		document.getElementById(packqty).value="";
+		document.getElementById(nopc).value="";
+		document.getElementById(domcs).value="";
+		document.getElementById(lbls).value="";
+		document.getElementById(domce).value="";
+		document.getElementById(lble).value="";
+		document.getElementById(mpck).value="";
+		document.getElementById(nomp).value="";
+		document.getElementById(noofpacks).value="";
+		document.getElementById(detmpbno).value="";
+		return false;
+	}
+	else
+	{
+	var wtnop="wtnopkg_"+qtyno;
+	var z="nopc_"+qtyno;
+	var ds="noofpacks_"+qtyno;
+	var zx=(parseFloat(qtyval)/parseFloat(document.getElementById(wtnop).value));
+	document.getElementById(z).value=parseInt(zx);
+	document.getElementById(ds).value=parseInt(zx);
+	}
+}
+
+function domcchk(val1, val2)
+{
+var x="domce_"+val2;
+if(val1!="")
+{
+document.getElementById(x).value=val1;
+}
+else
+{
+document.getElementById(x).value="";
+}
+}
+
+function domchk(dval)
+{
+	var x="domcs_"+dval;
+	if(document.getElementById(x).value=="")
+	{
+		alert("Please select Label character");
+		return false;
+	}
+}
+
+function domchk1(lbval, dval)
+{
+	var x="lbls_"+dval;
+	var tx="lble_"+dval;
+	if(document.getElementById(x).value=="")
+	{
+		alert("Please enter Label number");
+		document.getElementById(tx).focus();
+		return false;
+	}
+	else
+	{
+		var z="nopc_"+dval;
+		var xx="lble_"+dval;
+		if(parseInt(lbval)-parseInt(document.getElementById(x).value)<parseInt(document.getElementById(z).value))
+		{
+			alert("Total Label nos. are not matching with No. of Pouches");
+			document.getElementById(xx).value="";
+			return false;
+		}
+	}
+}
+
+function pfpchk(pfpval)
+{
+	document.getElementById('balcqty').value=parseFloat(document.getElementById('avlqtypck').value)-parseFloat(pfpval);
+	if(document.getElementById('balcqty').value<=0)
+	{
+		document.getElementById('balcqty').value=0;
+		document.getElementById('balcnob').value=0;
+	}
+	var sno=document.frmaddDepartment.sno.value;
+	for(var i=1; i<=sno; i++)
+	{
+		var fet="fetchk_"+i;
+		var det="dtail_"+i;
+		document.getElementById(fet).checked=false;
+		document.getElementById(det).innerHTML="Fill";
+	}
+	for(var j=1; j<=sno; j++)
+	{
+		//alert(j);
+		var a="packqty_"+j;
+		var b="nopc_"+j;
+		var c="domcs_"+j;
+		var d="lbls_"+j;
+		var e="domce_"+j;
+		var f="lble_"+j;
+		var g="mpck_"+j;
+		var h="nomp_"+j;
+		var i="noofpacks_"+j;
+		var det="dtail_"+j;
+		//alert(det);
+		document.getElementById(a).value="";
+		document.getElementById(b).value="";
+		document.getElementById(c).value="";
+		document.getElementById(d).value="";
+		document.getElementById(e).value="";
+		document.getElementById(f).value="";
+		document.getElementById(g).checked=false;
+		document.getElementById(h).value="";
+		document.getElementById(i).value="";
+		document.getElementById(det).innerHTML="Fill";
+		
+		document.getElementById(a).disabled=true;
+		document.getElementById(b).disabled=true;
+		document.getElementById(c).disabled=true;
+		document.getElementById(d).disabled=true;
+		document.getElementById(e).disabled=true;
+		document.getElementById(f).disabled=true;
+		document.getElementById(g).disabled=true;
+		document.getElementById(h).disabled=true;
+		document.getElementById(i).disabled=true;
+	}
+	document.getElementById('txtwhg1').value="";
+	document.getElementById('txtbing1').value="";
+	document.getElementById('txtsubbg1').value="";
+	document.getElementById('txtwhg2').value="";
+	document.getElementById('txtbing2').value="";
+	document.getElementById('txtsubbg2').value="";
+	document.getElementById('txtwhg3').value="";
+	document.getElementById('txtbing3').value="";
+	document.getElementById('txtsubbg3').value="";
+	document.getElementById('txtwhg4').value="";
+	document.getElementById('txtbing4').value="";
+	document.getElementById('txtsubbg4').value="";
+	document.getElementById('txtwhg5').value="";
+	document.getElementById('txtbing5').value="";
+	document.getElementById('txtsubbg5').value="";
+	document.getElementById('txtwhg6').value="";
+	document.getElementById('txtbing6').value="";
+	document.getElementById('txtsubbg6').value="";
+	document.getElementById('txtwhg7').value="";
+	document.getElementById('txtbing7').value="";
+	document.getElementById('txtsubbg7').value="";
+	document.getElementById('txtwhg8').value="";
+	document.getElementById('txtbing8').value="";
+	document.getElementById('txtsubbg8').value="";
+	
+	document.getElementById('nopmpcs_1').readOnly=true;
+	document.getElementById('nopmpcs_1').value="";
+	document.getElementById('nopmpcs_1').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_2').readOnly=true;
+	document.getElementById('nopmpcs_2').value="";
+	document.getElementById('nopmpcs_2').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_3').readOnly=true;
+	document.getElementById('nopmpcs_3').value="";
+	document.getElementById('nopmpcs_3').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_4').readOnly=true;
+	document.getElementById('nopmpcs_4').value="";
+	document.getElementById('nopmpcs_4').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_5').readOnly=true;
+	document.getElementById('nopmpcs_5').value="";
+	document.getElementById('nopmpcs_5').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_6').readOnly=true;
+	document.getElementById('nopmpcs_6').value="";
+	document.getElementById('nopmpcs_6').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_7').readOnly=true;
+	document.getElementById('nopmpcs_7').value="";
+	document.getElementById('nopmpcs_7').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_8').readOnly=true;
+	document.getElementById('nopmpcs_8').value="";
+	document.getElementById('nopmpcs_8').style.backgroundColor="#cccccc";
+	
+	document.getElementById('noppchs_1').readOnly=true;
+	document.getElementById('noppchs_1').value="";
+	document.getElementById('noppchs_1').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_2').readOnly=true;
+	document.getElementById('noppchs_2').value="";
+	document.getElementById('noppchs_2').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_3').readOnly=true;
+	document.getElementById('noppchs_3').value="";
+	document.getElementById('noppchs_3').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_4').readOnly=true;
+	document.getElementById('noppchs_4').value="";
+	document.getElementById('noppchs_4').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_5').readOnly=true;
+	document.getElementById('noppchs_5').value="";
+	document.getElementById('noppchs_5').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_6').readOnly=true;
+	document.getElementById('noppchs_6').value="";
+	document.getElementById('noppchs_6').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_7').readOnly=true;
+	document.getElementById('noppchs_7').value="";
+	document.getElementById('noppchs_7').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_8').readOnly=true;
+	document.getElementById('noppchs_8').value="";
+	document.getElementById('noppchs_8').style.backgroundColor="#cccccc";
+	
+	document.getElementById('noptpchs_1').readOnly=true;
+	document.getElementById('noptpchs_1').value="";
+	document.getElementById('noptpchs_1').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_2').readOnly=true;
+	document.getElementById('noptpchs_2').value="";
+	document.getElementById('noptpchs_2').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_3').readOnly=true;
+	document.getElementById('noptpchs_3').value="";
+	document.getElementById('noptpchs_3').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_4').readOnly=true;
+	document.getElementById('noptpchs_4').value="";
+	document.getElementById('noptpchs_4').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_5').readOnly=true;
+	document.getElementById('noptpchs_5').value="";
+	document.getElementById('noptpchs_5').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_6').readOnly=true;
+	document.getElementById('noptpchs_6').value="";
+	document.getElementById('noptpchs_6').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_7').readOnly=true;
+	document.getElementById('noptpchs_7').value="";
+	document.getElementById('noptpchs_7').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_8').readOnly=true;
+	document.getElementById('noptpchs_8').value="";
+	document.getElementById('noptpchs_8').style.backgroundColor="#cccccc";
+	
+	document.getElementById('noptqtys_1').readOnly=true;
+	document.getElementById('noptqtys_1').value="";
+	document.getElementById('noptqtys_1').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_2').readOnly=true;
+	document.getElementById('noptqtys_2').value="";
+	document.getElementById('noptqtys_2').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_3').readOnly=true;
+	document.getElementById('noptqtys_3').value="";
+	document.getElementById('noptqtys_3').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_4').readOnly=true;
+	document.getElementById('noptqtys_4').value="";
+	document.getElementById('noptqtys_4').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_5').readOnly=true;
+	document.getElementById('noptqtys_5').value="";
+	document.getElementById('noptqtys_5').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_6').readOnly=true;
+	document.getElementById('noptqtys_6').value="";
+	document.getElementById('noptqtys_6').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_7').readOnly=true;
+	document.getElementById('noptqtys_7').value="";
+	document.getElementById('noptqtys_7').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_8').readOnly=true;
+	document.getElementById('noptqtys_8').value="";
+	document.getElementById('noptqtys_8').style.backgroundColor="#cccccc";
+}
+function pfpchk1(pfpval)
+{
+	if(document.getElementById('picqtyp').value=="" || document.getElementById('picqtyp').value==0)
+	{
+		alert("Quantity Picked for Packing cannot be blank or Zero");
+		document.getElementById('pckloss').value="";
+		return false;
+	}
+	else
+	{
+		document.getElementById('balpck').value=parseFloat(document.getElementById('picqtyp').value)-(parseFloat(document.getElementById('ccloss').value)+parseFloat(pfpval));
+	}
+	var sno=document.frmaddDepartment.sno.value;
+	for(var i=1; i<=sno; i++)
+	{
+		var fet="fetchk_"+i;
+		var det="dtail_"+i;
+		document.getElementById(fet).checked=false;
+		document.getElementById(det).innerHTML="Fill";
+	}
+	for(var j=1; j<=sno; j++)
+	{
+		//alert(j);
+		var a="packqty_"+j;
+		var b="nopc_"+j;
+		var c="domcs_"+j;
+		var d="lbls_"+j;
+		var e="domce_"+j;
+		var f="lble_"+j;
+		var g="mpck_"+j;
+		var h="nomp_"+j;
+		var i="noofpacks_"+j;
+		var det="dtail_"+j;
+		//alert(det);
+		document.getElementById(a).value="";
+		document.getElementById(b).value="";
+		document.getElementById(c).value="";
+		document.getElementById(d).value="";
+		document.getElementById(e).value="";
+		document.getElementById(f).value="";
+		document.getElementById(g).checked=false;
+		document.getElementById(h).value="";
+		document.getElementById(i).value="";
+		document.getElementById(det).innerHTML="Fill";
+		
+		document.getElementById(a).disabled=true;
+		document.getElementById(b).disabled=true;
+		document.getElementById(c).disabled=true;
+		document.getElementById(d).disabled=true;
+		document.getElementById(e).disabled=true;
+		document.getElementById(f).disabled=true;
+		document.getElementById(g).disabled=true;
+		document.getElementById(h).disabled=true;
+		document.getElementById(i).disabled=true;
+	}
+	document.getElementById('txtwhg1').value="";
+	document.getElementById('txtbing1').value="";
+	document.getElementById('txtsubbg1').value="";
+	document.getElementById('txtwhg2').value="";
+	document.getElementById('txtbing2').value="";
+	document.getElementById('txtsubbg2').value="";
+	document.getElementById('txtwhg3').value="";
+	document.getElementById('txtbing3').value="";
+	document.getElementById('txtsubbg3').value="";
+	document.getElementById('txtwhg4').value="";
+	document.getElementById('txtbing4').value="";
+	document.getElementById('txtsubbg4').value="";
+	document.getElementById('txtwhg5').value="";
+	document.getElementById('txtbing5').value="";
+	document.getElementById('txtsubbg5').value="";
+	document.getElementById('txtwhg6').value="";
+	document.getElementById('txtbing6').value="";
+	document.getElementById('txtsubbg6').value="";
+	document.getElementById('txtwhg7').value="";
+	document.getElementById('txtbing7').value="";
+	document.getElementById('txtsubbg7').value="";
+	document.getElementById('txtwhg8').value="";
+	document.getElementById('txtbing8').value="";
+	document.getElementById('txtsubbg8').value="";
+	
+	document.getElementById('nopmpcs_1').readOnly=true;
+	document.getElementById('nopmpcs_1').value="";
+	document.getElementById('nopmpcs_1').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_2').readOnly=true;
+	document.getElementById('nopmpcs_2').value="";
+	document.getElementById('nopmpcs_2').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_3').readOnly=true;
+	document.getElementById('nopmpcs_3').value="";
+	document.getElementById('nopmpcs_3').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_4').readOnly=true;
+	document.getElementById('nopmpcs_4').value="";
+	document.getElementById('nopmpcs_4').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_5').readOnly=true;
+	document.getElementById('nopmpcs_5').value="";
+	document.getElementById('nopmpcs_5').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_6').readOnly=true;
+	document.getElementById('nopmpcs_6').value="";
+	document.getElementById('nopmpcs_6').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_7').readOnly=true;
+	document.getElementById('nopmpcs_7').value="";
+	document.getElementById('nopmpcs_7').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_8').readOnly=true;
+	document.getElementById('nopmpcs_8').value="";
+	document.getElementById('nopmpcs_8').style.backgroundColor="#cccccc";
+	
+	document.getElementById('noppchs_1').readOnly=true;
+	document.getElementById('noppchs_1').value="";
+	document.getElementById('noppchs_1').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_2').readOnly=true;
+	document.getElementById('noppchs_2').value="";
+	document.getElementById('noppchs_2').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_3').readOnly=true;
+	document.getElementById('noppchs_3').value="";
+	document.getElementById('noppchs_3').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_4').readOnly=true;
+	document.getElementById('noppchs_4').value="";
+	document.getElementById('noppchs_4').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_5').readOnly=true;
+	document.getElementById('noppchs_5').value="";
+	document.getElementById('noppchs_5').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_6').readOnly=true;
+	document.getElementById('noppchs_6').value="";
+	document.getElementById('noppchs_6').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_7').readOnly=true;
+	document.getElementById('noppchs_7').value="";
+	document.getElementById('noppchs_7').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_8').readOnly=true;
+	document.getElementById('noppchs_8').value="";
+	document.getElementById('noppchs_8').style.backgroundColor="#cccccc";
+	
+	document.getElementById('noptpchs_1').readOnly=true;
+	document.getElementById('noptpchs_1').value="";
+	document.getElementById('noptpchs_1').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_2').readOnly=true;
+	document.getElementById('noptpchs_2').value="";
+	document.getElementById('noptpchs_2').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_3').readOnly=true;
+	document.getElementById('noptpchs_3').value="";
+	document.getElementById('noptpchs_3').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_4').readOnly=true;
+	document.getElementById('noptpchs_4').value="";
+	document.getElementById('noptpchs_4').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_5').readOnly=true;
+	document.getElementById('noptpchs_5').value="";
+	document.getElementById('noptpchs_5').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_6').readOnly=true;
+	document.getElementById('noptpchs_6').value="";
+	document.getElementById('noptpchs_6').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_7').readOnly=true;
+	document.getElementById('noptpchs_7').value="";
+	document.getElementById('noptpchs_7').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_8').readOnly=true;
+	document.getElementById('noptpchs_8').value="";
+	document.getElementById('noptpchs_8').style.backgroundColor="#cccccc";
+	
+	document.getElementById('noptqtys_1').readOnly=true;
+	document.getElementById('noptqtys_1').value="";
+	document.getElementById('noptqtys_1').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_2').readOnly=true;
+	document.getElementById('noptqtys_2').value="";
+	document.getElementById('noptqtys_2').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_3').readOnly=true;
+	document.getElementById('noptqtys_3').value="";
+	document.getElementById('noptqtys_3').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_4').readOnly=true;
+	document.getElementById('noptqtys_4').value="";
+	document.getElementById('noptqtys_4').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_5').readOnly=true;
+	document.getElementById('noptqtys_5').value="";
+	document.getElementById('noptqtys_5').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_6').readOnly=true;
+	document.getElementById('noptqtys_6').value="";
+	document.getElementById('noptqtys_6').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_7').readOnly=true;
+	document.getElementById('noptqtys_7').value="";
+	document.getElementById('noptqtys_7').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_8').readOnly=true;
+	document.getElementById('noptqtys_8').value="";
+	document.getElementById('noptqtys_8').style.backgroundColor="#cccccc";
+}
+function plchk1(pfpval)
+{
+	if(document.getElementById('pckloss').value=="")
+	{
+		alert("Packing Loss cannot be blank");
+		document.getElementById('ccloss').value="";
+		return false;
+	}
+	else
+	{
+		document.getElementById('balpck').value=parseFloat(document.getElementById('picqtyp').value)-(parseFloat(document.getElementById('pckloss').value)+parseFloat(pfpval));
+	}
+	var sno=document.frmaddDepartment.sno.value;
+	for(var i=1; i<=sno; i++)
+	{
+		var fet="fetchk_"+i;
+		var det="dtail_"+i;
+		document.getElementById(fet).checked=false;
+		document.getElementById(det).innerHTML="Fill";
+	}
+	for(var j=1; j<=sno; j++)
+	{
+		//alert(j);
+		var a="packqty_"+j;
+		var b="nopc_"+j;
+		var c="domcs_"+j;
+		var d="lbls_"+j;
+		var e="domce_"+j;
+		var f="lble_"+j;
+		var g="mpck_"+j;
+		var h="nomp_"+j;
+		var i="noofpacks_"+j;
+		var det="dtail_"+j;
+		//alert(det);
+		document.getElementById(a).value="";
+		document.getElementById(b).value="";
+		document.getElementById(c).value="";
+		document.getElementById(d).value="";
+		document.getElementById(e).value="";
+		document.getElementById(f).value="";
+		document.getElementById(g).checked=false;
+		document.getElementById(h).value="";
+		document.getElementById(i).value="";
+		document.getElementById(det).innerHTML="Fill";
+		
+		document.getElementById(a).disabled=true;
+		document.getElementById(b).disabled=true;
+		document.getElementById(c).disabled=true;
+		document.getElementById(d).disabled=true;
+		document.getElementById(e).disabled=true;
+		document.getElementById(f).disabled=true;
+		document.getElementById(g).disabled=true;
+		document.getElementById(h).disabled=true;
+		document.getElementById(i).disabled=true;
+	}
+	document.getElementById('txtwhg1').value="";
+	document.getElementById('txtbing1').value="";
+	document.getElementById('txtsubbg1').value="";
+	document.getElementById('txtwhg2').value="";
+	document.getElementById('txtbing2').value="";
+	document.getElementById('txtsubbg2').value="";
+	document.getElementById('txtwhg3').value="";
+	document.getElementById('txtbing3').value="";
+	document.getElementById('txtsubbg3').value="";
+	document.getElementById('txtwhg4').value="";
+	document.getElementById('txtbing4').value="";
+	document.getElementById('txtsubbg4').value="";
+	document.getElementById('txtwhg5').value="";
+	document.getElementById('txtbing5').value="";
+	document.getElementById('txtsubbg5').value="";
+	document.getElementById('txtwhg6').value="";
+	document.getElementById('txtbing6').value="";
+	document.getElementById('txtsubbg6').value="";
+	document.getElementById('txtwhg7').value="";
+	document.getElementById('txtbing7').value="";
+	document.getElementById('txtsubbg7').value="";
+	document.getElementById('txtwhg8').value="";
+	document.getElementById('txtbing8').value="";
+	document.getElementById('txtsubbg8').value="";
+	
+	document.getElementById('nopmpcs_1').readOnly=true;
+	document.getElementById('nopmpcs_1').value="";
+	document.getElementById('nopmpcs_1').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_2').readOnly=true;
+	document.getElementById('nopmpcs_2').value="";
+	document.getElementById('nopmpcs_2').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_3').readOnly=true;
+	document.getElementById('nopmpcs_3').value="";
+	document.getElementById('nopmpcs_3').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_4').readOnly=true;
+	document.getElementById('nopmpcs_4').value="";
+	document.getElementById('nopmpcs_4').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_5').readOnly=true;
+	document.getElementById('nopmpcs_5').value="";
+	document.getElementById('nopmpcs_5').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_6').readOnly=true;
+	document.getElementById('nopmpcs_6').value="";
+	document.getElementById('nopmpcs_6').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_7').readOnly=true;
+	document.getElementById('nopmpcs_7').value="";
+	document.getElementById('nopmpcs_7').style.backgroundColor="#cccccc";
+	document.getElementById('nopmpcs_8').readOnly=true;
+	document.getElementById('nopmpcs_8').value="";
+	document.getElementById('nopmpcs_8').style.backgroundColor="#cccccc";
+	
+	document.getElementById('noppchs_1').readOnly=true;
+	document.getElementById('noppchs_1').value="";
+	document.getElementById('noppchs_1').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_2').readOnly=true;
+	document.getElementById('noppchs_2').value="";
+	document.getElementById('noppchs_2').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_3').readOnly=true;
+	document.getElementById('noppchs_3').value="";
+	document.getElementById('noppchs_3').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_4').readOnly=true;
+	document.getElementById('noppchs_4').value="";
+	document.getElementById('noppchs_4').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_5').readOnly=true;
+	document.getElementById('noppchs_5').value="";
+	document.getElementById('noppchs_5').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_6').readOnly=true;
+	document.getElementById('noppchs_6').value="";
+	document.getElementById('noppchs_6').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_7').readOnly=true;
+	document.getElementById('noppchs_7').value="";
+	document.getElementById('noppchs_7').style.backgroundColor="#cccccc";
+	document.getElementById('noppchs_8').readOnly=true;
+	document.getElementById('noppchs_8').value="";
+	document.getElementById('noppchs_8').style.backgroundColor="#cccccc";
+	
+	document.getElementById('noptpchs_1').readOnly=true;
+	document.getElementById('noptpchs_1').value="";
+	document.getElementById('noptpchs_1').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_2').readOnly=true;
+	document.getElementById('noptpchs_2').value="";
+	document.getElementById('noptpchs_2').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_3').readOnly=true;
+	document.getElementById('noptpchs_3').value="";
+	document.getElementById('noptpchs_3').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_4').readOnly=true;
+	document.getElementById('noptpchs_4').value="";
+	document.getElementById('noptpchs_4').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_5').readOnly=true;
+	document.getElementById('noptpchs_5').value="";
+	document.getElementById('noptpchs_5').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_6').readOnly=true;
+	document.getElementById('noptpchs_6').value="";
+	document.getElementById('noptpchs_6').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_7').readOnly=true;
+	document.getElementById('noptpchs_7').value="";
+	document.getElementById('noptpchs_7').style.backgroundColor="#cccccc";
+	document.getElementById('noptpchs_8').readOnly=true;
+	document.getElementById('noptpchs_8').value="";
+	document.getElementById('noptpchs_8').style.backgroundColor="#cccccc";
+	
+	document.getElementById('noptqtys_1').readOnly=true;
+	document.getElementById('noptqtys_1').value="";
+	document.getElementById('noptqtys_1').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_2').readOnly=true;
+	document.getElementById('noptqtys_2').value="";
+	document.getElementById('noptqtys_2').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_3').readOnly=true;
+	document.getElementById('noptqtys_3').value="";
+	document.getElementById('noptqtys_3').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_4').readOnly=true;
+	document.getElementById('noptqtys_4').value="";
+	document.getElementById('noptqtys_4').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_5').readOnly=true;
+	document.getElementById('noptqtys_5').value="";
+	document.getElementById('noptqtys_5').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_6').readOnly=true;
+	document.getElementById('noptqtys_6').value="";
+	document.getElementById('noptqtys_6').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_7').readOnly=true;
+	document.getElementById('noptqtys_7').value="";
+	document.getElementById('noptqtys_7').style.backgroundColor="#cccccc";
+	document.getElementById('noptqtys_8').readOnly=true;
+	document.getElementById('noptqtys_8').value="";
+	document.getElementById('noptqtys_8').style.backgroundColor="#cccccc";
+}
+function clk(snoval,upsid)
+{
+	//alert(snoval);
+	var sno=document.frmaddDepartment.sno.value;
+	//alert(sno);
+	if(document.getElementById('ccloss').value=="")
+	{
+		alert("Captive Consumption cannot be blank");
+		//document.getElementById('ccloss').value="";
+		for(var i=1; i<=sno; i++)
+		{
+		var fet="fetchk_"+i;
+		var det="dtail_"+i;
+		document.getElementById(fet).checked=false;
+		document.getElementById(det).innerHTML="Fill";
+		}
+		return false;
+	}
+	else
+	{
+		if(snoval>0)
+		{
+			var upsname="upsname_"+snoval;
+			document.frmaddDepartment.upssize.value=snoval;
+			document.frmaddDepartment.upsidno.value=upsid;
+			
+			for(var j=1; j<=sno; j++)
+			{
+				//alert(j);
+				var a="packqty_"+j;
+				var b="nopc_"+j;
+				var c="domcs_"+j;
+				var d="lbls_"+j;
+				var e="domce_"+j;
+				var f="lble_"+j;
+				var g="mpck_"+j;
+				var h="nomp_"+j;
+				var i="noofpacks_"+j;
+				var det="dtail_"+j;
+				//alert(det);
+				document.getElementById(a).value="";
+				document.getElementById(b).value="";
+				document.getElementById(c).value="";
+				document.getElementById(d).value="";
+				document.getElementById(e).value="";
+				document.getElementById(f).value="";
+				document.getElementById(g).checked=false;
+				document.getElementById(h).value="";
+				document.getElementById(i).value="";
+				document.getElementById(det).innerHTML="Fill";
+				
+				document.getElementById(a).disabled=true;
+				document.getElementById(b).disabled=true;
+				document.getElementById(c).disabled=true;
+				document.getElementById(d).disabled=true;
+				document.getElementById(e).disabled=true;
+				document.getElementById(f).disabled=true;
+				document.getElementById(g).disabled=true;
+				document.getElementById(h).disabled=true;
+				document.getElementById(i).disabled=true;
+			}
+			
+			var a="packqty_"+snoval;
+			var b="nopc_"+snoval;
+			var c="domcs_"+snoval;
+			var d="lbls_"+snoval;
+			var e="domce_"+snoval;
+			var f="lble_"+snoval;
+			var g="mpck_"+snoval;
+			var h="nomp_"+snoval;
+			var i="noofpacks_"+snoval;
+			var det2="dtail_"+snoval;
+			document.getElementById(a).disabled=false;
+			document.getElementById(b).disabled=false;
+			document.getElementById(c).disabled=false;
+			document.getElementById(d).disabled=false;
+			document.getElementById(e).disabled=false;
+			document.getElementById(f).disabled=false;
+			document.getElementById(g).disabled=false;
+			document.getElementById(h).disabled=false;
+			//document.getElementById(i).disabled=false;
+			document.getElementById(det2).innerHTML="Fill";
+			//alert(document.getElementById('pcktype').value);
+			//if(document.getElementById('pcktype').value=="E")
+			//{
+				document.getElementById(a).value=document.getElementById('balpck').value;
+				document.getElementById(a).readOnly=true;
+				document.getElementById(a).style.backgroundColor="#cccccc";
+				var wtnop="wtnopkg_"+snoval;
+				var z="nopc_"+snoval;
+				var zx=(parseFloat(document.getElementById(a).value)/parseFloat(document.getElementById(wtnop).value));
+				document.getElementById(z).value=parseInt(zx);
+				document.getElementById(a).disabled=true;
+			//}
+		}
+	}
+}
+
+function detailspop(dval2)
+{
+	var dval=1;
+	if(dval>0)
+	{
+		var nomp="nomp_"+dval;
+		var totnomp=document.getElementById(nomp).value;
+		var tid=document.frmaddDepartment.maintrid.value;
+		var subtid=document.frmaddDepartment.subtrid.value;
+		var lotno=document.frmaddDepartment.txtlot1.value;
+		var txtpsrn=document.frmaddDepartment.txtpsrn.value;
+		//alert(variety);
+		if(dval2=="edit")
+		{ 
+			winHandle=window.open('getuser_pronpslip_barcode3_new.php?totnomp='+totnomp+'&tid='+tid+'&lotno='+lotno+'&txtpsrn='+txtpsrn+'&subtid='+subtid+'&dval='+dval,'WelCome','top=170,left=180,width=450,height=450,scrollbars=yes');
+			if(winHandle==null){
+			alert("While Launching New Window...\nYour browser maybe blocking up Popup windows. \n\n  Please check your Popup Blocker Settings or ..\n Please hold Ctrl Key and Click on link to open new Browser"); }
+		}
+		else
+		{
+			if(document.frmaddDepartment.detmpbno.value!="" && document.frmaddDepartment.detmpbno.value > 0)
+			{
+				winHandle=window.open('getuser_pronpslip_barcode3_new.php?totnomp='+totnomp+'&tid='+tid+'&lotno='+lotno+'&txtpsrn='+txtpsrn+'&subtid='+subtid+'&dval='+dval,'WelCome','top=170,left=180,width=450,height=450,scrollbars=yes');
+				if(winHandle==null){
+				alert("While Launching New Window...\nYour browser maybe blocking up Popup windows. \n\n  Please check your Popup Blocker Settings or ..\n Please hold Ctrl Key and Click on link to open new Browser"); }
+			}
+			else
+			{
+				winHandle=window.open('getuser_pronpslip_barcode_sel.php?totnomp='+totnomp+'&tid='+tid+'&lotno='+lotno+'&txtpsrn='+txtpsrn+'&subtid='+subtid+'&dval='+dval,'WelCome','top=170,left=180,width=450,height=450,scrollbars=yes');
+				if(winHandle==null){
+				alert("While Launching New Window...\nYour browser maybe blocking up Popup windows. \n\n  Please check your Popup Blocker Settings or ..\n Please hold Ctrl Key and Click on link to open new Browser"); }
+			}
+		}
+	}
+}
+
+function wh(wh1val, whno)
+{ 	
+	if(whno==1)
+	{
+		var z=0; var xs=0; var tnop=0;
+		var tqty1="txtwhg"+whno;
+		var sno=document.frmaddDepartment.sno.value;
+		for(var j=1; j<=sno; j++)
+		{
+			var fet="nomp_"+j;
+			tnop=(parseInt(tnop)+parseInt(document.getElementById(fet).value));
+		}
+		if(tnop==0)
+		{
+			alert("Please enter NoP");
+			document.getElementById(tqty1).SelectedIndex=0;
+			document.getElementById(tqty1).value="";
+			return false;
+		}
+		
+		if(parseInt(document.getElementById("wtnop_1").value)!=parseInt(tnop))
+		{
+			alert("Invalid NoP. Total Nop not matching with the Master Pack Total NoP");
+			document.getElementById(tqty1).SelectedIndex=0;
+			document.getElementById(tqty1).value="";
+			document.getElementById("nomp_"+[sno]).focus();
+			return false;
+		}
+		for(var i=1; i<=sno; i++)
+		{
+			var fet="nopc_"+i;
+			if(document.getElementById(fet).value=="")
+			{z++;}
+			else
+			{xs=i;}
+		}
+		
+		if(z==sno)
+		{
+			alert("Please select UPS");
+			document.getElementById(tqty1).SelectedIndex=0;
+			document.getElementById(tqty1).value="";
+			return false;
+		}
+		
+		var nomp="nomp_"+sno;
+		var tonop=0;
+		var f=0;
+		for (var i=1; i<=sno; i++)
+		{
+			var sno33="sno33_"+i;
+			var sno33val=document.getElementById(sno33).value;
+			for (var j=1; j<=sno33val; j++)
+			{
+				var nophs="nophs"+i+"_"+j;
+				tonop=parseInt(tonop)+parseInt(document.getElementById(nophs).value);
+			}
+		}
+		if(parseInt(tonop)==0)
+		{
+			alert("Please enter NoP");
+			document.getElementById(tqty1).SelectedIndex=0;
+			document.getElementById(tqty1).value="";
+			return false;
+		}
+		if(parseInt(tonop)!=parseInt(tnop))
+		{
+			alert("Total of NoP from SLOC not matching with NoP");
+			document.getElementById(tqty1).SelectedIndex=0;
+			document.getElementById(tqty1).value="";
+			return false;
+		}
+	}
+	else
+	{
+		var whn=whno-1;
+		var tqty="noptqtys_"+whn;
+		var tqty1="txtwhg"+whno;
+		if(document.getElementById(tqty).value=="")
+		{
+			alert("Please enter Master Pack/Pouches details in previous Bin");
+			document.getElementById(tqty1).SelectedIndex=0;
+			document.getElementById(tqty1).value="";
+			return false;
+		}
+	}
+	
+	var bin="txtbing"+whno;
+	var extbin=document.frmaddDepartment.extbin.value;
+	showUser(wh1val,bin,'wh',bin,whno,extbin,extbin,extbin);
+}
+
+function bin(bin2val, binno)
+{
+	var whc="txtwhg"+binno;
+	var sbin="sbingn"+binno;
+	var binc="txtsubbg"+binno;
+	var extsubbin=document.frmaddDepartment.extsubbin.value;
+	if(document.getElementById(whc).value=="")
+	{
+		alert("Please select Warehouse");
+		return false;
+	}
+	else
+	{
+		showUser(bin2val,sbin,'bin',binc,binno,extsubbin,'','');
+	}
+}
+
+function subbin(subbin2val, subbinno)
+{	
+	var binc="txtbing"+subbinno;
+	if(document.getElementById(binc).value=="")
+	{	
+		alert("Please select Bin");
+		return false;
+	}
+	else
+	{
+		var itemv=document.frmaddDepartment.txtvariety.value;
+		var slocnogood="Pack";
+		var trid=document.frmaddDepartment.maintrid.value;
+		var Bagsv1="";
+		var qtyv1="";
+		var ssbin="slocr"+subbinno;
+		var bins="txtsubbg"+subbinno;
+		showUser(subbin2val,ssbin,'subbinnew',itemv,bins,slocnogood,subbinno,subbinno,trid);
+		setTimeout(function() { sloccomment(subbinno); },800);
+	}
+}
+
+function sloccomment(rval)
+{
+	var mp="nopmpcs_"+rval;
+	var p="noppchs_"+rval;
+	var tp="noptpchs_"+rval;
+	var tq="noptqtys_"+rval;
+	var existview="existview"+rval;
+	var trflg="trflg"+rval;
+	var tpflg="tpflg"+rval;
+	var tflg="tflg"+rval;
+	var tpmflg="tpmflg"+rval;
+	if(document.getElementById(existview).value=="")
+	{
+		setTimeout(function() { sloccomment(rval); },400);
+	}
+	else if((document.getElementById(trflg).value!="" && document.getElementById(tpflg).value!="" && document.getElementById(tflg).value!="" && document.getElementById(tpmflg).value!="") && (document.getElementById(trflg).value==0 && document.getElementById(tpflg).value==0 && document.getElementById(tflg).value==0 && document.getElementById(tpmflg).value==0))
+	{
+		if(document.frmaddDepartment.detmpbno.value!="" || document.frmaddDepartment.detmpbno.value > 0)
+		{
+			document.getElementById(mp).value="";
+			document.getElementById(mp).readOnly=true;
+			document.getElementById(mp).style.backgroundColor="#cccccc";
+		}
+		document.getElementById(p).value="";
+		document.getElementById(p).readOnly=true;
+		document.getElementById(p).style.backgroundColor="#cccccc";
+		document.getElementById(tp).value="";
+		document.getElementById(tq).value="";
+		document.getElementById('nopmpcs_1').value=1;
+		document.getElementById('noptpchs_1').value=parseInt(document.getElementById("wtnop_1").value);
+		document.getElementById('noptqtys_1').value=parseInt(document.getElementById("wtmp_1").value);
+	}
+	else
+	{
+		document.getElementById(mp).value="";
+		document.getElementById(mp).readOnly=true;
+		document.getElementById(mp).style.backgroundColor="#cccccc";
+		document.getElementById(p).value="";
+		document.getElementById(p).readOnly=true;
+		document.getElementById(p).style.backgroundColor="#cccccc";
+		document.getElementById(tp).value="";
+		document.getElementById(tq).value="";
+		alert("Please select different Sub Bin");
+		return false;
+	}
+}
+function pacsbinchk(mpval, mpno)
+{
+	if(document.getElementById('txtsubbg'+[mpno]).value=="")
+	{
+		alert("Please Select Subbin first");
+		return false;
+	}
+	else
+	{
+		var sno=document.frmaddDepartment.sno.value;
+		for(var i=1; i<=sno; i++)
+		{
+			//if(document.getElementById('fetchk_'+[i]).checked==true)
+			{
+				var d=parseInt(document.getElementById('wtnop_'+[i]).value)*parseInt(mpval);
+				var dd=document.getElementById('wtmp_'+[i]).value;
+				var npwt=document.getElementById('wtnopkg_'+[i]).value;
+			}
+		}
+		if(document.getElementById('noppchs_'+[mpno]).value!="")
+		{
+			document.getElementById('noptpchs_'+[mpno]).value=parseInt(d)+parseInt(document.getElementById('noppchs_'+[mpno]).value);
+			document.getElementById('noptqtys_'+[mpno]).value=(parseFloat(npwt)*parseFloat(document.getElementById('noppchs_'+[mpno]).value))+(parseFloat(mpval)*parseFloat(dd));
+			document.getElementById('noptqtys_'+[mpno]).value=Math.round(parseFloat(document.getElementById('noptqtys_'+[mpno]).value)*1000)/1000;
+		}
+		else
+		{
+			document.getElementById('noptpchs_'+[mpno]).value=parseInt(d);
+			document.getElementById('noptqtys_'+[mpno]).value=parseFloat(mpval)*parseFloat(dd);
+			document.getElementById('noptqtys_'+[mpno]).value=Math.round(parseFloat(document.getElementById('noptqtys_'+[mpno]).value)*1000)/1000;
+		}
+	}
+}
+
+function pacpchchk(pchval, pchno)
+{
+	if(document.getElementById('txtsubbg'+[pchno]).value=="")
+	{
+		alert("Please Select Subbin first");
+		return false;
+	}
+	else
+	{
+		var sno=document.frmaddDepartment.sno.value;
+		var mpval=document.getElementById('nopmpcs_'+[pchno]).value;
+		for(var i=1; i<=sno; i++)
+		{
+			//if(document.getElementById('fetchk_'+[i]).checked==true)
+			{
+				var d=parseInt(document.getElementById('wtnop_'+[i]).value)*parseInt(mpval);
+				var dd=document.getElementById('wtmp_'+[i]).value;
+				var npwt=document.getElementById('wtnopkg_'+[i]).value;
+			}
+		}
+		if(mpval!="")
+		{
+			document.getElementById('noptpchs_'+[pchno]).value=parseInt(d)+parseInt(pchval);
+			document.getElementById('noptqtys_'+[pchno]).value=(parseFloat(npwt)*parseFloat(pchval))+(parseFloat(mpval)*parseFloat(dd));
+			document.getElementById('noptqtys_'+[pchno]).value=Math.round(parseFloat(document.getElementById('noptqtys_'+[pchno]).value)*1000)/1000;
+		}
+		else
+		{
+			document.getElementById('noptpchs_'+[pchno]).value=parseInt(pchval);
+			document.getElementById('noptqtys_'+[pchno]).value=parseFloat(npwt)*parseFloat(pchval);
+			document.getElementById('noptqtys_'+[pchno]).value=Math.round(parseFloat(document.getElementById('noptqtys_'+[pchno]).value)*1000)/1000;
+		}
+	}
+}
+function openpackdetails(subtid,tid)
+{
+winHandle=window.open('packdetails_trn.php?subid='+subtid+'&itmid='+tid,'WelCome','top=170,left=180,width=920,height=450,scrollbars=yes');
+if(winHandle==null){
+alert("While Launching New Window...\nYour browser maybe blocking up Popup windows. \n\n  Please check your Popup Blocker Settings or ..\n Please hold Ctrl Key and Click on link to open new Browser"); }
+
+}
+
+function getDateObject(dateString,dateSeperator)
+{
+	//This function return a date object after accepting 
+	//a date string ans dateseparator as arguments
+	var curValue=dateString;
+	var sepChar=dateSeperator;
+	var curPos=0;
+	var cDate,cMonth,cYear;
+
+	//extract day portion
+	curPos=dateString.indexOf(sepChar);
+	cDate=dateString.substring(0,curPos);
+	
+	//extract month portion				
+	endPos=dateString.indexOf(sepChar,curPos+1);			
+	cMonth=dateString.substring(curPos+1,endPos);
+
+	//extract year portion				
+	curPos=endPos;
+	endPos=curPos+5;			
+	cYear=curValue.substring(curPos+1,endPos);
+	
+	//Create Date Object
+	dtObject=new Date(cYear,cMonth-1,cDate);	
+	return (dtObject);
+} 
+
+function dateDiff(dateEarlier, dateLater) 
+{
+	var x=dateEarlier.split("-");
+	var y=dateLater.split("-");
+	dateEarlier=new Date(x[2],x[1]-1,x[0]);
+	dateLater=new Date(y[2],y[1]-1,y[0]);
+	var one_day=1000*60*60*24
+    return (  Math.round((dateLater.getTime()-dateEarlier.getTime())/one_day)  );
+}
+
+
+function chkvalidity(valval)
+{
+	/*if(document.frmaddDepartment.txtconpl.value=="")
+	{
+		alert("Enter Processing Loss");
+		document.frmaddDepartment.txtconpl.focus();
+		return false;
+	}
+	else
+	{*/
+	if(valval!="")
+	{
+		dt1=getDateObject(document.frmaddDepartment.date.value,"-");
+		dt2=getDateObject(document.frmaddDepartment.dp1.value,"-");
+		dt3=getDateObject(document.frmaddDepartment.dp2.value,"-");
+		dt4=getDateObject(document.frmaddDepartment.dp3.value,"-");
+		if(valval==3)
+		{
+			if(dt2 <= dt1)
+			{
+				alert("Valid upto Date cannot be Less than or equal to Transaction Date.");
+				document.frmaddDepartment.validityperiod.value="";
+				document.frmaddDepartment.validityupto.value="";
+				document.frmaddDepartment.valdays.value="";
+				return false;
+			}
+			else
+			{
+				var ddiff=dateDiff(document.frmaddDepartment.dopc.value, document.frmaddDepartment.dp1.value);
+				alert("Based on selected Validity period, this lot is valid for "+ddiff+" days");
+				document.frmaddDepartment.validityupto.value=document.frmaddDepartment.dp1.value;
+				document.frmaddDepartment.valdays.value=ddiff;
+			}
+		}
+		if(valval==6)
+		{	
+			if(dt3 <= dt1)
+			{
+				alert("Valid upto Date cannot be Less than or equal to Transaction Date.");
+				document.frmaddDepartment.validityperiod.value="";
+				document.frmaddDepartment.validityupto.value="";
+				document.frmaddDepartment.valdays.value="";
+				return false;
+			}
+			else
+			{
+				var ddiff=dateDiff(document.frmaddDepartment.dopc.value, document.frmaddDepartment.dp2.value);
+				alert("Based on selected Validity period, this lot is valid for "+ddiff+" days");
+				document.frmaddDepartment.validityupto.value=document.frmaddDepartment.dp2.value;
+				document.frmaddDepartment.valdays.value=ddiff;
+			}
+		}
+		if(valval==9)
+		{
+			if(dt4 <= dt1)
+			{
+				alert("Valid upto Date cannot be Less than or equal to Transaction Date.");
+				document.frmaddDepartment.validityperiod.value="";
+				document.frmaddDepartment.validityupto.value="";
+				document.frmaddDepartment.valdays.value="";
+				return false;
+			}
+			else
+			{
+				var ddiff=dateDiff(document.frmaddDepartment.dopc.value, document.frmaddDepartment.dp3.value);
+				alert("Based on selected Validity period, this lot is valid for "+ddiff+" days");
+				document.frmaddDepartment.validityupto.value=document.frmaddDepartment.dp3.value;
+				document.frmaddDepartment.valdays.value=ddiff;
+			}
+		}
+	}
+	else
+	{
+		document.frmaddDepartment.validityupto.value="";
+		document.frmaddDepartment.valdays.value="";
+	}
+	//}
+}
+
+function datesel(dopc)
+{
+	document.getElementById("postingsubsubtable").innerHTML="";
+	document.frmaddDepartment.txtlot1.value="";
+	showCalendar(dopc);
+}
+
+function openprintsubbin(subid, bid, wid, lid)
+{
+var itm="";
+var tp="";
+winHandle=window.open('subbin_sloc_details_print.php?slid='+subid+'&bid='+bid+'&wid='+wid+'&tp='+tp+'&pid='+itm+'&lid='+lid,'WelCome','top=170,left=180,width=820,height=350,scrollbars=yes');
+if(winHandle==null){
+alert("While Launching New Window...\nYour browser maybe blocking up Popup windows. \n\n  Please check your Popup Blocker Settings or ..\n Please hold Ctrl Key and Click on link to open new Browser"); }
+//showUser(edtrecid,'postingsubtable','subformedt','','','','',''); 
+}
+
+</script>
+
+<body>
+
+<table width="1003" height="600" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
+
+    <td valign="top"><table width="1003" height="72" border="0" cellspacing="0" cellpadding="0" align="center">
+        <tr>
+        <tr>
+           <td valign="top"><?php require_once("../include/arr_pack.php");?></td>
+        </tr>
+        </tr>
+      </table>
+      <table width="100%" style=" z-index:-1;" height="auto" align="center" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="100%" valign="top" align="center"><img src="../images/pack_curvetop.gif" /></td>
+        </tr>
+        <tr>
+          <td width="100%" valign="top" height="auto" align="center"  class="midbgline">
+
+<!-- actual page start--->	
+ <table  width="974" border="0" cellpadding="0" cellspacing="0" bordercolor="#1dbe03" >
+  <tr><td>
+   <table  width="974" border="0" cellpadding="0" cellspacing="0" bordercolor="#1dbe03" >
+	   <tr style="padding:0px 0px 0px 0px" >
+	  <td width="32" height="25"><img src="../images/rupee1.jpg" align="right" width="30" height="30" />&nbsp;</td>
+	  <td width="940" class="Mainheading" height="25">
+	  <table width="940" border="0" cellpadding="0" cellspacing="0" bordercolor="#1dbe03" style="border-bottom:solid; border-bottom-color:#1dbe03" >
+	      <td width="813" height="25" class="Mainheading">&nbsp;Transaction - Packaging slip - MMC&nbsp;<input type="hidden" name="logid" value="<?php echo $logid?>" /></td>
+	    </tr></table></td>
+	  </tr>
+	  </table></td></tr>
+
+	  <td align="center" colspan="4" >
+
+<?php
+$sql_pdt=mysqli_query($link,"Select max(proslipmain_date) from tbl_proslipmain where plantcode='$plantcode' order by proslipmain_date desc") or die(mysqli_error($link));
+$tot_pdt=mysqli_num_rows($sql_pdt);
+$row_pdt=mysqli_fetch_array($sql_pdt);
+?>
+<?php
+
+$plantcodes=""; $yearcodes="";   $extwh=""; $extbin=""; $extsubbin="";
+		$quer4=mysqli_query($link,"SELECT yearsid, ycode FROM tblyears where years_status!='u' order by ycode asc"); 
+		while($noticia = mysqli_fetch_array($quer4)) 
+		{
+			if($yearcodes!="")
+			$yearcodes=$yearcodes.",".$noticia['ycode'];
+			else
+			$yearcodes=$noticia['ycode'];
+		}
+	   	$quer6=mysqli_query($link,"SELECT  distinct code FROM tbl_parameters where plantcode='$plantcode'   order by code asc");
+	   	$row_month=mysqli_fetch_array($quer6);
+	  	$plantcodes=$row_month['code'];
+		$quer5=mysqli_query($link,"SELECT  distinct stcode FROM tbl_partymaser where stcode!=''  order by stcode asc"); 
+		 while($noticia2 = mysqli_fetch_array($quer5)) 
+		 {
+		 	if($plantcodes!="")
+			$plantcodes=$plantcodes.",".$noticia2['stcode'];
+			else
+			$plantcodes=$noticia2['stcode'];
+		 }
+		 
+?>   
+<form id="mainform" name="frmaddDepartment" method="post" action="<?php $_SERVER['PHP_SELF']; ?>" onsubmit="return mySubmit();"   > 
+	<input name="frm_action" value="submit" type="hidden"> 
+	<input type="hidden" name="txtid" value="<?php echo $code?>" />
+	<input type="hidden" name="plantcodes" value="<?php echo $plantcodes;?>" />
+	<input type="hidden" name="yearcodes" value="<?php echo $yearcodes;?>" />	 
+	<input type="hidden" name="cdate" value="<?php echo date("d-m-Y");?>" />	
+<?php
+$tid=0; $subtid=0; $tot_psub=0; $totpcqty=0;
+?>
+
+<table border="0" cellspacing="0" cellpadding="0" align="center" width="974"  style="border-collapse:collapse">
+<tr height="7"><td height="7"></td></tr>
+<tr>
+<td width="30">	 </td><td>
+<div id="postingtable" style="display:block">
+<table align="center" border="1" width="970" cellspacing="0" cellpadding="0" bordercolor="#1dbe03" style="border-collapse:collapse" > 
+<tr class="tblsubtitle" height="20">
+  <td colspan="8" align="center" class="tblheading">Add Packaging Slip </td>
+</tr>
+<tr height="15"><td colspan="8" align="right" class="smalltblheading"><font color="#FF0000" >* </font>indicates required field&nbsp;</td></tr>
+
+ <tr class="Light" height="30">
+<td width="240" align="right" valign="middle" class="smalltblheading">&nbsp;Transaction ID&nbsp;</td>
+<td width="240"  align="left" valign="middle" class="smalltbltext">&nbsp;<?php echo $code1?></td>
+<td width="240" align="right" valign="middle" class="smalltblheading">&nbsp;Transaction Date&nbsp;</td>
+<td width="240" align="left" valign="middle" class="smalltbltext">&nbsp;<input name="date" type="text" size="10" class="smalltbltext" tabindex="0" readonly="true"  style="background-color:#CCCCCC" value="<?php echo date("d-m-Y");?>" maxlength="10"/>&nbsp;</td>
+</tr>
+
+<tr class="Light" height="30">
+<td width="240" align="right" valign="middle" class="smalltblheading">&nbsp;Date of Packaging&nbsp;</td>
+<td width="240" align="left" valign="middle" class="smalltbltext">&nbsp;<input name="dopc" id="dopc" type="text" size="10" class="smalltbltext" tabindex="0" value="<?php echo date("d-m-Y");?>" maxlength="10"/>&nbsp;<a href="javascript:void(0)" onClick="datesel('dopc')" tabindex="6"><img src="../images/cal.gif" border="0" align="absmiddle" /></a>&nbsp;<font color="#FF0000">*</font></td>
+<td width="240" align="right"  valign="middle" class="smalltblheading">Packaging Slip Ref. No.&nbsp;</td>
+    <td width="240" align="left"  valign="middle" class="smalltbltext">&nbsp;<input name="txtpsrn" type="text" size="15" class="smalltbltext" tabindex=""    maxlength="15" />&nbsp;<font color="#FF0000">*</font>&nbsp;</td>
+</tr>
+
+<tr class="Light" height="30">
+	<td width="240" align="right"  valign="middle" class="smalltblheading" >Barcode&nbsp;</td>
+    <td width="240" align="left"  valign="middle" class="smalltblheading" id="barserch">&nbsp;<input type="text" name="barcode" class="tbltext" size="10" maxlength="9" value="" onblur="barcheck(this.value)" onkeyup="searchbarcode(this.value)" onkeypress="return isNumberKey24(event)" />&nbsp;<font color="#FF0000">*</font>&nbsp;<input type="hidden" name="bardupchk" value="0" /></td>
+	<td width="240" align="right"  valign="middle" class="smalltblheading" >Gross MMC Weight&nbsp;</td>
+    <td width="240" align="left"  valign="middle" class="smalltblheading">&nbsp;<input type="text" name="weight" id="w" class="tbltext" size="6" maxlength="6" onchange="chkmlt1(this.value);" onkeypress="return isNumberKey1(event)" value=""  />&nbsp;Kgs.&nbsp;<font color="#FF0000">*</font>&nbsp;</td>
+</tr>	
+	   
+<input type="hidden" name="txtstage" value="Pack" />
+</table>
+<br />
+  
+<table align="center" border="1" cellspacing="0" cellpadding="0" width="970" bordercolor="#1dbe03" style="border-collapse:collapse">
+<tr class="tblsubtitle" height="20">
+	<td width="17" align="center" valign="middle" class="smalltblheading">#</td>
+	<td width="79" align="center" valign="middle" class="smalltblheading">Crop</td>
+	<td width="130" align="center" valign="middle" class="smalltblheading">Variety</td>
+	<td width="115" align="center" valign="middle" class="smalltblheading"> Lot No.</td>
+	<td width="80" align="center" valign="middle" class="smalltblheading">Packed Qty</td>
+	<td width="95" align="center" valign="middle" class="smalltblheading">UPS</td>
+	<td width="80" align="center" valign="middle" class="smalltblheading">Existing Pchs</td>
+	<td width="75" align="center" valign="middle" class="smalltblheading">No. of Pchs</td>
+    <td width="80" align="center" valign="middle" class="smalltblheading">Balance Pchs</td>
+	<td width="65" align="center" valign="middle" class="smalltblheading">No. of Barcodes Attached</td>
+	<td width="60" align="center" valign="middle" class="smalltblheading">Remarks</td>
+	<td width="27" align="center" valign="middle" class="smalltblheading">Edit</td>
+	<td width="39" align="center" valign="middle" class="smalltblheading">Delete</td>
+</tr>
+<?php
+$total_tbl=0;
+?>
+<input type="hidden" name="itmdchk" value="<?php echo $total_tbl;?>" /> 
+</table>
+<br />
+
+<div id="postingsubtable" style="display:block">
+<table align="center" border="1" width="970" cellspacing="0" cellpadding="0" bordercolor="#1dbe03" style="border-collapse:collapse"  > 
+<tr class="tblsubtitle" height="25">
+    <td align="center" valign="middle" class="tblheading" colspan="4" >Post Item Form</td>
+</tr>
+<tr class="Light" height="30">
+<?php
+$quer3=mysqli_query($link,"SELECT cropid, cropname FROM tblcrop  order by cropname Asc"); 
+?>
+<td width="240" align="right"  valign="middle" class="smalltblheading">Crop&nbsp;</td>
+<td width="240" align="left"  valign="middle" class="smalltbltext" >&nbsp;<select class="smalltbltext" name="txtcrop" style="width:120px;" onchange="modetchk(this.value)">
+<option value="" selected>--Select Crop--</option>
+	<?php while($noticia = mysqli_fetch_array($quer3)) { ?>
+		<option value="<?php echo $noticia['cropid'];?>" />   
+		<?php echo $noticia['cropname'];?>
+		<?php } ?>
+	</select>&nbsp;<font color="#FF0000">*</font>&nbsp;</td>
+
+	<td width="240" align="right"  valign="middle" class="smalltblheading" >Variety&nbsp;</td>
+    <td width="240" align="left"  valign="middle" class="smalltbltext" id="vitem">&nbsp;<select class="smalltbltext" id="itm" name="txtvariety" style="width:150px;" onchange="modetchk1(this.value);" >
+<option value="" selected>--Select Variety-</option>
+</select>&nbsp;<font color="#FF0000">*</font>&nbsp;</td>
+</tr>
+
+<tr class="Light" height="30">
+<td width="240" align="right"  valign="middle" class="smalltblheading">UPS&nbsp;</td>
+<td width="240" align="left"  valign="middle" class="smalltbltext" id="upstp" >&nbsp;<select class="smalltbltext" name="txtups" style="width:120px;" onchange="modetchk2(this.value)">
+<option value="" selected>--Select--</option>
+</select>&nbsp;<font color="#FF0000">*</font>&nbsp;</td>
+<td width="240" align="right" valign="middle" class="smalltblheading">NoP in Master Pack &amp; Weight&nbsp;</td>
+<td width="240"  align="left" valign="middle" class="smalltbltext" id="tnopinmp">&nbsp;</td>
+</tr>		   
+
+<tr class="Light" height="30">
+<td align="right" width="239" valign="middle" class="smalltblheading">&nbsp;Lot No.&nbsp;</td>
+<td align="left" width="241" valign="middle" class="smalltbltext">&nbsp;<input name="txtlot1" type="text" size="20" maxlength="20" value="" readonly="readonly" style="background-color:#CCCCCC" >&nbsp;<font color="#FF0000">*</font>&nbsp;&nbsp;<a href="Javascript:void(0);" onclick="openslocpop();">Select</a></td>
+<td align="left" width="482" valign="middle" class="smalltblheading" colspan="3">&nbsp;<a href="javascript:void(0);" onclick="getdetails();" >Get details</a></td>
+</tr>
+</table>
+
+<input type="hidden" name="maintrid" value="<?php echo $tid;?>" />
+<input type="hidden" name="subtrid" value="<?php echo $subtid;?>" />
+
+<div id="postingsubsubtable" style="display:block"> <input name="protype" value="" type="hidden">
+<input type="hidden" name="extwh" value="<?php echo $extwh;?>" />
+<input type="hidden" name="extbin" value="<?php echo $extbin?>" />
+<input type="hidden" name="extsubbin" value="<?php echo $extsubbin?>" />
+</div>
+</div>
+<br />
+
+<table align="center" border="1" width="970" cellspacing="0" cellpadding="0" bordercolor="#1dbe03" style="border-collapse:collapse" >
+<tr class="Light" height="30">
+<td width="88" align="right"  valign="middle" class="smalltblheading">&nbsp;Remarks&nbsp;</td>
+<td width="656" align="left"  valign="middle" class="smalltbltext">&nbsp;<input type="text" name="txtremarks" class="smalltbltext" size="100" maxlength="100" ></td>
+</tr>
+</table>
+<br />
+<input type="hidden" name="tot_psub" value="<?php echo $tot_psub;?>" /><input type="hidden" name="totpcqty" value="<?php echo $totpcqty;?>">
+</div>
+<table align="center" width="970" cellpadding="5" cellspacing="5" border="0" >
+<tr >
+<td valign="top" align="right"><a href="home_packaging_mmc.php" tabindex="20"><img src="../images/cancel.gif" border="0"style="display:inline;cursor:Pointer;" onclick="return confirm('Do You wish to Cancel this Transaction?');" /></a>&nbsp;&nbsp;<input name="Submit" type="image" src="../images/preview.gif" alt="Submit Value"  border="0" style="display:inline;cursor:Pointer;" tabindex="" onClick="return mySubmit();">&nbsp;&nbsp;</td>
+</tr>
+</table>
+
+</td><td width="30"></td>
+</tr>
+<tr><td colspan="4">&nbsp;</td></tr>
+</table>
+</form>	  </td>
+	  </tr>
+	  </table>
+<!-- actual page end--->			  
+		  </td>
+        </tr>
+        <tr>
+          <td width="989" valign="top" align="center"  class="border_bottom">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="989" valign="top" align="left" ><div class="footer" ><img src="../images/istratlogo.gif"  align="left"/><img src="../images/vnrlogo.gif"  align="right"/></div></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>
+</body>
+</html>
+
+  

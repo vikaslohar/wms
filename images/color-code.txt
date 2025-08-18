@@ -1,0 +1,3 @@
+sunmenu-bordercolor:#f0b11f
+
+sunmenu-bg color:#fad682

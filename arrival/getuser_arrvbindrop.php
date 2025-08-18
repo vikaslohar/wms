@@ -1,0 +1,99 @@
+<?php
+	session_start();
+	if(!isset($_SESSION['sessionadmin']))
+	{
+		echo '<script language="JavaScript" type="text/JavaScript">';
+		echo "window.location='../login.php' ";
+		echo '</script>';
+	}
+	else
+	{
+		$year1=$_SESSION['ayear1'];
+		$year2=$_SESSION['ayear2'];
+		$username= $_SESSION['username'];
+		$yearid_id=$_SESSION['yearid_id'];
+		$role=$_SESSION['role'];
+		$loginid=$_SESSION['loginid'];
+		$logid=$_SESSION['logid'];
+		$lgnid=$_SESSION['logid'];
+		$plantcode=$_SESSION['plantcode'];
+		$plantcode1=$_SESSION['plantcode1'];
+		$plantcode2=$_SESSION['plantcode2'];
+		$plantcode3=$_SESSION['plantcode3'];
+		$plantcode4=$_SESSION['plantcode4'];
+	}
+	require_once("../include/config.php");
+	require_once("../include/connection.php");
+
+if(isset($_GET['a']))
+	{
+	$a = $_GET['a'];	 
+	}
+if(isset($_GET['b']))
+	{
+	$b = $_GET['b'];	 
+	}
+	else
+	{ 
+	$b="";
+	}
+	
+	//$d="";
+	
+	if($b!="")
+	{
+		if($b=="bing1")
+		{
+		$d="sbing1";
+		$id="txtslbing1";
+		$nid="b1";
+		}
+		if($b=="bing2")
+		{
+		$d="sbing2";
+		$id="txtslbing2";
+		$nid="b2";
+		}
+		if($b=="bing3")
+		{
+		$d="sbing3";
+		$id="txtslbing3";
+		$nid="b3";
+		}
+		if($b=="bind1")
+		{
+		$d="sbind1";
+		$id="txtslbind1";
+		$nid="b4";
+		}
+		if($b=="bind2")
+		{
+		$d="sbind2";
+		$id="txtslbind2";
+		$nid="b5";
+		}
+		if($b=="bind3")
+		{
+		$d="sbind3";
+		$id="txtslbind3";
+		$nid="b5";
+		}
+	}
+
+
+	//if($a==1)
+	//{
+	//$a=13;
+	//}
+$flag=0; 
+//echo $a;
+$sql_month=mysqli_query($link,"select binid, binname from tbl_bin where whid='".$a."' and plantcode='$plantcode' order by binname")or die("Error:".mysqli_error($link));
+//$row_month=mysqli_fetch_array($sql_month);
+
+?>
+&nbsp;<select class="smalltbltext" id="vbin_<?php echo $b;?>" name="vbin_<?php echo $b;?>" style="width:60px;" onchange="bin2(this.value,'<?php echo $b?>');" >
+<option value="" selected>Bin</option>
+	<?php while($noticia_bing1 = mysqli_fetch_array($sql_month)) { ?>
+		<option value="<?php echo $noticia_bing1['binid'];?>" >   
+		<?php echo $noticia_bing1['binname'];?></option>
+		<?php } ?></select>&nbsp;<font color="#FF0000">*</font>&nbsp;

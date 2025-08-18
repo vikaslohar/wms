@@ -1,0 +1,470 @@
+<?php
+	session_start();
+	if(!isset($_SESSION['sessionadmin']))
+	{
+	echo '<script language="JavaScript" type="text/JavaScript">';
+	echo "window.location='../login.php' ";
+	echo '</script>';
+	}
+	else
+	{
+	$year1=$_SESSION['ayear1'];
+	$year2=$_SESSION['ayear2'];
+	$username= $_SESSION['username'];
+	$yearid_id=$_SESSION['yearid_id'];
+	$role=$_SESSION['role'];
+    $loginid=$_SESSION['loginid'];
+    $logid=$_SESSION['logid'];
+	$lgnid=$_SESSION['logid'];
+	$plantcode=$_SESSION['plantcode'];
+	$plantcode1=$_SESSION['plantcode1'];
+	$plantcode2=$_SESSION['plantcode2'];
+	$plantcode3=$_SESSION['plantcode3'];
+	$plantcode4=$_SESSION['plantcode4'];
+	}
+	require_once("../include/config.php");
+	require_once("../include/connection.php");
+     //$yearid_id="09-10";
+	//$logid="OP1";
+	//$lgnid="OP1";
+	if(isset($_REQUEST['itmid']))
+	{
+	$itmid = $_REQUEST['itmid'];
+	}
+	if(isset($_REQUEST['remarks']))
+	{
+	 $remarks = $_REQUEST['remarks'];
+	}
+$quer3=mysqli_query($link,"select * from tblfnyears where years_flg != 0 and years_status='a'"); 
+$noticia3 = mysqli_fetch_array($quer3);
+$ycode=$noticia3['ycode'];
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Order Transaction - Order-Stock Transfer- Preview</title>
+<link href="../include/main_order.css" rel="stylesheet" type="text/css" />
+<link href="../include/vnrtrac_order.css" rel="stylesheet" type="text/css" />
+<script language='javascript'>
+/*function test(foccode,emp)
+{
+if (foccode!="")
+{
+document.from.foccode.value=foccode;
+document.from.empname.value=emp;
+}
+}	
+function post_value()
+{
+if(document.from.foc.checked=true)
+{
+opener.document.frmaddDept.regionh.value = document.from.empname.value;
+opener.document.frmaddDept.empi.value = document.from.foccode.value;
+opener.document.frmaddDept.txtnoofemp.value="";
+
+self.close();
+}
+}
+
+function mySubmit()
+{
+
+if(document.from.foccode.value=="")
+{
+alert("You must select Zone Head");
+return false;
+}
+return true;
+}
+	*/
+	
+			</script>
+</head>
+<body topmargin="0" >
+  
+<table width="750" height="282" border="0" align="center" cellpadding="0" cellspacing="0" >
+   <tr>
+  <td valign="top">
+  <?php 
+$tid=$itmid;
+$sql_tbl=mysqli_query($link,"select * from tbl_orderm where plantcode='$plantcode' and logid='".$logid."' and order_trtype='Order Stock' and orderm_id='".$tid."'") or die(mysqli_error($link));
+$row_tbl=mysqli_fetch_array($sql_tbl);			
+$arrival_id=$row_tbl['orderm_id'];
+
+	$tdate=$row_tbl['orderm_date'];
+	$tyear=substr($tdate,0,4);
+	$tmonth=substr($tdate,5,2);
+	$tday=substr($tdate,8,2);
+	$tdate=$tday."-".$tmonth."-".$tyear;
+?>
+ <form name="mainform" method="post" action="<?php $_SERVER['PHP_SELF']; ?>"   > 
+	 <input name="frm_action" value="submit" type="hidden"> 
+	 	<input type="hidden" name="logid" value="<?php echo $logid?>" />
+		<input type="Hidden" name="txtitem" value="<?php echo $p_id?>" />
+		<input type="hidden" name="remarks" value="<?php echo $remarks?>" />
+		<input type="hidden" name="date" value="<?php echo $tdate?>" />
+		<input type="hidden" name="txtid" value="<?php echo $row_tbl['orderm_code']?>" />
+	  
+ 
+<table align="center" border="1" width="950" cellspacing="0" cellpadding="0" bordercolor="#cc30cc" style="border-collapse:collapse" >
+  <tr class="tblsubtitle" height="20">
+    <td colspan="6" align="center" class="tblheading">Order - Stock Transfer Preview </td>
+  </tr>
+  <tr height="15">
+    <td colspan="6" align="right" class="tblheading"><font color="#FF0000" >* </font>indicates required field&nbsp;</td>
+  </tr>
+  <tr class="Light" height="30">
+    <td width="173" align="right" valign="middle" class="tblheading">&nbsp;Transaction Id&nbsp;</td>
+    <td width="196"  align="left" valign="middle" class="tbltext">&nbsp;
+        <?php echo "TOS".$row_tbl['orderm_code']."/".$ycode."/".$lgnid;?></td>
+    <td width="207" align="right"  valign="middle" class="tblheading" >&nbsp;Date&nbsp;</td>
+    <td align="left" width="264" valign="middle" class="tbltext" colspan="3">&nbsp;
+        <?php echo $tdate;?></td>
+  </tr>
+  <?php
+	$quer3=mysqli_query($link,"SELECT * FROM tbl_partymaser where p_id='".$row_tbl['orderm_party']."'"); 
+	$row3=mysqli_fetch_array($quer3);
+?>
+  <tr class="Dark" height="30">
+    <td align="right" width="173" valign="middle" class="tblheading">&nbsp;Order No.&nbsp;</td>
+    <td align="left" width="196" valign="middle" class="tbltext">&nbsp;
+        <?php echo $row_tbl['orderm_porderno'];?></td>
+    <td align="right" width="207" valign="middle" class="tblheading">&nbsp;Party Order Ref. No.&nbsp;</td>
+    <td align="left" width="264" valign="middle" class="tbltext">&nbsp;
+        <?php echo $row_tbl['orderm_partyrefno'];?></td>
+  </tr>
+  <?php
+$sql_month=mysqli_query($link,"select * from tblproductionlocation where productionlocationid='".$row_tbl['orderm_location']."' order by productionlocation")or die(mysqli_error($link));
+$noticia = mysqli_fetch_array($sql_month);
+?>
+  <tr class="Light" height="30">
+    <td align="right" width="196" valign="middle" class="tblheading">&nbsp;State&nbsp;</td>
+    <td align="left" width="216" valign="middle" class="tbltext">&nbsp;
+        <?php echo $row_tbl['orderm_locstate'];?></td>
+    <td align="right" width="231" valign="middle" class="tblheading">&nbsp;Location&nbsp;</td>
+    <td align="left" width="297" valign="middle" class="tbltext">&nbsp;
+        <?php echo $noticia['productionlocation'];?></td>
+  </tr>
+  <tr class="Dark" height="30">
+    <td align="right"  valign="middle" class="tblheading" >Party Type&nbsp;</td>
+    <td align="left"  valign="middle" class="tbltext"colspan="6">&nbsp;
+        <?php echo $row_tbl['orderm_party_type'];?></td>
+  </tr>
+  <tr class="Light" height="30">
+    <td align="right"  valign="middle" class="tblheading" >Stock Transfer  To&nbsp;</td>
+    <td align="left"  valign="middle" class="tbltext"colspan="6">&nbsp;
+        <?php echo $row3['business_name'];?></td>
+  </tr>
+  <tr class="Dark" height="30">
+    <td align="right"  valign="middle" class="tblheading">Address&nbsp;</td>
+    <td align="left"  valign="middle" class="tbltext" colspan="6" id="vaddress">&nbsp;
+        <?php echo $row3['address'];?>
+      <?php if($row3['city']!=""){ echo " ".$row3['city'];}?>
+      ,
+      <?php echo $row3['state'];?><?php if($row3['pin']!=0 && $row3['pin']!=""){echo ", Pin no.-".$row3['pin'];}?><?php if($row3['mob']!="" && $row3['mob']!=0){echo ", Mob no.-".$row3['mob'];}?><?php if($row3['phone']!=""){echo ", Phone no. ".$row3['std']."-".$row3['phone'];}?><?php if($row3['tin']!=""){echo ", Tin no.-".$row3['tin'];}?><?php echo ".";?>
+      &nbsp;</td>
+  </tr>
+  <tr class="Light" height="30">
+    <td align="right"  valign="middle" class="tblheading">Consignee Applicable&nbsp;</td>
+    <td align="left"  valign="middle" class="tbltext"  colspan="5">&nbsp;
+        <?php echo $row_tbl['orderm_consigneeapp'];?></td>
+  </tr>
+  <?php 
+if($row_tbl['orderm_consigneeapp']=="Yes")
+{
+if($row_tbl['orderm_conpin']!="")
+	 if ($row_tbl['orderm_conpin'] >0 ){ 
+	 $pin="-".$row_tbl['orderm_conpin'];} ?>
+  <tr class="Dark" height="30">
+    <td align="right" width="173" valign="middle" class="tblheading">&nbsp;Consignee Name&nbsp;</td>
+    <td align="left"  valign="middle" class="tbltext" colspan="3">&nbsp;
+        <?php echo $row_tbl['orderm_consigneename'];?></td>
+  </tr>
+     <tr class="Light" height="25">
+    <td align="right"  valign="middle" class="tblheading">Address&nbsp;</td>
+  <td align="left"  valign="middle" class="tbltext" colspan="6" id="vaddress"><div style="padding-left:4px"><?php echo $row_tbl['orderm_conadd'];?>,&nbsp;<?php echo $row_tbl['orderm_concity'];?><?php echo $pin;?>&nbsp;<?php if($row_tbl['orderm_constate']!=""){?>,&nbsp;<?php echo $row_tbl['orderm_constate'];}?>,&nbsp;<?php if($row_tbl['orderm_country']!=""){?>,&nbsp;<?php echo $row_tbl['orderm_country'];}?>&nbsp;<?php if($row_tbl['orderm_conphoneno']!=""){?>&nbsp;Phone:<?php echo $row_tbl['orderm_conphonestd']."-".$row_tbl['orderm_conphoneno'];}?> <?php if($row_tbl['orderm_conmobile']!=""){?>Mobile:<?php echo $row_tbl['orderm_conmobile'];}?></div></td>
+     
+  </tr>
+  
+  <tr class="Dark" height="30">
+    <td align="right" width="173" valign="middle" class="tblheading">&nbsp;TIN&nbsp;</td>
+    <td align="left" width="196" valign="middle" class="tbltext">&nbsp;
+        <?php echo $row_tbl['orderm_contin'];?></td>
+    <td align="right" width="207" valign="middle" class="tblheading">&nbsp;CST&nbsp;</td>
+    <td align="left" width="264" valign="middle" class="tbltext">&nbsp;
+        <?php echo $row_tbl['orderm_concst'];?></td>
+  </tr>
+  <?php
+}
+?>
+  <tr class="Light" height="30">
+    <td align="right" width="173" valign="middle" class="tblheading">&nbsp;Order Placed By&nbsp;</td>
+    <td colspan="6" align="left" valign="middle" class="tbltext">&nbsp;
+        <?php echo $row_tbl['orderm_placedby'];?></td>
+  </tr>
+  <tr class="Dark" height="25">
+    <td height="35" align="right"  valign="middle" class="tblheading">&nbsp;Preferred Mode of Dispatch&nbsp;</td>
+    <td align="left"  valign="middle" class="tbltext" >&nbsp;
+        <?php echo $row_tbl['orderm_tmode'];?></td>
+    <?php
+if($row_tbl['orderm_tmode'] == "Transport")
+{
+?>
+    <td align="right" width="196" valign="middle" class="tblheading">&nbsp;Transport Name&nbsp;</td>
+    <td align="left"  valign="middle" class="tbltext" >&nbsp;
+        <?php echo $row_tbl['orderm_trname'];?></td>
+    <?php
+}
+else if($row_tbl['orderm_tmode'] == "Courier")
+{
+?>
+    <td align="right" width="196" valign="middle" class="tblheading">&nbsp;Courier Name&nbsp;</td>
+    <td align="left" valign="middle" class="tbltext" >&nbsp;
+        <?php echo $row_tbl['orderm_cname'];?></td>
+    <?php
+}
+else 
+{
+?>
+    <td align="right" width="196" valign="middle" class="tblheading">&nbsp;Name of Person&nbsp;</td>
+    <td align="left" valign="middle" class="tbltext">&nbsp;
+        <?php echo $row_tbl['orderm_pname'];?></td>
+  </tr>
+  <?php
+}
+?>
+</table>
+  
+<br />
+<br />
+<table align="center" border="1" cellspacing="0" cellpadding="0" width="950" bordercolor="#cc30cc" style="border-collapse:collapse">
+<?php
+$sql_tbl_sub=mysqli_query($link,"select * from tbl_order_sub where plantcode='$plantcode' and orderm_id='".$tid."'") or die(mysqli_error($link));
+$subtbltot=mysqli_num_rows($sql_tbl_sub);
+$subtid=0;
+
+?>
+<tr class="tblsubtitle" height="20">
+    	<td width="2%" align="center" valign="middle" class="tblheading">#</td>
+		<td width="10%" align="center" valign="middle" class="tblheading">&nbsp;Crop</td>
+        <td width="5%" align="center" valign="middle" class="tblheading">Variety Type</td>
+        <td width="12%" align="center" valign="middle" class="tblheading">&nbsp;Variety</td>
+		<td width="11%" align="center" valign="middle" class="tblheading">&nbsp;PV Variety</td>
+		<td width="3%" align="center" valign="middle" class="tblheading">UPS Type</td>
+		<td width="7%" align="center" valign="middle" class="tblheading">UPS</td>
+		<td width="7%" align="center" valign="middle" class="tblheading">Total Qty (Kgs.)</td>
+		<td width="6%" align="center" valign="middle" class="tblheading">SMC Qty (Kgs.)</td>
+		<td width="6%" align="center" valign="middle" class="tblheading">L.Qty (Kgs.)</td>
+        <td width="6%" align="center" valign="middle" class="tblheading">PT</td>
+        <td width="4%" align="center" valign="middle" class="tblheading">Std MP</td>
+        <td width="4%" align="center" valign="middle" class="tblheading">NoP</td>
+		<td width="5%" align="center" valign="middle" class="tblheading">NoWB</td>
+		<td width="4%" align="center" valign="middle" class="tblheading">NoMP</td>
+</tr>
+  <?php
+$srno=1;$itmdchk="";$itmdchk1=""; $grtqty=0; $grsmqty=0; $grlqty=0; $getmp=""; $grtnop=0; $grtnowb=0; $getnomp=0;
+$total_tbl=mysqli_num_rows($sql_tbl);
+if($total_tbl > 0)
+{
+while($row_tbl_sub=mysqli_fetch_array($sql_tbl_sub))
+{
+	if($itmdchk!="")
+	{
+		$itmdchk=$itmdchk.$row_tbl_sub['order_sub_variety'].",";
+	}
+	else
+	{
+		$itmdchk=$row_tbl_sub['order_sub_variety'].",";
+	}
+	if($itmdchk1!="")
+	{
+		$itmdchk1=$itmdchk1.$row_tbl_sub['order_sub_ups_type'].",";
+	}
+	else
+	{
+		$itmdchk1=$row_tbl_sub['order_sub_ups_type'].",";
+	}
+
+$sql_crop=mysqli_query($link,"select * from tblcrop where cropid='".$row_tbl_sub['order_sub_crop']."'") or die(mysqli_error($link));
+$row_crop=mysqli_fetch_array($sql_crop);
+$crop=$row_crop['cropname'];
+
+		
+$sql_veriety=mysqli_query($link,"select * from tblvariety where varietyid='".$row_tbl_sub['order_sub_variety']."' and actstatus='Active'") or die(mysqli_error($link));
+$p_1=mysqli_fetch_array($sql_veriety);
+$variety=$p_1['popularname'];
+
+$sql_pvveriety=mysqli_query($link,"select * from tblvariety where varietyid='".$p_1['pvverid']."' and actstatus='Active'") or die(mysqli_error($link));
+$p_12=mysqli_fetch_array($sql_pvveriety);
+$pvvariety=$p_12['popularname'];
+		
+$up=""; $qt=""; $qt1="";$zz="";$np=""; $qt1=""; $nowbp=""; $nompp=""; $nowb=""; $nomp=""; $ptp=""; $stdptv=""; $pt=""; $stdpt=""; $vtype=""; $smcqty=""; $lqty="";
+$sql_sloc=mysqli_query($link,"select * from tbl_order_sub_sub where plantcode='$plantcode' and orderm_id='".$tid."' and order_sub_id='".$row_tbl_sub['order_sub_id']."' order by order_sub_sub_id") or die(mysqli_error($link));
+while($row_sloc=mysqli_fetch_array($sql_sloc))
+{
+$zz=explode(" ",$row_sloc['order_sub_sub_ups']);
+$dq=explode(".",$zz[0]);
+if($dq[1]==000){$qt1=$dq[0];}else{$qt1=$row_sloc['order_sub_sub_ups'];}
+
+$up1=$qt1." ".$zz[1];
+
+if($up!="")
+$up=$up.$up1."<br/>";
+else
+$up=$up1."<br/>";
+
+$dq=explode(".",$row_sloc['order_sub_sub_qty']);
+if($dq[1]==000){$qt1=$dq[0];}else{$qt1=$row_sloc['order_sub_sub_qty'];}
+
+if($qt!="")
+$qt=$qt.$qt1."<br/>";
+else
+$qt=$qt1."<br/>";
+
+if($smcqty!="")
+$smcqty=$smcqty."<br />".$row_sloc['order_sub_subqty'];
+else
+$smcqty=$row_sloc['order_sub_subqty'];
+ 
+if($lqty!="") 
+$lqty=$lqty."<br />".$row_sloc['order_sub_sublqty'];
+else
+$lqty=$row_sloc['order_sub_sublqty'];
+
+if($np!="")
+$np=$np.$row_sloc['order_sub_sub_nop']."<br/>";
+else
+$np=$row_sloc['order_sub_sub_nop']."<br/>";
+
+$nowb=$row_sloc['order_sub_sub_nowb'];
+if($nowb==0)$nowb="";
+if($nowbp!="")
+$nowbp=$nowbp.$nowb."<br/>";
+else
+$nowbp=$nowb."<br/>";
+
+$nomp=$row_sloc['order_sub_sub_nomp'];
+if($nomp==0)$nomp="";
+if($nompp!="")
+$nompp=$nompp.$nomp."<br/>";
+else
+$nompp=$nomp."<br/>";
+
+$pt=$row_sloc['order_sub_sub_pt'];
+if($ptp!="")
+$ptp=$ptp.$pt."<br/>";
+else
+$ptp=$pt."<br/>";
+
+$stdpt=$row_sloc['order_sub_sub_stdpt'];
+if($stdptv!="")
+$stdptv=$stdptv.$stdpt."<br/>";
+else
+$stdptv=$stdpt."<br/>";
+
+$grtqty=$grtqty+$qt1; 
+$grsmqty=$grsmqty+$row_sloc['order_sub_subqty'];
+$grlqty=$grlqty+$row_sloc['order_sub_sublqty'];
+$grtnop=$grtnop+$row_sloc['order_sub_sub_nop'];
+$grtnowb=$grtnowb+$nowb;
+$getnomp=$getnomp+$nomp;
+
+}
+if($up==0)$up=""; 
+if($np==0) $np="";
+if($row_tbl_sub['order_sub_ups_type']=="Yes")
+{
+  $up1="ST";
+}
+else if($row_tbl_sub['order_sub_ups_type']=="No")
+{
+$up1="NST";
+}
+$vtype=$row_tbl_sub['order_sub_variety_typ'];
+
+/*$grtqty=$grtqty+$qt; 
+$grsmqty=$grsmqty+$smcqty;
+$grlqty=$grlqty+$lqty;
+$grtnop=$grtnop+$np;
+$grtnowb=$grtnowb+$nowbp;
+$getnomp=$getnomp+$nompp;*/
+
+if($srno%2!=0)
+{
+?>
+<tr class="Light" height="20">
+    	<td width="2%" align="center" valign="middle" class="smalltblheading"><?php echo $srno;?></td>
+		<td width="10%" align="center" valign="middle" class="smalltblheading">&nbsp;<?php echo $crop;?></td>
+        <td width="5%" align="center" valign="middle" class="smalltblheading"><?php echo $vtype;?></td>
+        <td width="12%" align="center" valign="middle" class="smalltblheading">&nbsp;<?php echo $variety;?></td>
+		<td width="11%" align="center" valign="middle" class="smalltblheading">&nbsp;<?php echo $pvvariety;?></td>
+		<td width="3%" align="center" valign="middle" class="smalltblheading"><?php echo $up1;?></td>
+		<td width="7%" align="center" valign="middle" class="smalltblheading"><?php echo $up;?></td>
+        <td width="7%" align="center" valign="middle" class="smalltblheading"><?php echo $qt;?></td>
+		<td width="6%" align="center" valign="middle" class="smalltblheading"><?php echo $smcqty;?></td>
+		<td width="6%" align="center" valign="middle" class="smalltblheading"><?php echo $lqty;?></td>
+        <td width="6%" align="center" valign="middle" class="smalltblheading"><?php echo $ptp;?></td>
+        <td width="4%" align="center" valign="middle" class="smalltblheading"><?php echo $stdptv;?></td>
+        <td width="4%" align="center" valign="middle" class="smalltblheading"><?php echo $np;?></td>
+		<td width="5%" align="center" valign="middle" class="smalltblheading"><?php echo $nowbp;?></td>
+		<td width="4%" align="center" valign="middle" class="smalltblheading"><?php echo $nompp;?></td>
+</tr>
+  <?php
+}
+else
+{
+?>
+  <tr class="Light" height="20">
+    	<td width="2%" align="center" valign="middle" class="smalltblheading"><?php echo $srno;?></td>
+		<td width="10%" align="center" valign="middle" class="smalltblheading">&nbsp;<?php echo $crop;?></td>
+        <td width="5%" align="center" valign="middle" class="smalltblheading"><?php echo $vtype;?></td>
+        <td width="12%" align="center" valign="middle" class="smalltblheading">&nbsp;<?php echo $variety;?></td>
+		<td width="11%" align="center" valign="middle" class="smalltblheading">&nbsp;<?php echo $pvvariety;?></td>
+		<td width="3%" align="center" valign="middle" class="smalltblheading"><?php echo $up1;?></td>
+		<td width="7%" align="center" valign="middle" class="smalltblheading"><?php echo $up;?></td>
+        <td width="7%" align="center" valign="middle" class="smalltblheading"><?php echo $qt;?></td>
+		<td width="6%" align="center" valign="middle" class="smalltblheading"><?php echo $smcqty;?></td>
+		<td width="6%" align="center" valign="middle" class="smalltblheading"><?php echo $lqty;?></td>
+        <td width="6%" align="center" valign="middle" class="smalltblheading"><?php echo $ptp;?></td>
+        <td width="4%" align="center" valign="middle" class="smalltblheading"><?php echo $stdptv;?></td>
+        <td width="4%" align="center" valign="middle" class="smalltblheading"><?php echo $np;?></td>
+		<td width="5%" align="center" valign="middle" class="smalltblheading"><?php echo $nowbp;?></td>
+		<td width="4%" align="center" valign="middle" class="smalltblheading"><?php echo $nompp;?></td>
+</tr>		
+<?php
+}
+$srno++;
+}
+}
+
+?>
+<tr class="Light" height="20">
+    <td width="2%" align="right" valign="middle" class="smalltblheading" colspan="7">Grand Total&nbsp;</td>
+    <td width="7%" align="center" valign="middle" class="smalltblheading"><?php echo $grtqty;?></td>
+	<td width="6%" align="center" valign="middle" class="smalltblheading"><?php echo $grsmqty;?></td>
+	<td width="6%" align="center" valign="middle" class="smalltblheading"><?php echo $grlqty;?></td>
+    <td width="6%" align="center" valign="middle" class="smalltblheading">&nbsp;</td>
+    <td width="4%" align="center" valign="middle" class="smalltblheading">&nbsp;</td>
+    <td width="4%" align="center" valign="middle" class="smalltblheading"><?php echo $grtnop;?></td>
+	<td width="5%" align="center" valign="middle" class="smalltblheading"><?php echo $grtnowb;?></td>
+	<td width="4%" align="center" valign="middle" class="smalltblheading"><?php echo $getnomp;?></td>
+</tr>
+</table>
+<table align="center" border="1" cellspacing="0" cellpadding="0" width="950" bordercolor="#cc30cc" style="border-collapse:collapse">
+<tr class="Dark" height="30">
+<td width="58" align="right"  valign="middle" class="tblheading">&nbsp;Remarks&nbsp;</td>
+<td align="left"  valign="middle" class="tbltext" colspan="20">&nbsp;<?php echo $remarks;?></td>
+</tr>
+</table> 	
+<table align="center" cellpadding="5" cellspacing="5" border="0" width="950">
+<tr >
+<td align="right" colspan="3">&nbsp;<img src="../images/Vista-printer.png" height="29" width="35" border="0" onClick="javascript:window.print();" />&nbsp;<img src="../images/close_icon2.jpg" height="30"  border="0" onClick="window.close()" />&nbsp;&nbsp;</td>
+</tr>
+</table>
+</form>
+</td></tr>
+</table>
+
+</body>
+</html>

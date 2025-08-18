@@ -1,0 +1,333 @@
+<?php
+	session_start();
+	if(!isset($_SESSION['sessionadmin']))
+	{
+	echo '<script language="JavaScript" type="text/JavaScript">';
+	echo "window.location='../login.php' ";
+	echo '</script>';
+	}
+	else
+	{
+	$year1=$_SESSION['ayear1'];
+	$year2=$_SESSION['ayear2'];
+	$username= $_SESSION['username'];
+	$yearid_id=$_SESSION['yearid_id'];
+	$role=$_SESSION['role'];
+    $loginid=$_SESSION['loginid'];
+    $logid=$_SESSION['logid'];
+	$lgnid=$_SESSION['logid'];
+	$plantcode=$_SESSION['plantcode'];
+	$plantcode1=$_SESSION['plantcode1'];
+	$plantcode2=$_SESSION['plantcode2'];
+	$plantcode3=$_SESSION['plantcode3'];
+	$plantcode4=$_SESSION['plantcode4'];
+	}
+	
+	require_once("../include/config.php");
+	require_once("../include/connection.php");
+
+	$sdate=$_REQUEST['sdate'];
+	$edate=$_REQUEST['edate'];
+	$txtcrop=$_REQUEST['txtcrop'];
+	$txtvariety=$_REQUEST['txtvariety'];
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Report - Sample Collection List</title>
+<link href="../include/vnrtrac_quality.css" rel="stylesheet" type="text/css" />
+<style type="text/css" media="print">
+body { font-family:Arial;}
+img.butn { display:none; visibility:hidden; }
+
+</style>
+
+</head>
+<body topmargin="0" >
+<table width="800" height="282" border="0" align="center" cellpadding="0" cellspacing="0" >
+   <tr>
+  <td valign="top">
+</br>
+<?php
+	  $tdate=$sdate;
+		$tday=substr($tdate,0,2);
+		$tmonth=substr($tdate,3,2);
+		$tyear=substr($tdate,6,4);
+		$sdate=$tyear."-".$tmonth."-".$tday;
+	
+	
+		$tdate=$edate;
+		$tday=substr($tdate,0,2);
+		$tmonth=substr($tdate,3,2);
+		$tyear=substr($tdate,6,4);
+		$edate=$tyear."-".$tmonth."-".$tday;
+		
+	  	$crop=""; $variety="";
+	  	if($txtcrop!="ALL"){
+			$quer3=mysqli_query($link,"SELECT * FROM tblcrop  where cropid='".$txtcrop."'"); 
+			$row31=mysqli_fetch_array($quer3);
+			$crop=$row31['cropname'];
+		}else{
+			$crop=$txtcrop;
+		}
+		
+		if($txtvariety!="ALL"){
+			$quer3=mysqli_query($link,"SELECT * FROM tblvariety where varietyid ='".$txtvariety."' "); 
+			$row=mysqli_fetch_array($quer3);
+			$variety=$row31['popularname'];
+		}else{
+			$variety=$txtvariety;
+		}
+	  ?>
+<table align="center" border="0" width="943" cellspacing="0" cellpadding="0" bordercolor="#d21704" style="border-collapse:collapse" > 
+<tr class="Light" height="20">
+  <td align="left" valign="middle" class="tblheading">&nbsp;&nbsp;Sample Collection List</td><td align="right" class="tblheading">Crop - <?php echo $crop;?>&nbsp;&nbsp;|&nbsp;&nbsp;Variety - <?php echo $variety;?>&nbsp;&nbsp;</td>
+</tr>
+</table>
+<table align="center" border="1" cellspacing="0" cellpadding="0" width="850" bordercolor="#d21704" style="border-collapse:collapse">
+
+<tr class="tblsubtitle" height="20">
+	<td width="34" height="19"align="center" valign="middle" class="smalltblheading">#</td>
+	<td width="88" align="center" valign="middle" class="smalltblheading">DOSR</td>
+	<td width="126" align="center" valign="middle" class="smalltblheading">Crop</td>
+	<td width="175" align="center" valign="middle" class="smalltblheading">Variety</td>
+	<td width="113" align="center" valign="middle" class="smalltblheading">Lot No.</td> 
+	<td width="76" align="center" valign="middle" class="smalltblheading">Total Qty</td>
+	<td width="59" align="center" valign="middle" class="smalltblheading">QC Tests </td>
+	<td align="center" valign="middle" class="smalltblheading">Sample No. </td>
+	<td width="106" align="center" valign="middle" class="smalltblheading">Sample Collection Date</td>
+	<td align="center" valign="middle" class="smalltblheading">SRF No./QC Ref. No. </td>
+	<td width="64" align="center" valign="middle" class="smalltblheading">Remark</td>
+</tr>
+<?php
+$srno=1;
+$sqlm="select distinct oldlot from tbl_qctest where spdate>='".$sdate."' and spdate<='".$edate."' and bflg=1 and qcflg=0";
+
+if($txtcrop!="ALL"){
+	$sqlm.=" and crop='".$txtcrop."'";
+}
+if($txtvariety!="ALL"){
+	$sqlm.=" and variety='".$txtvariety."'";
+}
+
+$sqlm.=" order by spdate desc";
+$sqlm_arr_home=mysqli_query($link,$sqlm) or die(mysqli_error($link));
+$totm_arr_home=mysqli_num_rows($sqlm_arr_home);
+if($totm_arr_home > 0)
+{
+while($rowm_arr_home=mysqli_fetch_array($sqlm_arr_home))
+{
+
+$sql="select * from tbl_qctest where spdate>='".$sdate."' and spdate<='".$edate."' and oldlot='".$rowm_arr_home['oldlot']."' and bflg=1 and qcflg=0";
+
+if($txtcrop!="ALL"){
+	$sql.=" and crop='".$txtcrop."'";
+}
+if($txtvariety!="ALL"){
+	$sql.=" and variety='".$txtvariety."'";
+}
+
+$sql.=" order by spdate desc";
+$sql_arr_home=mysqli_query($link,$sql) or die(mysqli_error($link));
+ $tot_arr_home=mysqli_num_rows($sql_arr_home);
+if($tot_arr_home > 0)
+{
+while($row_arr_home=mysqli_fetch_array($sql_arr_home))
+{
+	$smp=$row_arr_home['yearid'];
+	$remark=$row_arr_home['remarks'];
+	$qcrefno=$row_arr_home['qcrefno'];
+	
+	$trdate=$row_arr_home['srdate'];
+	$tryear=substr($trdate,0,4);
+	$trmonth=substr($trdate,5,2);
+	$trday=substr($trdate,8,2);
+	$trdate=$trday."-".$trmonth."-".$tryear;	
+	
+	$tdate=$row_arr_home['spdate'];
+	$tryear=substr($tdate,0,4);
+	$trmonth=substr($tdate,5,2);
+	$trday=substr($tdate,8,2);
+	$spdate=$trday."-".$trmonth."-".$tryear;	
+	
+	$lrole=$row_arr_home['arr_role'];
+	$arrival_id=$row_arr_home['tid'];
+	$qc1=$row_arr_home['sampleno'];
+		$crop=""; $variety=""; $lotno=""; $stage=""; $got=""; $qc=""; 
+	$sql_tbl_sub=mysqli_query($link,"select * from tbl_qctest where tid='".$arrival_id."'") or die(mysqli_error($link));
+	$subtbltot=mysqli_num_rows($sql_tbl_sub);
+	while($row_tbl_sub1=mysqli_fetch_array($sql_tbl_sub))
+	{			
+		$lotno=$row_tbl_sub1['oldlot'];
+		$details=""; $totqty=0;
+		$lrole=$row_arr_home['arr_role'];
+		$quer3=mysqli_query($link,"SELECT business_name FROM tbl_partymaser  where p_id='".$row_arr_home['party_id']."'"); 
+		$row3=mysqli_fetch_array($quer3);
+		
+		$quer3=mysqli_query($link,"SELECT * FROM tblcrop  where cropid='".$row_arr_home['crop']."'"); 
+		$row31=mysqli_fetch_array($quer3);
+		
+		$quer3=mysqli_query($link,"SELECT * FROM tblvariety where varietyid ='".$row_arr_home['variety']."' "); 
+		$row=mysqli_fetch_array($quer3);
+	 	$tt=$row['popularname'];
+	  	$tot=mysqli_num_rows($quer3);	
+		if($tot==0)
+		{
+			$vv=$row_tbl_sub1['variety'];
+		}
+		else
+		{
+			$vv=$tt;
+		}
+
+		$sql_tblsub1=mysqli_query($link,"select distinct lotldg_sstage from tbl_lot_ldg where orlot='".$lotno."' order by orlot") or die(mysqli_error($link));
+		$t_tblsub1=mysqli_num_rows($sql_tblsub1);
+		while($rowtbl22=mysqli_fetch_array($sql_tblsub1))
+		{
+			$bags=0; $qty=0; $slocs="";
+			$sql_tbl_sub1=mysqli_query($link,"select distinct lotldg_subbinid, lotldg_variety, lotldg_crop, lotldg_whid, lotldg_binid from tbl_lot_ldg where orlot='".$lotno."' and lotldg_sstage='".$rowtbl22['lotldg_sstage']."' group by lotldg_subbinid, lotldg_variety, orlot order by lotldg_subbinid") or die(mysqli_error($link));
+			$t=mysqli_num_rows($sql_tbl_sub1);
+			while($row_tbl22=mysqli_fetch_array($sql_tbl_sub1))
+			{ 
+				$ac=0; $acn=0; $gd=""; $slups=0;$slqty=0;
+				$sql_tbl1=mysqli_query($link,"select max(lotldg_id) from tbl_lot_ldg where lotldg_subbinid='".$row_tbl22['lotldg_subbinid']."' and orlot='".$lotno."' and lotldg_sstage='".$rowtbl22['lotldg_sstage']."'") or die(mysqli_error($link));  
+				$row_tbl1=mysqli_fetch_array($sql_tbl1);
+				
+				$sql1=mysqli_query($link,"select * from tbl_lot_ldg where lotldg_id='".$row_tbl1[0]."' and lotldg_balqty > 0")or die(mysqli_error($link));
+				$total_tbl=mysqli_num_rows($sql1);
+				
+				while($row_tbl=mysqli_fetch_array($sql1))
+				{	
+					//$lotldg_trid=$row_tbl['lotldg_trid'];
+					
+					$aq=explode(".",$row_tbl['lotldg_balbags']);
+					if($aq[1]==000){$ac=$aq[0];}else{$ac=$row_tbl['lotldg_balbags'];}
+					
+					$an=explode(".",$row_tbl['lotldg_balqty']);
+					if($an[1]==000){$acn=$an[0];}else{$acn=$row_tbl['lotldg_balqty'];}
+					
+					$wareh=""; $binn=""; $subbinn=""; $sups="";$sqty=0; 
+					
+					$sql_whouse=mysqli_query($link,"select perticulars from tbl_warehouse where whid='".$row_tbl['lotldg_whid']."'") or die(mysqli_error($link));
+					$row_whouse=mysqli_fetch_array($sql_whouse);
+					$wareh=$row_whouse['perticulars']."/";
+					
+					$sql_binn=mysqli_query($link,"select binname from tbl_bin where binid='".$row_tbl['lotldg_binid']."' and whid='".$row_tbl['lotldg_whid']."'") or die(mysqli_error($link));
+					$row_binn=mysqli_fetch_array($sql_binn);
+					$binn=$row_binn['binname']."/";
+					
+					
+					$sql_subbinn=mysqli_query($link,"select sname from tbl_subbin where sid='".$row_tbl['lotldg_subbinid']."' and binid='".$row_tbl['lotldg_binid']."' and whid='".$row_tbl['lotldg_whid']."'") or die(mysqli_error($link));
+					$row_subbinn=mysqli_fetch_array($sql_subbinn);
+					$subbinn=$row_subbinn['sname'];
+					$slups=$slups+$row_tbl['lotldg_balbags'];
+					 
+					$an24=explode(".",$row_tbl['lotldg_balqty']);
+					if($an24[1]==000){$acn24=$an[0];}else{$acn24=$row_tbl['lotldg_balqty'];}
+					$slqty=$slqty+$acn24;
+					
+					if($slocs!="")
+					$slocs=$slocs.", ".$wareh.$binn.$subbinn." | ".$ac." | ".$acn;
+					else
+					$slocs=$wareh.$binn.$subbinn." | ".$ac." | ".$acn;
+					$sql_param=mysqli_query($link,"select * from tbl_parameters") or die(mysqli_error($link));
+					$row_param=mysqli_fetch_array($sql_param);
+					
+					$tp1=$row_param['code'];
+					$bags=$bags+$ac;
+					$qty=$qty+$acn;
+					$totqty=$totqty+$qty;
+				}
+			}
+			$stage=$row_tbl_sub1['logid'];
+			$pp=$row_tbl_sub1['state'];	
+			
+			$ddss=$rowtbl22['lotldg_sstage'];
+			$p_array=explode(",", $row_tbl_sub1['trstage']); 
+			foreach($p_array as $val)
+			{ 
+				if($val<>"")
+				{ 
+					if($val==$rowtbl22['lotldg_sstage'])
+					{ 
+						$ddss="<b>".$rowtbl22['lotldg_sstage']."</b>";
+					}
+				}
+			}
+			if($qty > 0)	
+			{
+				if($details!="")
+				$details=$details.$ddss;
+				else
+				$details=$ddss; 
+			
+				$details=$details.", ".$bags." | ".$qty.", ".$slocs."<br/>";
+			}
+		}
+}	
+}
+
+if($srno%2!=0)
+{
+?>			  
+<tr class="Light">
+	<td width="34" align="center" valign="middle" class="smalltbltext"><?php echo $srno;?></td>
+	<td width="88" align="center" valign="middle" class="smalltbltext"><?php echo $trdate;?></td>
+	<td width="126" align="center" valign="middle" class="smalltbltext"><?php echo $row31['cropname'];?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $vv;?></td>
+	<td width="113" align="center" valign="middle" class="smalltbltext"><?php echo $lotno?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $totqty;?></td>  
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $pp;?></td>
+	<td width="87" align="center" valign="middle" class="tblheading"><?php echo $tp1?><?php echo $smp?><?php echo sprintf("%000006d",$qc1);?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $spdate;?></td>  
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $qcrefno;?></td>  
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $remark;?></td>
+</tr>
+<?php
+}
+else
+{
+?>
+<tr class="Dark">
+	<td width="34" align="center" valign="middle" class="smalltbltext"><?php echo $srno;?></td>
+	<td width="88" align="center" valign="middle" class="smalltbltext"><?php echo $trdate;?></td>
+	<td width="126" align="center" valign="middle" class="smalltbltext"><?php echo $row31['cropname'];?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $vv;?></td>
+	<td width="113" align="center" valign="middle" class="smalltbltext"><?php echo $lotno?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $totqty;?></td>  
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $pp;?></td>
+	<td width="87" align="center" valign="middle" class="tblheading"><?php echo $tp1?><?php echo $smp?><?php echo sprintf("%000006d",$qc1);?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $spdate;?></td> 
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $qcrefno;?></td>   
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $remark;?></td>
+</tr>
+<?php
+}
+$srno=$srno+1;
+}
+}
+}
+
+
+if($srno==1)
+{
+?>
+<tr class="Light" height="20">
+	<td height="19"align="center" valign="middle" class="tblheading" colspan="11">No Records Found</td>
+</tr>
+<?php
+}
+?>
+</table>
+<br />
+<table align="center" cellpadding="5" cellspacing="5" border="0" width="850">
+<tr >
+<td align="right" colspan="3"><img src="../images/close_icon2.jpg" height="30" border="0" onClick="window.close()" target="_blank" class="butn" style="cursor:pointer" />&nbsp;&nbsp;<img src="../images/Vista-printer.png" height="29" width="35" border="0" onClick="javascript:window.print();" style="cursor:pointer" />&nbsp;&nbsp;</td>
+</tr>
+</table>
+</td></tr>
+</table>
+
+</body>
+</html>

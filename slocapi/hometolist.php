@@ -1,0 +1,55 @@
+<?php
+/**
+ * @author Ravi Tamada
+ * @link http://www.androidhive.info/2012/01/android-login-and-registration-with-php-mysql-and-sqlite/ Complete tutorial
+ */
+require_once 'include/DB_Functions.php';
+$db = new DB_Functions();
+
+// json response array
+$response = array("error" => FALSE);
+
+if (isset($_REQUEST['scode'])) {
+
+    // receiving the post params
+	$email = $_REQUEST['mobile1'];
+    $scode = $_REQUEST['scode'];
+	$pcode = $_REQUEST['pcode'];
+
+	$user_login = $db->isUserExisted($scode);
+	//	print_r($user_login);
+	if ($user_login != false) 
+	{
+		// user is found
+		$user_trlist = $db->GetToTrList($scode);
+		//	print_r($user_login);
+		if ($user_trlist != false) 
+		{
+			$response["error"] = FALSE;
+			$response["msg"]="Success";
+			$response["user"] = $user_trlist;
+			echo json_encode($response);
+		}
+		else
+		{
+			$response["error"] = TRUE;
+			$response["msg"] = "Transactions not found.";
+			echo json_encode($response);
+		}
+	}
+	else
+	{
+		// user is not found with the credentials
+		$response["error"] = TRUE;
+		$response["msg"] = "Invalid Login. Please try again.";
+		echo json_encode($response);
+	}
+} 
+else 
+{
+    // required post params is missing
+    $response["error"] = TRUE;
+    $response["msg"] = "Required parameters Username or password is missing";
+    echo json_encode($response);
+}
+?>

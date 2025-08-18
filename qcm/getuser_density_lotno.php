@@ -1,0 +1,370 @@
+<?php
+	session_start();
+	if(!isset($_SESSION['sessionadmin']))
+	{
+	echo '<script language="JavaScript" type="text/JavaScript">';
+	echo "window.location='../login.php' ";
+	echo '</script>';
+	}
+	else
+	{
+	$year1=$_SESSION['ayear1'];
+	$year2=$_SESSION['ayear2'];
+	$username= $_SESSION['username'];
+	$yearid_id=$_SESSION['yearid_id'];
+	$role=$_SESSION['role'];
+    $loginid=$_SESSION['loginid'];
+    $logid=$_SESSION['logid'];
+	$lgnid=$_SESSION['logid'];
+	$plantcode=$_SESSION['plantcode'];
+	$plantcode1=$_SESSION['plantcode1'];
+	$plantcode2=$_SESSION['plantcode2'];
+	$plantcode3=$_SESSION['plantcode3'];
+	$plantcode4=$_SESSION['plantcode4'];
+	}
+	
+	require_once("../include/config.php");
+	require_once("../include/connection.php");
+
+	
+	if(isset($_REQUEST['crop']))
+	{
+	 $crop = $_REQUEST['crop'];
+	}
+	if(isset($_REQUEST['variety']))
+	{
+	 $variety = $_REQUEST['variety'];
+	}
+	if(isset($_REQUEST['stage']))
+	{
+	 $stage = $_REQUEST['stage'];
+	}
+	if(isset($_REQUEST['sqq']))
+	{
+	$sqq = $_REQUEST['sqq'];
+	}
+	else
+	{
+	$sqq="";
+	}
+	if(isset($_POST['frm_action'])=='submit')
+	{
+	/*echo "<script>window.opener.location.href = window.opener.location.href;
+						   self.close();</script>";	*/
+	}
+	
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Quality- Transaction-Existing Lot selection</title>
+<link href="../include/vnrtrac_quality.css" rel="stylesheet" type="text/css" />
+<style type="text/css" media="print">
+body { font-family:Arial;}
+img.butn { display:none; visibility:hidden; }
+
+</style>
+<script language='javascript'>
+
+function post_value()
+{
+	opener.document.frmaddDepartment.txtlot1.value=document.from.foccode.value;
+	//alert(document.from.stage.value);
+	//alert(document.from.samplewgt.value);
+	
+	if(document.from.stage.value=="Raw" )
+	{
+		opener.document.frmaddDepartment.txtrawdensity.disabled=false;
+		opener.document.frmaddDepartment.txtrawdensity.value=document.from.samplewgt.value;
+		opener.document.frmaddDepartment.txtdensity.disabled=true;;
+	}
+	if(document.from.stage.value=="Condition" )
+	{
+		opener.document.frmaddDepartment.txtdensity.disabled=false;;
+		opener.document.frmaddDepartment.txtdensity.value=document.from.samplewgt.value;
+		opener.document.frmaddDepartment.txtrawdensity.disabled=true;
+	}
+	
+	self.close();
+}
+
+function clk(val,val1,val2,val3)
+{
+//alert(val);alert(val1);alert(val2);alert(val3);
+document.from.foccode.value=val;
+document.from.foccode1.value=val1;
+document.from.foccode2.value=val2;
+document.from.samplewgt.value=val3;
+}
+
+function slocshow()
+{
+	if(document.from1.txtlot2.value=="")
+	{
+		alert("Invalid Lot Number");
+		//document.from1.txtlot2.value="";
+		document.from1.stcode.value="00000";
+		return false;
+	}
+}
+
+function ycodchk()
+{
+		document.from1.txtlot2.value="";
+		document.from1.stcode.value="00000";
+}
+
+function lot2chk()
+{
+	if(document.from1.ycodee.value=="")
+	{
+		alert("Invalid Lot Number");
+		document.from1.txtlot2.value="";
+		document.from1.stcode.value="00000";
+		return false;
+	}
+	else
+	{
+		document.from1.stcode.value="00000";
+	}
+}
+function lotchk()
+{	
+	val2=document.from1.ycodee.value;
+	val5=document.from1.txtlot2.value;
+	val6=document.from1.stcode.value;
+	val7=document.from1.pcode.value;
+	val8=document.from1.stcode2.value;
+	var f=0;
+	if(val7=="")
+	{
+		alert("Please Select Plant code");
+		f=1;
+		return false;
+	}
+	if(val2=="")
+	{
+		alert("Please Select Year Code");
+		f=1;
+		return false;
+	}	
+	if(val5=="")
+	{
+		alert("Please Enter Lot No.");
+		f=1;
+		return false;
+	}
+	if(val5.length < 5)
+	{
+		alert("Invalid Lot No.");
+		f=1;
+		return false;
+	}
+	if(val6=="")
+	{
+		alert("Please Enter Lot No.");
+		f=1;
+		return false;
+	}
+	if(val6.length < 5)
+	{
+		alert("Invalid Lot No.");
+		f=1;
+		return false;
+	} 
+	if(val8=="")
+	{
+		alert("Please Enter Lot No.");
+		f=1;
+		return false;
+	}
+	if(val8.length < 2)
+	{
+		alert("Invalid Lot No.");
+		f=1;
+		return false;
+	}
+	if(f==1)
+	{
+	return false;
+	}
+	else
+	{
+	val3=document.from1.crop.value;
+	val4=document.from1.variety.value;
+	val2=document.from1.ycodee.value;
+	val5=document.from1.txtlot2.value;
+	val6=document.from1.stcode.value;
+	val7=document.from1.pcode.value;
+	val8=document.from1.stcode2.value;
+	var txtlot1=val7+val2+val5+"/"+val6+"/"+val8;
+	window.location='getuser_trading_lotno.php?crop='+val3+'&variety='+val4+'&sqq='+txtlot1;
+	return true;	
+	}
+}	
+
+
+function mySubmit()
+{
+if(document.from.foccode.value=="")
+{
+alert("You must select Lot");
+return false;
+}
+return true;
+}	
+	
+
+			</script>
+			
+</head>
+<body topmargin="0" >
+ 
+<table width="400" height="282" border="0" align="center" cellpadding="0" cellspacing="0" >
+<tr>
+<td valign="top">
+  	<form id="mainform" name="from" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" onsubmit="post_value();"   > 
+	<input name="frm_action" value="submit" type="hidden"> 
+	<input type="Hidden" name="txtlot1" value="<?php echo $lid?>" />
+	<input type="Hidden" name="stage" value="<?php echo $stage?>" />
+	<input type="hidden" name="cnt" value="0" />
+	
+	</br>
+<?php 
+if($sqq!="")
+{
+	$sss=" and orlot='".$sqq."'";
+}
+else
+$sss="";
+ 
+$sql_tbl_sub=mysqli_query($link,"select distinct(orlot) from tbl_lot_ldg where lotldg_crop='".$crop."' and lotldg_variety='".$variety."' and lotldg_balqty > 0 and lotldg_sstage='$stage'  $sss")or die(mysqli_error($link));
+$ct1=mysqli_num_rows($sql_tbl_sub);
+?>		
+<table align="center" border="1" width="400" cellspacing="0" cellpadding="0" bordercolor="#d21704" style="border-collapse:collapse" > 
+<?php
+if($ct1 > 0)
+{
+?>		
+<tr class="tblsubtitle" height="20">
+  <td colspan="3" align="center" class="tblheading">Select Lot </td>
+</tr>
+<tr class="Dark" height="30">
+<td width="44" align="right" valign="middle" class="tblheading">Select&nbsp;</td>
+<td width="350"  align="left" valign="middle" class="tblheading" colspan="2">&nbsp;Lot&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="../images/back.gif" border="0" onClick="window.close()" />&nbsp;<input type="image" src="../images/update.gif" alt="Submit Value" border="0" style="display:inline;cursor:pointer;" onclick="return mySubmit();"/></td>
+
+
+</tr>
+<?php
+$srno=1;$zzss=0;
+while($row=mysqli_fetch_array($sql_tbl_sub))
+{
+//echo $row['lotldg_got'];
+$ct=0;
+$zz=str_split($row['orlot']);
+$mlot=$zz[2].$zz[3].$zz[4].$zz[5].$zz[6];
+$samplewt="";
+$sqlck2=mysqli_query($link,"select * from tbl_densitydata where density_orlot='".$row['orlot']."' order by density_id asc") or die(mysqli_error($link));
+while($rowck2=mysqli_fetch_array($sqlck2))
+{
+if($stage=="Raw")
+{
+	$samplewt=$rowck2['density_rawsampwt']; 
+}
+if($stage=="Condition")
+{
+
+	$samplewt=$rowck2['density_consampwt']; 
+}
+//echo $orlot=$row['orlot']."-".$samplewt;
+if($stage=="Raw")
+{
+//echo $samplewt;
+//$zzss++;
+if($srno%2!=0)
+{
+?>
+<tr class="Dark" height="25">
+<td align="right"  valign="middle" class="tbltext"><input type="radio" name="loc" value="<?php echo $row['orlot'];?>" onclick="clk(this.value,'<?php echo $samplewt;?>','<?php echo $samplewt;?>','<?php echo $samplewt;?>');" />&nbsp;</td>
+<td align="left"  valign="middle" class="tbltext" >&nbsp;<?php echo  $row['orlot'];?></td>
+<td align="left"  valign="middle" class="tbltext" >&nbsp;<?php echo  $stage;?></td>
+</tr>
+<?php
+}
+else
+{
+?>
+<tr class="Light" height="30">
+<td align="right"  valign="middle" class="tbltext"><input type="radio" name="loc" value="<?php echo $row['orlot'];?>" onclick="clk(this.value,'<?php echo $samplewt;?>','<?php echo $samplewt;?>','<?php echo $samplewt;?>');" />&nbsp;</td>
+<td align="left"  valign="middle" class="tbltext" >&nbsp;<?php echo  $row['orlot'];?></td>
+<td align="left"  valign="middle" class="tbltext" >&nbsp;<?php echo  $stage;?></td>
+</tr>     
+<?php
+}
+ $srno=$srno+1;
+}
+else
+{
+if($mlot>=80000)
+{
+//$zzss++;
+if($srno%2!=0)
+{
+?>
+<tr class="Dark" height="25">
+<td align="right"  valign="middle" class="tbltext"><input type="radio" name="loc" value="<?php echo $row['orlot'];?>" onclick="clk(this.value,'<?php echo $row['lotldg_qc'];?>','<?php echo $row['lotldg_got'];?>','<?php echo $samplewt;?>');" />&nbsp;</td>
+<td align="left"  valign="middle" class="tbltext" >&nbsp;<?php echo  $row['orlot'];?></td>
+<td align="left"  valign="middle" class="tbltext" >&nbsp;<?php echo  $stage;?></td>
+</tr>
+<?php
+}
+else
+{
+?>
+<tr class="Light" height="30">
+<td align="right"  valign="middle" class="tbltext"><input type="radio" name="loc" value="<?php echo $row['orlot'];?>" onclick="clk(this.value,'<?php echo $row['lotldg_qc'];?>','<?php echo $row['lotldg_got'];?>','<?php echo $samplewt;?>');" />&nbsp;</td>
+<td align="left"  valign="middle" class="tbltext" >&nbsp;<?php echo  $row['orlot'];?></td>
+<td align="left"  valign="middle" class="tbltext" >&nbsp;<?php echo  $stage;?></td>
+</tr>     
+<?php
+}
+ $srno=$srno+1;
+}
+}
+}
+}
+}
+else
+{
+?>
+<tr class="light" height="20">
+  <td colspan="4" align="left" class="tblheading">&nbsp;Lot numbers not found reasons:</td>
+</tr>
+<tr class="light" height="20">
+  <td colspan="4" align="left" class="tblheading">&nbsp;1. Lot numbers not Imported</td>
+</tr>
+<tr class="light" height="20">
+  <td colspan="4" align="left" class="tblheading">&nbsp;2. Lot number not Generated using this Crop and Variety.</td>
+</tr>
+<?php
+}
+//echo $zzss;
+?>
+
+<input type="hidden" name="foccode" value="" />
+<input type="hidden" name="foccode1" value="" />
+<input type="hidden" name="foccode2" value="" />
+<input type="hidden" name="samplewgt" value="" />
+</table>
+<table cellpadding="5" cellspacing="5" border="0" width="400">
+<tr >
+<td align="center" colspan="3"><img src="../images/back.gif" border="0" onClick="window.close()" />&nbsp;<input type="image" src="../images/update.gif" alt="Submit Value" border="0" style="display:inline;cursor:pointer;" onclick="return mySubmit();"/></td>
+</tr>
+</table>
+</form>
+</td></tr>
+</table>
+
+</body>
+</html>
