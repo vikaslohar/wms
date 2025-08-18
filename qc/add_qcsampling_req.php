@@ -49,7 +49,7 @@
 		$tyear1=substr($tdate11,6,4);
 		$tdate1=$tyear1."-".$tmonth1."-".$tday1;
 		
-		$sql_main="insert into tbl_qcgen (year_code, arr_code, arrival_date, arr_role, crop, variety)values('$yearid_id','$txtid','$tdate1','$logid','$txtcrop','$txtvariety')";
+		$sql_main="insert into tbl_qcgen (year_code, arr_code, arrival_date, arr_role, crop, variety, plantcode)values('$yearid_id','$txtid','$tdate1','$logid','$txtcrop','$txtvariety','$plantcode')";
 		// exit;
 		if(mysqli_query($link,$sql_main) or die(mysqli_error($link)))
 		{
@@ -67,7 +67,7 @@
 					$sstage=$row_issuetbl['lotldg_sstage']; 
 					
 					
-					$sql_sub="insert into tbl_qcgen1 (pp, moist, gemp, got, arr_role, lotno, arrival_id, crop, variety, stage, qcr, gotr) values ('$chk1', '$chk2', '$chk3', '$chk4', '$logid', '$val', '$mainid', '$txtcrop', '$txtvariety', '$sstage', '$qc', '$got')";
+					$sql_sub="insert into tbl_qcgen1 (pp, moist, gemp, got, arr_role, lotno, arrival_id, crop, variety, stage, qcr, gotr, plantcode) values ('$chk1', '$chk2', '$chk3', '$chk4', '$logid', '$val', '$mainid', '$txtcrop', '$txtvariety', '$sstage', '$qc', '$got','$plantcode')";
 					mysqli_query($link,$sql_sub) or die(mysqli_error($link));
 				}
 			}		
@@ -81,7 +81,7 @@
 //exit;
 //$a="c";
 	//$a="c";
-	$sql_code="SELECT MAX(arr_code) FROM tbl_qcgen  ORDER BY arr_code DESC";
+	$sql_code="SELECT MAX(arr_code) FROM tbl_qcgen WHERE plantcode='$plantcode' ORDER BY arr_code DESC";
 	$res_code=mysqli_query($link,$sql_code)or die(mysqli_error($link));
 		
 		if(mysqli_num_rows($res_code) > 0)

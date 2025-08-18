@@ -4793,9 +4793,9 @@ public function updateDataVerification($scode, $trid) {
 	}
 	
 	
-	public function GetDomMacDetails($scode) {
+	/*public function GetDomMacDetails($scode) {
 		$plantcode = $this->getPlantcode($scode);
-		$user10=array(); 
+		$user10=array();  $pnpslipmain_id=0; $flg=0; $pnpslipsub_lblflg=''; $pnpslipsub_elblno=''; $pnpslipsub_plcode1='';
 		$stmt_dommac = $this->conn_ps->prepare("SELECT packlinecode FROM tbl_rm_packmac where plantcode='$plantcode' order by packlinecode ASC ");
 		//$stmt_dommac->bind_param("i", $pnpslipmain_variety);
 		$result_dommac=$stmt_dommac->execute();
@@ -4814,8 +4814,101 @@ public function updateDataVerification($scode, $trid) {
 		{return false;}
 		else
 		{return $user10;}
-	}
+	}*/
 	
+	public function GetDomMacDetails($scode) {
+	$plantcode = $this->getPlantcode($scode);
+		$user10=array(); $pnpslipmain_id=0; $flg=0; $pnpslipsub_lblflg=''; $pnpslipsub_elblno=''; $pnpslipsub_plcode1='';
+		$stmtm = $this->conn_ps->prepare("SELECT pnpslipmain_id FROM tbl_pnpslipmain WHERE pnpslipmain_tflag = 2 and pnpslipmain_trtype='fc' and pnpslipmain_wbactflag=0");
+		//$stmtm->bind_param("i", $trid);
+		$stmtm->execute();
+		$stmtm->store_result();
+		if ($stmtm->num_rows > 0) {
+			$stmtm->bind_result($pnpslipmain_id);
+			$plc='';
+			while($stmtm->fetch())
+			{
+		
+				$stmt = $this->conn_ps->prepare("SELECT pnpslipsub_lblflg, pnpslipsub_elblno, pnpslipsub_plcode1 FROM tbl_pnpslipsub WHERE pnpslipmain_id = ? order by pnpslipsub_plcode1 ASC ");
+				$stmt->bind_param("i", $pnpslipmain_id);
+				$result=$stmt->execute();
+				$stmt->store_result();
+				if ($stmt->num_rows > 0) {
+					$stmt->bind_result($pnpslipsub_lblflg, $pnpslipsub_elblno, $pnpslipsub_plcode1);
+					//looping through all the records
+					while($stmt->fetch())
+					{
+						if($plc!="") {$plc=$plc.",".$pnpslipsub_plcode1;} else  {$plc=$pnpslipsub_plcode1;}	
+					}
+				}
+				$stmt->close();	
+			}
+			$plcd=explode(",",$plc);
+			
+			$stmt_dommac = $this->conn_ps->prepare("SELECT packlinecode, packlinetype FROM tbl_rm_packmac where plantcode='$plantcode' order by packlinecode ASC "); 
+			$result_dommac=$stmt_dommac->execute();
+			$stmt_dommac->store_result();
+			if ($stmt_dommac->num_rows > 0) {
+				$stmt_dommac->bind_result($dom_mcode, $packlinetype);
+				//looping through all the records 
+				while($stmt_dommac->fetch())
+				{
+					if($packlinetype=="online")
+					{
+						if(!empty($plcd))
+						{
+							if(!in_array($dom_mcode,$plcd))
+							{
+								if(!in_array($dom_mcode,$user10))
+								{
+									array_push($user10,$dom_mcode);
+								}
+							}
+						}
+						else
+						{
+							if(!in_array($dom_mcode,$user10))
+							{
+								array_push($user10,$dom_mcode);
+							}
+						}
+					}
+					else
+					{
+						if(!in_array($dom_mcode,$user10))
+						{
+							array_push($user10,$dom_mcode);
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			$stmt_dommac = $this->conn_ps->prepare("SELECT packlinecode, packlinetype FROM tbl_rm_packmac where plantcode='$plantcode' order by packlinecode ASC "); 
+			//$stmt_dommac = $this->conn_ps->prepare("SELECT dom_mcode FROM tbl_rm_dommac order by dom_mcode ASC ");
+			//$stmt_dommac->bind_param("i", $pnpslipmain_variety);
+			$result_dommac=$stmt_dommac->execute();
+			$stmt_dommac->store_result();
+			if ($stmt_dommac->num_rows > 0) {
+				$stmt_dommac->bind_result($dom_mcode, $packlinetype);
+				//looping through all the records 
+				while($stmt_dommac->fetch())
+				{
+					//$temp["dommcode"] = $dom_mcode;
+					array_push($user10,$dom_mcode);
+				}
+			}
+		}	
+		$stmtm->close();
+		
+		$stmt_dommac->close();
+		if(empty($user10))
+		{return false;}
+		else
+		{ sort($user10); return $user10;}
+		
+	}
 	
 	function GetQRScanningFinalize($scode, $trid, $loosepouches)
 	{
