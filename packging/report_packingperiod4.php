@@ -2,39 +2,39 @@
 	session_start();
 	if(!isset($_SESSION['sessionadmin']))
 	{
-	echo '<script language="JavaScript" type="text/JavaScript">';
-	echo "window.location='../login.php' ";
-	echo '</script>';
+		echo '<script language="JavaScript" type="text/JavaScript">';
+		echo "window.location='../login.php' ";
+		echo '</script>';
 	}
 	else
 	{
-	$year1=$_SESSION['ayear1'];
-	$year2=$_SESSION['ayear2'];
-	$username= $_SESSION['username'];
-	$yearid_id=$_SESSION['yearid_id'];
-	$role=$_SESSION['role'];
-    $loginid=$_SESSION['loginid'];
-    $logid=$_SESSION['logid'];
-	$lgnid=$_SESSION['logid'];
-	$plantcode=$_SESSION['plantcode'];
-	$plantcode1=$_SESSION['plantcode1'];
-	$plantcode2=$_SESSION['plantcode2'];
-	$plantcode3=$_SESSION['plantcode3'];
-	$plantcode4=$_SESSION['plantcode4'];
+		$year1=$_SESSION['ayear1'];
+		$year2=$_SESSION['ayear2'];
+		$username= $_SESSION['username'];
+		$yearid_id=$_SESSION['yearid_id'];
+		$role=$_SESSION['role'];
+		$loginid=$_SESSION['loginid'];
+		$logid=$_SESSION['logid'];
+		$lgnid=$_SESSION['logid'];
+		$plantcode=$_SESSION['plantcode'];
+		$plantcode1=$_SESSION['plantcode1'];
+		$plantcode2=$_SESSION['plantcode2'];
+		$plantcode3=$_SESSION['plantcode3'];
+		$plantcode4=$_SESSION['plantcode4'];
 	}
 	
 	require_once("../include/config.php");
 	require_once("../include/connection.php");
 	
-		$sdate = $_REQUEST['sdate'];
-		$edate = $_REQUEST['edate'];
-		$crop = $_REQUEST['txtcrop'];
-		$variety = $_REQUEST['txtvariety'];
-		$txtupsdc = $_REQUEST['txtupsdc'];
-		$withreprint = $_REQUEST['withreprint'];
-		if($crop=="")$crop="ALL";
-		if($variety=="")$variety="ALL";
-		if($txtupsdc=="")$txtupsdc="ALL";
+	$sdate = $_REQUEST['sdate'];
+	$edate = $_REQUEST['edate'];
+	$crop = $_REQUEST['txtcrop'];
+	$variety = $_REQUEST['txtvariety'];
+	$txtupsdc = $_REQUEST['txtupsdc'];
+	$withreprint = $_REQUEST['withreprint'];
+	if($crop=="")$crop="ALL";
+	if($variety=="")$variety="ALL";
+	if($txtupsdc=="")$txtupsdc="ALL";
 		
 	$sd=explode("-",$sdate);
 	$ed=explode("-",$edate);
@@ -112,6 +112,7 @@ if($tot_arr_home > 0)
 
 <tr class="tblsubtitle" height="20">
 	<td width="26" align="center" valign="middle" class="smalltblheading">#</td>
+	<td width="90"  align="center" valign="middle" class="smalltblheading">Date</td>
 	<td width="126"  align="center" valign="middle" class="smalltblheading">Crop</td>
 	<td width="90"  align="center" valign="middle" class="smalltblheading">Variety</td>
 	<td width="90"  align="center" valign="middle" class="smalltblheading">Lot Number</td>
@@ -175,7 +176,7 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 		else
 		$sql_arr_home=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr2['packtype']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') group by lotno order by lotdgp_id asc") or die(mysqli_error($link));
 		while($row_arr_home=mysqli_fetch_array($sql_arr_home))
-		{$totqty=0; $totnob=0; $cnt=0;
+		{$totqty=0; $totnob=0; $cnt=0; $txtdot="";
 			if($withreprint=="yes")	
 			$sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where plantcode='$plantcode' and packtype='".$row_rr2['packtype']."'and lotno='".$row_arr_home['lotno']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') and balqty > 0 order by lotdgp_id asc") or die(mysqli_error($link)); 
 			else
@@ -208,6 +209,12 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 					$totnob=$totnob+$nob; 
 					if($totnob<0) $totnob=0;
 					if($totqty<0) $totqty=0;
+					
+					$rdate=$row_issuetbl['lotldg_trdate'];
+					$ryear=substr($rdate,0,4);
+					$rmonth=substr($rdate,5,2);
+					$rday=substr($rdate,8,2);
+					$txtdot=$rday."-".$rmonth."-".$ryear;
 				}
 			}
 		//}
@@ -221,6 +228,7 @@ if($cnt>0)
 ?>			  
 <tr class="Light">
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $srno;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $txtdot;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $crop?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $variety?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $row_arr_home['lotno']?></td>

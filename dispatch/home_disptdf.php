@@ -222,18 +222,7 @@ return true;
 <tr>
 <td width="10">	 </td><td>
 
-<!--<table align="center" border="1" cellspacing="0" cellpadding="0" width="700" bordercolor="#378b8b" style="border-collapse:collapse">
-  <tr class="tblsubtitle" height="20"><td colspan="10" align="center" class="subheading">Search Transactions</td></tr>
-  <tr class="Light" height="25">
-  <td width="76" class="tblheading" align="right">&nbsp;Start Date&nbsp;</td>
-  <td width="152" align="left">&nbsp;<input name="sdate" id="sdate" type="text" size="10" class="tbltext" tabindex="0" readonly="true"  value="<?php echo date("d-m-Y", time());?>" style="background-color:#EFEFEF" />&nbsp;<a href="javascript:void(0)" onClick="imgOnClick(document.frmaddDept.sdate,-100,-100)" tabindex="6"><img src="../images/cal.gif" alt="Calender" border="0" align="absmiddle"></a><script type="text/javascript" language="javascript" src="../include/popcalender.js"></script></td>
-  
-  <td width="78" class="tblheading" align="right">&nbsp;End Date&nbsp;</td>
-  <td width="147" align="left">&nbsp;<input name="edate" id="edate" type="text" size="10" class="tbltext" tabindex="0" readonly="true"  value="<?php echo date("d-m-Y", time());?>" style="background-color:#EFEFEF" />&nbsp;<a href="javascript:void(0)" onClick="imgOnClick1(document.frmaddDept.edate,-100,-100)" tabindex="6"><img src="../images/cal.gif" alt="Calender" border="0" align="absmiddle"></a><script type="text/javascript" language="javascript" src="../include/popcalender.js"></script></td>
 
-  <td width="135" class="tblheading" align="center"><input type="image" src="../images/search.gif" border="0"  /></td>
-  </tr>
-  </table><br/>-->
   <?php
   	$targetpage = $_SERVER['PHP_SELF']; 
 	$adjacents = 2;
@@ -246,14 +235,14 @@ return true;
 	else
 		$start = 0;	
 		
-  $sql_arr_home=mysqli_query($link,"select * from tbl_dtdf where plantcode='".$plantcode."' and dtdf_tflg=1 order by dtdf_id DESC LIMIT $start, $limit") or die(mysqli_error($link));
+  $sql_arr_home=mysqli_query($link,"select * from tbl_dtdf where plantcode='".$plantcode."' and dtdf_tflg=2 order by dtdf_id DESC LIMIT $start, $limit") or die(mysqli_error($link));
  $tot_arr_home=mysqli_num_rows($sql_arr_home);
 
 //$total_results3 =mysqli_query($link,"SELECT COUNT(*)  FROM tbl_qctest where bflg=1   and qcflg=0");
 //$total_results2 = mysqli_fetch_array($total_results3);
 //$total_results = $total_results2[0]; 
 
-$query = "select * from tbl_dtdf where plantcode='".$plantcode."' and dtdf_tflg=1 order by dtdf_id DESC";
+$query = "select * from tbl_dtdf where plantcode='".$plantcode."' and dtdf_tflg=2 order by dtdf_id DESC";
 $total_pages = mysqli_num_rows(mysqli_query($link,$query));
 //echo	$total_pages = $total_pages[num];
 	
@@ -341,32 +330,261 @@ $pagination = "";
 		$pagination.= "</div>\n";		
 	}
 	 $srno=($page-1)*$limit+1;
-/*if(!isset($_GET['page'])) { 
-		$page = 1; 
-		$srno=1;
-	} else { 
-		if(isset($_GET['page']))								
-	{$page = $_GET['page'];}
-	else {$page = 0;} 
-		$srno=(($page * 10)+1) - 10;
-	} 
-	$max_results = 10; 
-	$from = (($page * $max_results) - $max_results); 
-	
-	
-$sql_arr_home=mysqli_query($link,"select * from tbl_dtdf where dtdf_tflg=1 order by dtdf_id DESC LIMIT $from, $max_results") or die(mysqli_error($link));
-$tot_arr_home=mysqli_num_rows($sql_arr_home);
-//$tot_arr_home=0;
 
-$total_results3 =mysqli_query($link,"SELECT COUNT(*)  FROM tbl_dtdf where dtdf_tflg=1 order by dtdf_id DESC");
-$total_results2 = mysqli_fetch_array($total_results3);
-$total_results = $total_results2[0]; 
-*/
     if($tot_arr_home >0) { 
 ?>
 <table align="center" border="0" width="850" cellspacing="0" cellpadding="0" bordercolor="#378b8b" style="border-collapse:collapse" > 
 <tr class="Light" height="20">
-  <td colspan="6" align="center" class="tblheading">Dispatch TDF Seed</td>
+  <td colspan="6" align="center" class="tblheading">Dispatch TDF Seed - Pending</td>
+</tr>
+</table>
+<table align="center" border="1" cellspacing="0" cellpadding="0" width="850" bordercolor="#378b8b" style="border-collapse:collapse">
+
+            <tr class="tblsubtitle" height="20">
+              <td width="19" align="center" valign="middle" class="smalltblheading">#</td>
+			  <td width="88" align="center" valign="middle" class="smalltblheading">Transaction ID</td>
+			  <td width="70" align="center" valign="middle" class="smalltblheading">Date</td>
+              <td width="95" align="center" valign="middle" class="smalltblheading">Crop</td>
+              <td width="115" align="center" valign="middle" class="smalltblheading">Variety</td>
+			  <td width="102" align="center" valign="middle" class="smalltblheading">Lot No.</td>
+			  <td width="50" align="center" valign="middle" class="smalltblheading">NoB</td>
+			  <td width="55" align="center" valign="middle" class="smalltblheading">Qty</td>
+             <!-- <td width="164" align="center" valign="middle" class="smalltblheading">SLOC</td>-->
+              <td width="70" align="center" valign="middle" class="smalltblheading">Edit</td>
+            </tr>
+<?php
+//$srno=1;
+while($row_arr_home=mysqli_fetch_array($sql_arr_home))
+{
+	$trdate=$row_arr_home['dtdf_date'];
+	$tryear=substr($trdate,0,4);
+	$trmonth=substr($trdate,5,2);
+	$trday=substr($trdate,8,2);
+	$trdate=$trday."-".$trmonth."-".$tryear;
+	
+	$lrole=$row_arr_home['dtdf_logid'];
+	$arrival_id=$row_arr_home['dtdf_id'];
+	$tid=$arrival_id;
+	
+$crop=""; $variety=""; $lotno=""; $nnob=""; $nqty=""; 
+	
+$sql_arr_home2=mysqli_query($link,"select distinct dtdfs_variety from tbl_dtdf_sub where plantcode='".$plantcode."' and dtdf_id='$tid' order by dtdfs_id asc") or die(mysqli_error($link));
+$tot_arr_home2=mysqli_num_rows($sql_arr_home2);
+while($row_arr_home2=mysqli_fetch_array($sql_arr_home2))
+{
+
+$sql_sub=mysqli_query($link,"Select * from tbl_dtdf_sub where plantcode='".$plantcode."' and dtdfs_variety='".$row_arr_home2['dtdfs_variety']."' and dtdf_id='$tid'") or die(mysqli_error($link));
+while($row_sub=mysqli_fetch_array($sql_sub))
+{
+if($crop!="")
+$crop=$crop."<br />".$row_sub['dtdfs_crop'];  
+else
+$crop=$row_sub['dtdfs_crop']; 
+if($variety!="") 
+$variety=$variety."<br />".$row_arr_home2['dtdfs_variety'];
+else
+$variety=$row_arr_home2['dtdfs_variety'];
+
+$sqq=mysqli_query($link,"Select * from tbl_dtdfsub_sub where plantcode='".$plantcode."' and dtdfs_id='".$row_sub['dtdfs_id']."'") or die(mysqli_error($link));
+while($roo=mysqli_fetch_array($sqq))
+{
+if($roo['dbss_qty']>0)
+{
+	if($lotno!="")
+	$lotno=$lotno."<br />".$roo['dbss_lotno'];
+	else
+	$lotno=$roo['dbss_lotno'];
+	if($nnob!="")
+	$nnob=$nnob."<br />".$roo['dbss_nob'];
+	else
+	$nnob=$roo['dbss_nob']; 
+	if($nqty!="")
+	$nqty=$nqty."<br />".$roo['dbss_qty']; 
+	else
+	$nqty=$roo['dbss_qty']; 
+}
+	
+}
+}
+}	
+if($srno%2!=0)
+{
+?>			  
+<tr class="Light">
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $srno;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo "BD".$row_arr_home['dtdf_code']."/".$row_arr_home['dtdf_yearcode']."/".$row_arr_home['dtdf_logid'];?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $trdate;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $crop;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $variety;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $lotno;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $nnob;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $nqty;?></td>
+	<!--<td align="center" valign="middle" class="smalltbltext"><?php echo $sloc;?></td>-->
+    <td align="center" valign="middle" class="smalltbltext"><a href="edit_dispatch_tdf.php?pid=<?php echo $arrival_id;?>" ><img border="0" src="../images/edit.png"  style="display:inline;cursor:pointer;"  /></a></a></td>
+</tr>
+<?php
+}
+else
+{
+?>
+<tr class="Dark">
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $srno;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo "BD".$row_arr_home['dtdf_code']."/".$row_arr_home['dtdf_yearcode']."/".$row_arr_home['dtdf_logid'];?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $trdate;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $crop;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $variety;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $lotno;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $nnob;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $nqty;?></td>
+	<!--<td align="center" valign="middle" class="smalltbltext"><?php echo $sloc;?></td>-->
+    <td align="center" valign="middle" class="smalltbltext"><a href="edit_dispatch_tdf.php?pid=<?php echo $arrival_id;?>" ><img border="0" src="../images/edit.png"  style="display:inline;cursor:pointer;"  /></a></a></td>
+</tr>
+<?php
+}
+$srno=$srno+1;
+}
+
+
+
+?>
+</table>
+<?php
+	
+}
+?>
+<?php echo $pagination?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <?php
+  	$targetpage2 = $_SERVER['PHP_SELF']; 
+	$adjacents2 = 2;
+	$limit2 = 10; 								
+	if(isset($_GET['page2']))								
+	{$page2 = $_GET['page2'];}
+	else {$page2 = 0;}
+	if($page2) 
+		$start2 = ($page2 - 1) * $limit2; 			//first item to display on this page
+	else
+		$start2 = 0;	
+		
+  $sql_arr_home=mysqli_query($link,"select * from tbl_dtdf where plantcode='".$plantcode."' and dtdf_tflg=1 order by dtdf_id DESC LIMIT $start2, $limit2") or die(mysqli_error($link));
+ $tot_arr_home=mysqli_num_rows($sql_arr_home);
+
+//$total_results3 =mysqli_query($link,"SELECT COUNT(*)  FROM tbl_qctest where bflg=1   and qcflg=0");
+//$total_results2 = mysqli_fetch_array($total_results3);
+//$total_results = $total_results2[0]; 
+
+$query = "select * from tbl_dtdf where plantcode='".$plantcode."' and dtdf_tflg=1 order by dtdf_id DESC";
+$total_pages = mysqli_num_rows(mysqli_query($link,$query));
+//echo	$total_pages = $total_pages[num];
+	
+	if ($page2 == 0) $page2 = 1;					//if no page var is given, default to 1.
+	$prev2 = $page2 - 1;							//previous page is page - 1
+	$next2 = $page2 + 1;							//next page is page + 1
+	$lastpage2 = ceil($total_pages/$limit2);		//lastpage is = total pages / items per page, rounded up.
+	$lpm12 = $lastpage2 - 1;						//last page minus 1
+	
+$pagination2 = "";
+	if($lastpage2 > 1)
+	{	
+		$pagination2 .= "<div class=\"pagination\" align=\"right\"  style=\"width:900px\">";
+		//previous button
+		if ($page2 > 1) 
+			$pagination2.= " <a href=\"$targetpage2?page2=$prev2\">&laquo; Previous </a> ";
+		else
+			$pagination2.= " <span class=\"disabled\">&laquo; Previous </span> ";	
+		
+		//pages	
+		if ($lastpage2 < 7 + ($adjacents2 * 2))	//not enough pages to bother breaking it up
+		{	
+			for ($counter2 = 1; $counter2 <= $lastpage2; $counter2++)
+			{
+				if ($counter2 == $page2)
+					$pagination2.= " <span class=\"current\"> $counter2 </span> ";
+				else
+					$pagination2.= " <a href=\"$targetpage2?page2=$counter2\"> $counter2 </a> ";					
+			}
+		}
+		elseif($lastpage2 > 5 + ($adjacents2 * 2))	//enough pages to hide some
+		{
+			//close to beginning; only hide later pages
+			if($page2 < 1 + ($adjacents2 * 2))		
+			{
+				for ($counter2 = 1; $counter2 < 4 + ($adjacents2 * 2); $counter2++)
+				{
+					if ($counter2 == $page2)
+						$pagination2.= " <span class=\"current\"> $counter2 </span> ";
+					else
+						$pagination2.= " <a href=\"$targetpage2?page=$counter2\"> $counter </a> ";					
+				}
+				$pagination2.= " ... ";
+				$pagination2.= " <a href=\"$targetpage?page2=$lpm12\"> $lpm12 </a> ";
+				$pagination2.= " <a href=\"$targetpage2?page2=$lastpage2\"> $lastpage2 </a> ";		
+			}
+			//in middle; hide some front and some back
+			elseif($lastpage2 - ($adjacents2 * 2) > $page2 && $page2 > ($adjacents2 * 2))
+			{
+				$pagination2.= " <a href=\"$targetpage2?page2=1\"> 1 </a> ";
+				$pagination2.= " <a href=\"$targetpage2?page2=2\"> 2 </a> ";
+				$pagination2.= " ... ";
+				for ($counter2 = $page2 - $adjacents2; $counter2 <= $page2 + $adjacents2; $counter2++)
+				{
+					if ($counter2 == $page2)
+						$pagination2.= " <span class=\"current\"> $counter2 </span> ";
+					else
+						$pagination2.= " <a href=\"$targetpage2?page2=$counter\"> $counter2 </a> ";					
+				}
+				$pagination2.= " ... ";
+				$pagination2.= " <a href=\"$targetpage2?page2=$lpm12\"> $lpm12 </a> ";
+				$pagination2.= " <a href=\"$targetpage2?page2=$lastpage2\"> $lastpage2 </a> ";		
+			}
+			//close to end; only hide early pages
+			else
+			{
+				$pagination2.= " <a href=\"$targetpage?2page2=1\"> 1 </a> ";
+				$pagination2.= " <a href=\"$targetpage2?page2=2\"> 2 </a> ";
+				$pagination2.= " ... ";
+				for ($counter2 = $lastpage2 - (2 + ($adjacents2 * 2)); $counter2 <= $lastpage2; $counter2++)
+				{
+					if ($counter2 == $page2)
+						$pagination2.= " <span class=\"current\"> $counter2 </span> ";
+					else
+						$pagination2.= " <a href=\"$targetpage2?page2=$counter2\"> $counter2 </a> ";					
+				}
+			}
+		}
+		
+		//next button
+		if ($page2 < $counter2 - 1) 
+			$pagination2.= " <a href=\"$targetpage2?page2=$next\"> Next &raquo;</a> ";
+		else
+			$pagination2.= " <span class=\"disabled\"> Next &raquo;</span> ";
+		$pagination2.= "</div>\n";		
+	}
+	 $srno2=($page2-1)*$limit2+1;
+
+    if($tot_arr_home >0) { 
+?>
+<table align="center" border="0" width="850" cellspacing="0" cellpadding="0" bordercolor="#378b8b" style="border-collapse:collapse" > 
+<tr class="Light" height="20">
+  <td colspan="6" align="center" class="tblheading">Dispatch TDF Seed - Completed</td>
 </tr>
 </table>
 <table align="center" border="1" cellspacing="0" cellpadding="0" width="850" bordercolor="#378b8b" style="border-collapse:collapse">
@@ -434,40 +652,11 @@ if($roo['dbss_qty']>0)
 	else
 	$nqty=$roo['dbss_qty']; 
 }
-	/*$wareh=""; $binn=""; $subbinn=""; $sloc=""; $nob=0; $qty=0; $tnob=0; $tqty=0; 
-	$sqq24=mysqli_query($link,"Select * from tbl_dtdfsub_sub2 where dtdfs_id='".$row_sub['dtdfs_id']."' and dbss_is='".$roo['dbss_id']."' ") or die(mysqli_error($link));
-	$tot_sub2=mysqli_num_rows($sqq24);
-	if($tot_sub2 > 0)
-	{
-		while($row_sub2=mysqli_fetch_array($sqq24))
-		{
-			$nob=$row_sub2['dbsss_nob']; 
-			$qty=$row_sub2['dbsss_qty'];
-			$sql_whouse=mysqli_query($link,"select perticulars from tbl_warehouse where whid='".$row_sub2['dbsss_wh']."' order by perticulars") or die(mysqli_error($link));
-			$row_whouse=mysqli_fetch_array($sql_whouse);
-			$wareh=$row_whouse['perticulars'];
-				
-			$sql_binn=mysqli_query($link,"select binname from tbl_bin where binid='".$row_sub2['dbsss_bin']."' and whid='".$row_sub2['dbsss_wh']."'") or die(mysqli_error($link));
-			$row_binn=mysqli_fetch_array($sql_binn);
-			$binn=$row_binn['binname'];
-				
-			$sql_subbinn=mysqli_query($link,"select sname from tbl_subbin where sid='".$row_sub2['dbsss_subbin']."' and binid='".$row_sub2['dbsss_bin']."' and whid='".$row_sub2['dbsss_wh']."'") or die(mysqli_error($link));
-			$row_subbinn=mysqli_fetch_array($sql_subbinn);
-			$subbinn=$row_subbinn['sname'];
-			
-			
-			$tnob=$tnob+$nob; 
-			$tqty=$tqty+$qty; 
-			if($sloc!="")
-			$sloc=$sloc."<br />".$wareh."/".$binn."/".$subbinn." | ".$nob." | ".$qty;
-			else
-			$sloc=$wareh."/".$binn."/".$subbinn." | ".$nob." | ".$qty;
-		}
-	}*/
+	
 }
 }
 }	
-if($srno%2!=0)
+if($srno2%2!=0)
 {
 ?>			  
 <tr class="Light">
@@ -501,7 +690,7 @@ else
 </tr>
 <?php
 }
-$srno=$srno+1;
+$srno2=$srno2+1;
 }
 
 
@@ -509,40 +698,13 @@ $srno=$srno+1;
 ?>
 </table>
 <?php
-	/*$total_pages = ceil($total_results / $max_results); 
-	$no=(($page * $max_results)+1) - $max_results;
-	$tono=$srno-1;
-	echo "<table width='850' align='center' class='tbltext'><tr><td align='left' >$no - $tono of $total_results Records</td><td align='right'>Select a Page    "; 
- 
 	
-	// Build Previous Link 
-	if($page > 1)
-	{ 
-		$prev = ($page - 1); 
-		echo "<a href=\"".$_SERVER['PHP_SELF']."?page=$prev\" STYLE='text-decoration: none'><< Previous </a> "; 
-	} 
-	
-	for($i = 1; $i <= $total_pages; $i++)
-	{ 
-		if(($page) == $i)
-		{ 
-		echo "$i "; 
-		} else
-		{ 
-		echo "<a href=\"".$_SERVER['PHP_SELF']."?page=$i\" STYLE='text-decoration: none'>$i</a> "; 
-		} 
-	} 
-	
-	// Build Next Link 
-	if($page < $total_pages)
-	{ 
-		$next = ($page + 1); 
-		echo "<a href=\"".$_SERVER['PHP_SELF']."?page=$next\" STYLE='text-decoration: none'>Next>></a>"; 
-	} 
-		echo "</td></tr></table>"; */
 }
 ?>
-<?php echo $pagination?>
+<?php echo $pagination2?>
+
+
+
 </td>
 <td width="10"></td>
 </tr>

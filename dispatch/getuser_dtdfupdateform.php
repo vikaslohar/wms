@@ -88,7 +88,7 @@ if($txtpp=="")$txtpp="TDF";
 		
 if($z1 == 0)
 {
-	$sql_main="insert into tbl_dtdf(dtdf_tcode, dtdf_date, dtdf_partytype, dtdf_state, dtdf_location, dtdf_party, dtdf_yearcode, dtdf_logid, tmode, trans_name, trans_lorryrepno, trans_vehno, trans_paymode, courier_name, docket_no, pname_byhand, dtdf_remarks,plantcode) values ('$txtid', '$tdate1', '$txtpp', '$txtstatesl', '$locationname', '$txtstfp', '$yearid_id', '$logid', '$txt11', '$txttname', '$txtlrn', '$txtvn', '$txt13', '$txtcname', '$txtdc', '$txtpname', '$remarks','$plantcode')";
+	$sql_main="insert into tbl_dtdf(dtdf_tcode, dtdf_date, dtdf_partytype, dtdf_state, dtdf_location, dtdf_party, dtdf_yearcode, dtdf_logid, tmode, trans_name, trans_lorryrepno, trans_vehno, trans_paymode, courier_name, docket_no, pname_byhand, dtdf_remarks,plantcode,dtdf_tflg) values ('$txtid', '$tdate1', '$txtpp', '$txtstatesl', '$locationname', '$txtstfp', '$yearid_id', '$logid', '$txt11', '$txttname', '$txtlrn', '$txtvn', '$txt13', '$txtcname', '$txtdc', '$txtpname', '$remarks','$plantcode',2)";
 	if(mysqli_query($link,$sql_main) or die(mysqli_error($link)))
 	{
 		$mainid=mysqli_insert_id($link);

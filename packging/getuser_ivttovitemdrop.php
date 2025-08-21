@@ -49,6 +49,14 @@ else if($a==13)
 {
 	$sql_month=mysqli_query($link,"select varietyid, popularname from tblvariety where (pvverid='".$b."' OR varietyid=3) and varietyid!='$a' and actstatus='Active' order by popularname Asc")or die(mysqli_error($link));
 }
+else if($a==497)	
+{
+	$sql_month=mysqli_query($link,"select varietyid, popularname from tblvariety where (pvverid='".$b."' OR varietyid=940) and varietyid!='$a' and actstatus='Active' order by popularname Asc")or die(mysqli_error($link));
+}
+else if($a==940)	
+{
+	$sql_month=mysqli_query($link,"select varietyid, popularname from tblvariety where (pvverid='".$b."' OR varietyid=497) and varietyid!='$a' and actstatus='Active' order by popularname Asc")or die(mysqli_error($link));
+}
 else
 {
 	$sql_month=mysqli_query($link,"select varietyid, popularname from tblvariety where pvverid='".$b."' and varietyid!='$a' and actstatus='Active' order by popularname Asc")or die(mysqli_error($link));

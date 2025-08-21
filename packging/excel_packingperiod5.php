@@ -2,25 +2,25 @@
 session_start();
 	if(!isset($_SESSION['sessionadmin']))
 	{
-	echo '<script language="JavaScript" type="text/JavaScript">';
-	echo "window.location='../login.php' ";
-	echo '</script>';
+		echo '<script language="JavaScript" type="text/JavaScript">';
+		echo "window.location='../login.php' ";
+		echo '</script>';
 	}
 	else
 	{
-	$year1=$_SESSION['ayear1'];
-	$year2=$_SESSION['ayear2'];
-	$username= $_SESSION['username'];
-	$yearid_id=$_SESSION['yearid_id'];
-	$role=$_SESSION['role'];
-    $loginid=$_SESSION['loginid'];
-    $logid=$_SESSION['logid'];
-	$lgnid=$_SESSION['logid'];
-	$plantcode=$_SESSION['plantcode'];
-	$plantcode1=$_SESSION['plantcode1'];
-	$plantcode2=$_SESSION['plantcode2'];
-	$plantcode3=$_SESSION['plantcode3'];
-	$plantcode4=$_SESSION['plantcode4'];
+		$year1=$_SESSION['ayear1'];
+		$year2=$_SESSION['ayear2'];
+		$username= $_SESSION['username'];
+		$yearid_id=$_SESSION['yearid_id'];
+		$role=$_SESSION['role'];
+		$loginid=$_SESSION['loginid'];
+		$logid=$_SESSION['logid'];
+		$lgnid=$_SESSION['logid'];
+		$plantcode=$_SESSION['plantcode'];
+		$plantcode1=$_SESSION['plantcode1'];
+		$plantcode2=$_SESSION['plantcode2'];
+		$plantcode3=$_SESSION['plantcode3'];
+		$plantcode4=$_SESSION['plantcode4'];
 	}	
 	require_once("../include/config.php");
 	require_once("../include/connection.php");
@@ -98,7 +98,7 @@ session_start();
 
 	$totalbags=0; $totalqty=0;
 	$datahead1= array("Crop",$crp,"Variety",$variety,"UPS",$txtupsdc);
-	$datahead2= array("#","Crop","Variety","Lot Number","UPS","NoP","Total Qty"); 
+	$datahead2= array("#","Date","Crop","Variety","Lot Number","UPS","NoP","Total Qty"); 
 	
 $d=1; $totalbags=0;
 
@@ -154,7 +154,7 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 		else
 		$sql_arr_home=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr2['packtype']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') group by lotno order by lotdgp_id asc") or die(mysqli_error($link));
 		while($row_arr_home=mysqli_fetch_array($sql_arr_home))
-		{$totqty=0; $totnob=0; $cnt=0;
+		{$totqty=0; $totnob=0; $cnt=0; $txtdot="";
 			if($withreprint=="yes")	
 			$sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where plantcode='$plantcode' and packtype='".$row_rr2['packtype']."'and lotno='".$row_arr_home['lotno']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') and balqty > 0 order by lotdgp_id asc") or die(mysqli_error($link)); 
 			else
@@ -187,6 +187,12 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 					$totnob=$totnob+$nob; 
 					if($totnob<0) $totnob=0;
 					if($totqty<0) $totqty=0;
+					
+					$rdate=$row_issuetbl['lotldg_trdate'];
+					$ryear=substr($rdate,0,4);
+					$rmonth=substr($rdate,5,2);
+					$rday=substr($rdate,8,2);
+					$txtdot=$rday."-".$rmonth."-".$ryear;
 				}
 			}
 			$lotn=$row_arr_home['lotno'];
@@ -199,7 +205,7 @@ if($cnt>0)
 {
 //$totalqty=$totalqty+$totqty; 
 //$totalbags=$totalbags+$totnob;
-$data1[$d]=array($d,$crop,$variety,$lotn,$ups,$totnob,$totqty);
+$data1[$d]=array($d,$txtdot,$crop,$variety,$lotn,$ups,$totnob,$totqty);
 $d++;$cnt++;
 }
 }
