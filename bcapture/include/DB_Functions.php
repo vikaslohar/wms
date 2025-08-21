@@ -148,6 +148,22 @@ class DB_Functions {
 		return $pcode;
     }
 	
+	public function getPlantcode1($scode) {
+        $pcode='';
+		$stmt_plant = $this->conn_ps->prepare("SELECT plantcode1  FROM tbluser WHERE scode=? ");
+		$stmt_plant->bind_param("s", $scode);
+		$result_plant=$stmt_plant->execute();
+		$stmt_plant->store_result();
+		if ($stmt_plant->num_rows > 0) {
+			$stmt_plant->bind_result($plantcode1);
+			//looping through all the records 
+			$stmt_plant->fetch();
+			$pcode=$rec_pcode; 
+			$stmt_plant->close();
+		}
+		return $pcode;
+    }
+	
 	
 	public function getPlantdetails($scode) {
         $pcode='';
@@ -4818,6 +4834,8 @@ public function updateDataVerification($scode, $trid) {
 	
 	public function GetDomMacDetails($scode) {
 	$plantcode = $this->getPlantcode($scode);
+	$plantcode1 = $this->getPlantcode1($scode);
+	
 		$user10=array(); $pnpslipmain_id=0; $flg=0; $pnpslipsub_lblflg=''; $pnpslipsub_elblno=''; $pnpslipsub_plcode1='';
 		$stmtm = $this->conn_ps->prepare("SELECT pnpslipmain_id FROM tbl_pnpslipmain WHERE pnpslipmain_tflag = 2 and pnpslipmain_trtype='fc' and pnpslipmain_wbactflag=0");
 		//$stmtm->bind_param("i", $trid);
@@ -4844,8 +4862,14 @@ public function updateDataVerification($scode, $trid) {
 				$stmt->close();	
 			}
 			$plcd=explode(",",$plc);
-			
-			$stmt_dommac = $this->conn_ps->prepare("SELECT packlinecode, packlinetype FROM tbl_rm_packmac where plantcode='$plantcode' order by packlinecode ASC "); 
+			if($plantcode1!=NULL && $plantcode1!='' && $plantcode1!='NULL' && $plantcode1!='null' && $plantcode1!='Null')
+			{
+				$stmt_dommac = $this->conn_ps->prepare("SELECT packlinecode, packlinetype FROM tbl_rm_packmac where plantcode='$plantcode1' order by packlinecode ASC "); 
+			}
+			else
+			{
+				$stmt_dommac = $this->conn_ps->prepare("SELECT packlinecode, packlinetype FROM tbl_rm_packmac where plantcode='$plantcode' order by packlinecode ASC ");
+			}
 			$result_dommac=$stmt_dommac->execute();
 			$stmt_dommac->store_result();
 			if ($stmt_dommac->num_rows > 0) {
