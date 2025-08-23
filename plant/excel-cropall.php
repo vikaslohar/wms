@@ -2,25 +2,25 @@
 	session_start();
 	if(!isset($_SESSION['sessionadmin']))
 	{
-	echo '<script language="JavaScript" type="text/JavaScript">';
-	echo "window.location='../login.php' ";
-	echo '</script>';
+		echo '<script language="JavaScript" type="text/JavaScript">';
+		echo "window.location='../login.php' ";
+		echo '</script>';
 	}
 	else
 	{
-	$year1=$_SESSION['ayear1'];
-	$year2=$_SESSION['ayear2'];
-	$username= $_SESSION['username'];
-	$yearid_id=$_SESSION['yearid_id'];
-	$role=$_SESSION['role'];
-    $loginid=$_SESSION['loginid'];
-    $logid=$_SESSION['logid'];
-	$lgnid=$_SESSION['logid'];
-	$plantcode=$_SESSION['plantcode'];
-	$plantcode1=$_SESSION['plantcode1'];
-	$plantcode2=$_SESSION['plantcode2'];
-	$plantcode3=$_SESSION['plantcode3'];
-	$plantcode4=$_SESSION['plantcode4'];
+		$year1=$_SESSION['ayear1'];
+		$year2=$_SESSION['ayear2'];
+		$username= $_SESSION['username'];
+		$yearid_id=$_SESSION['yearid_id'];
+		$role=$_SESSION['role'];
+		$loginid=$_SESSION['loginid'];
+		$logid=$_SESSION['logid'];
+		$lgnid=$_SESSION['logid'];
+		$plantcode=$_SESSION['plantcode'];
+		$plantcode1=$_SESSION['plantcode1'];
+		$plantcode2=$_SESSION['plantcode2'];
+		$plantcode3=$_SESSION['plantcode3'];
+		$plantcode4=$_SESSION['plantcode4'];
 	}	
 	require_once("../include/config.php");
 	require_once("../include/connection.php");
@@ -127,7 +127,7 @@
 
 	$d=1;
 	$datahead1= array("Crop:$crp     Variety:$ver");
-	$datahead2= array("#","Crop","Veriety","Raw Seed Qty","Condition Seed Qty","Pack Seed Qty","Sales Return Qty","Total Qty"); 
+	$datahead2= array("#","Crop","Veriety","Variety Type","Raw Seed Qty","Condition Seed Qty","Pack Seed Qty","Sales Return Qty","Total Qty"); 
 
 $crps=explode(",",$crop2);
 foreach($crps as $crval)
@@ -238,7 +238,7 @@ if($crval<>"")
 		else
 		{
 		$verty=$verval;
-		$vtyp="";
+		if($verval==$$ver2){ $vtyp="OP";} else	{ $vtyp=""; }
 		}
 	 	
 		// Raw Seed Records
@@ -367,7 +367,7 @@ if($crval<>"")
 if($ccnt > 0)
 {
 $tqty=$tqty+$totrqty+$totcqty+$totpqty+$totsrqty;
-$data1[$d]=array($d,$crop1,$verty,$totrqty,$totcqty,$totpqty,$totsrqty,$tqty); 
+$data1[$d]=array($d,$crop1,$verty,$vtyp,$totrqty,$totcqty,$totpqty,$totsrqty,$tqty); 
 $d++;
 }
 }

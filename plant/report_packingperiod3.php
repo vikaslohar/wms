@@ -28,19 +28,19 @@
 	require_once("../include/connection.php");
 	
 		
-		$sdate = $_REQUEST['sdate'];
-		$edate = $_REQUEST['edate'];
-		$crop = $_REQUEST['txtcrop'];
-		$variety = $_REQUEST['txtvariety'];
-		$txtupsdc = $_REQUEST['txtupsdc'];
-		$withreprint = $_REQUEST['withreprint'];
-		if($crop=="")$crop="ALL";
-		if($variety=="")$variety="ALL";
-		if($txtupsdc=="")$txtupsdc="ALL";
-		
-		if(isset($_POST['frm_action'])=='submit')
-		{
-		}
+	$sdate = $_REQUEST['sdate'];
+	$edate = $_REQUEST['edate'];
+	$crop = $_REQUEST['txtcrop'];
+	$variety = $_REQUEST['txtvariety'];
+	$txtupsdc = $_REQUEST['txtupsdc'];
+	$withreprint = $_REQUEST['withreprint'];
+	if($crop=="")$crop="ALL";
+	if($variety=="")$variety="ALL";
+	if($txtupsdc=="")$txtupsdc="ALL";
+	
+	if(isset($_POST['frm_action'])=='submit')
+	{
+	}
 	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -97,7 +97,7 @@ var vv=document.frmaddDepartment.txtvariety.value;
 var edate=document.frmaddDepartment.edate.value;
 var txtupsdc=document.frmaddDepartment.txtupsdc.value;
 var withreprint=document.frmaddDepartment.withreprint.value;
-winHandle=window.open('report_packingperiod2.php?sdate='+sdate+'&txtcrop='+itemid+'&txtvariety='+vv+'&txtupsdc='+txtupsdc+'&edate='+edate+'&withreprint='+withreprint,'WelCome','top=20,left=80,width=950,height=600,scrollbars=yes');
+winHandle=window.open('report_packingperiod4.php?sdate='+sdate+'&txtcrop='+itemid+'&txtvariety='+vv+'&txtupsdc='+txtupsdc+'&edate='+edate+'&withreprint='+withreprint,'WelCome','top=20,left=80,width=950,height=600,scrollbars=yes');
 if(winHandle==null){
 alert("While Launching New Window...\nYour browser maybe blocking up Popup windows. \n\n  Please check your Popup Blocker Settings or ..\n Please hold Ctrl Key and Click on link to open new Browser"); } 
 }
@@ -220,10 +220,16 @@ if($tot_arr_home > 0)
 
 <tr class="tblsubtitle" height="20">
 	<td width="26" align="center" valign="middle" class="smalltblheading">#</td>
+	<td width="90"  align="center" valign="middle" class="smalltblheading">Date</td>
 	<td width="126"  align="center" valign="middle" class="smalltblheading">Crop</td>
 	<td width="90"  align="center" valign="middle" class="smalltblheading">Variety</td>
+	<td width="90"  align="center" valign="middle" class="smalltblheading">Lot Number</td>
 	<td width="55"  align="center" valign="middle" class="smalltblheading">UPS</td>
-	<td width="55"  align="center" valign="middle" class="smalltblheading">NoP</td>
+	<td width="55"  align="center" valign="middle" class="smalltblheading">Type</td>
+	<td align="center" valign="middle" class="tblheading">Packing Machine Code</td>
+	<td align="center" valign="middle" class="tblheading">Picked for Packing Qty</td>
+	<td align="center" valign="middle" class="tblheading">Packing Loss</td>
+	<td align="center" valign="middle" class="tblheading">Packing Loss %</td>
 	<td width="70"  align="center" valign="middle" class="smalltblheading">Total Qty</td>
 </tr>
 
@@ -276,17 +282,18 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 	//$row_rr2=mysqli_fetch_array($sql_rr2);
 	while($row_rr2=mysqli_fetch_array($sql_rr2))
 	{
-		$totqty=0; $totnob=0; $cnt=0;
+		
 		if($withreprint=="yes")
 		$sql_arr_home=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr2['packtype']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') group by lotno order by lotdgp_id asc") or die(mysqli_error($link));
 		else
-		$sql_arr_home=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr2['packtype']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') group by lotno order by lotdgp_id asc") or die(mysqli_error($link));
+		$sql_arr_home=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr2['packtype']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') group by lotno order by lotdgp_id asc") or die(mysqli_error($link));
 		while($row_arr_home=mysqli_fetch_array($sql_arr_home))
 		{
+			$totqty=0; $totnob=0; $cnt=0; $txtdot=""; $type='';
 			if($withreprint=="yes")	
 			$sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where plantcode='$plantcode' and packtype='".$row_rr2['packtype']."'and lotno='".$row_arr_home['lotno']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') and balqty > 0 order by lotdgp_id asc") or die(mysqli_error($link)); 
 			else
-			$sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where plantcode='$plantcode' and packtype='".$row_rr2['packtype']."'and lotno='".$row_arr_home['lotno']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') and balqty > 0 order by lotdgp_id asc") or die(mysqli_error($link)); 
+			$sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where plantcode='$plantcode' and packtype='".$row_rr2['packtype']."'and lotno='".$row_arr_home['lotno']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') and balqty > 0 order by lotdgp_id asc") or die(mysqli_error($link)); 
 			$t=mysqli_num_rows($sql_issuetbl);
 			if($t > 0)
 			{
@@ -316,11 +323,52 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 					$totnob=$totnob+$nob; 
 					if($totnob<0) $totnob=0;
 					if($totqty<0) $totqty=0;
+
+					$rdate=$row_issuetbl['lotldg_trdate'];
+					$ryear=substr($rdate,0,4);
+					$rmonth=substr($rdate,5,2);
+					$rday=substr($rdate,8,2);
+					$txtdot=$rday."-".$rmonth."-".$ryear;
+					
+					$totcqty=0; $totpqty=0; $totsrqty=0; $pmc=''; $lossper='';
+					if($row_issuetbl['trtype']=='PNPSLIP' || $row_issuetbl['trtype']=='NSTPNPSLIP')
+					{
+						$sql_is=mysqli_query($link,"select pnpslipmain_id, pnpslipmain_promachcode from tbl_pnpslipmain where  pnpslipmain_id='".$row_issuetbl['lotldg_id']."'  order by pnpslipmain_id asc") or die(mysqli_error($link));
+						while($row_is=mysqli_fetch_array($sql_is))
+						{ 
+							$sql_istbl=mysqli_query($link,"select * from tbl_pnpslipsub where pnpslipmain_id='".$row_is['pnpslipmain_id']."'  order by pnpslipsub_id asc") or die(mysqli_error($link)); 
+							$t=mysqli_num_rows($sql_istbl);
+							if($t > 0)
+							{
+								while($row_pnpsub=mysqli_fetch_array($sql_istbl))
+								{ 
+									$totcqty=$totcqty+$row_pnpsub['pnpslipsub_pickpqty']; 
+									$totpqty=$totpqty+$row_pnpsub['pnpslipsub_packloss']; 
+									$totsrqty=$totsrqty+$row_pnpsub['pnpslipsub_packqty']; 
+									
+									$ccnt++;
+								}	
+							}
+							
+							$sql_pmc=mysqli_query($link,"select * from tbl_rm_promac where promac_id='".$row_is['pnpslipmain_promachcode']."' ") or die(mysqli_error($link));
+							$row_arr_pmc=mysqli_fetch_array($sql_pmc);
+							$pmc=$row_arr_pmc['promac_mac'].$row_arr_pmc['promac_macid'];
+						}
+						$lossper=round($totpqty/$totcqty*100,2);
+					}
+					else
+					{
+						$totcqty=0; $totpqty=0; $totsrqty=0; $pmc=''; $lossper='';
+					}
+					if($row_issuetbl['trtype']=='PNPSLIP') {	$type="ST"; }
+					if($row_issuetbl['trtype']=='NSTPNPSLIP') {	$type="NST"; }
+					if($row_issuetbl['trtype']=='PACKRV') {	$type="Re-Printing"; }
+					if($row_issuetbl['trtype']=='SRRV') {	$type="SR Re-Validation"; }		
 				}
 			}
-		}
+		//}
 	//}
-			
+		
 $ups=$row_rr2['packtype'];	
 if($cnt>0)
 {
@@ -329,10 +377,16 @@ if($cnt>0)
 ?>			  
 <tr class="Light">
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $srno;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $txtdot;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $crop?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $variety?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $row_arr_home['lotno']?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $ups;?></td>
-	<td align="center" valign="middle" class="smalltbltext"><?php echo $totnob;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $type;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $pmc;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $totcqty?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $totpqty?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $lossper?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $totqty;?></td>
 </tr>
 <?php
@@ -341,7 +395,7 @@ if($cnt>0)
 }
 }
 }
-//}
+}
 //}
 ?>
 </table>			

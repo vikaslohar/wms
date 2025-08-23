@@ -2,25 +2,25 @@
 session_start();
 	if(!isset($_SESSION['sessionadmin']))
 	{
-	echo '<script language="JavaScript" type="text/JavaScript">';
-	echo "window.location='../login.php' ";
-	echo '</script>';
+		echo '<script language="JavaScript" type="text/JavaScript">';
+		echo "window.location='../login.php' ";
+		echo '</script>';
 	}
 	else
 	{
-	$year1=$_SESSION['ayear1'];
-	$year2=$_SESSION['ayear2'];
-	$username= $_SESSION['username'];
-	$yearid_id=$_SESSION['yearid_id'];
-	$role=$_SESSION['role'];
-    $loginid=$_SESSION['loginid'];
-    $logid=$_SESSION['logid'];
-	$lgnid=$_SESSION['logid'];
-	$plantcode=$_SESSION['plantcode'];
-	$plantcode1=$_SESSION['plantcode1'];
-	$plantcode2=$_SESSION['plantcode2'];
-	$plantcode3=$_SESSION['plantcode3'];
-	$plantcode4=$_SESSION['plantcode4'];
+		$year1=$_SESSION['ayear1'];
+		$year2=$_SESSION['ayear2'];
+		$username= $_SESSION['username'];
+		$yearid_id=$_SESSION['yearid_id'];
+		$role=$_SESSION['role'];
+		$loginid=$_SESSION['loginid'];
+		$logid=$_SESSION['logid'];
+		$lgnid=$_SESSION['logid'];
+		$plantcode=$_SESSION['plantcode'];
+		$plantcode1=$_SESSION['plantcode1'];
+		$plantcode2=$_SESSION['plantcode2'];
+		$plantcode3=$_SESSION['plantcode3'];
+		$plantcode4=$_SESSION['plantcode4'];
 	}	
 	require_once("../include/config.php");
 	require_once("../include/connection.php");
@@ -52,9 +52,9 @@ session_start();
 		
 	$crp="ALL"; $ver="ALL"; $dt=date("Y-m-d");
 	if($withreprint=="yes")
-	$qry="select Distinct lotldg_crop from tbl_lot_ldg_pack where lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') and balqty > 0 AND plantcode='$plantcode'";
+	$qry="select Distinct lotldg_crop from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') and balqty > 0 ";
 	else
-	$qry="select Distinct lotldg_crop from tbl_lot_ldg_pack where lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') and balqty > 0 AND plantcode='$plantcode'";
+	$qry="select Distinct lotldg_crop from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') and balqty > 0 ";
 
 	if($crop!="ALL")
 	{	
@@ -70,7 +70,7 @@ session_start();
 	if($variety!="ALL")
 	{	
 		$qry.=" and lotldg_variety='$variety' ";
-		$sql_var=mysqli_query($link,"select * from tblvariety where varietyid='".$variety."'") or die(mysqli_error($link));
+		$sql_var=mysqli_query($link,"select * from tblvariety where varietyid='".$variety."' ") or die(mysqli_error($link));
 		$row_var=mysqli_fetch_array($sql_var);
 		$ver=$row_var['popularname'];
 	}
@@ -97,7 +97,7 @@ session_start();
 		$cnt=1;
 
 	$totalbags=0; $totalqty=0;
-	$datahead1= array("Crop",$crp,"Variety",$ver,"UPS",$txtupsdc);
+	$datahead1= array("Crop",$crp,"Variety",$variety,"UPS",$txtupsdc);
 	$datahead2= array("#","Crop","Variety","UPS","NoP","Total Qty"); 
 	
 $d=1; $totalbags=0;
@@ -107,16 +107,16 @@ while($row_arr_home1=mysqli_fetch_array($sql_arr_home1))
 if($txtupsdc!="ALL")
 {
 	if($withreprint=="yes")
-	$sql_rr=mysqli_query($link,"select distinct lotldg_variety from tbl_lot_ldg_pack where lotldg_crop='".$row_arr_home1['lotldg_crop']."' and packtype='".$txtupsdc."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') AND plantcode='$plantcode' order by lotdgp_id desc") or die(mysqli_error($link));
+	$sql_rr=mysqli_query($link,"select distinct lotldg_variety from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and packtype='".$txtupsdc."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') order by lotdgp_id desc") or die(mysqli_error($link));
 	else
-	$sql_rr=mysqli_query($link,"select distinct lotldg_variety from tbl_lot_ldg_pack where lotldg_crop='".$row_arr_home1['lotldg_crop']."' and packtype='".$txtupsdc."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') AND plantcode='$plantcode' order by lotdgp_id desc") or die(mysqli_error($link));
+	$sql_rr=mysqli_query($link,"select distinct lotldg_variety from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and packtype='".$txtupsdc."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') order by lotdgp_id desc") or die(mysqli_error($link));
 }
 else
 {
 	if($withreprint=="yes")
-	$sql_rr=mysqli_query($link,"select distinct lotldg_variety from tbl_lot_ldg_pack where lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') AND plantcode='$plantcode' order by lotdgp_id desc") or die(mysqli_error($link));
+	$sql_rr=mysqli_query($link,"select distinct lotldg_variety from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') order by lotdgp_id desc") or die(mysqli_error($link));
 	else
-	$sql_rr=mysqli_query($link,"select distinct lotldg_variety from tbl_lot_ldg_pack where lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') AND plantcode='$plantcode' order by lotdgp_id desc") or die(mysqli_error($link));
+	$sql_rr=mysqli_query($link,"select distinct lotldg_variety from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') order by lotdgp_id desc") or die(mysqli_error($link));
 }
 $tot_rr=mysqli_num_rows($sql_rr);
 while($row_rr=mysqli_fetch_array($sql_rr))
@@ -127,7 +127,7 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 	$sql_crop=mysqli_query($link,"select * from tblcrop where cropid='".$row_arr_home1['lotldg_crop']."'") or die(mysqli_error($link));
 	$row31=mysqli_fetch_array($sql_crop);
 	$crop=$row31['cropname'];		
-	$sql_variety=mysqli_query($link,"select * from tblvariety where varietyid='".$row_rr['lotldg_variety']."'") or die(mysqli_error($link));
+	$sql_variety=mysqli_query($link,"select * from tblvariety where varietyid='".$row_rr['lotldg_variety']."' ") or die(mysqli_error($link));
 	$ttt=mysqli_num_rows($sql_variety);
 	if($ttt > 0)
 	{
@@ -141,24 +141,24 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 
 	$totqty=0; 
 	if($withreprint=="yes")
-	$sql_rr2=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') AND plantcode='$plantcode' order by packtype asc") or die(mysqli_error($link));
+	$sql_rr2=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') order by packtype asc") or die(mysqli_error($link));
 	else
-	$sql_rr2=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') AND plantcode='$plantcode' order by packtype asc") or die(mysqli_error($link));
+	$sql_rr2=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') order by packtype asc") or die(mysqli_error($link));
 	$tot_rr2=mysqli_num_rows($sql_rr2);
 	//$row_rr2=mysqli_fetch_array($sql_rr2);
 	while($row_rr2=mysqli_fetch_array($sql_rr2))
 	{
 		$totqty=0; $totnob=0; $cnt=0;
 		if($withreprint=="yes")
-		$sql_arr_home=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr2['packtype']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') AND plantcode='$plantcode' group by lotno order by lotdgp_id asc") or die(mysqli_error($link));
+		$sql_arr_home=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr2['packtype']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') group by lotno order by lotdgp_id asc") or die(mysqli_error($link));
 		else
-		$sql_arr_home=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr2['packtype']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') AND plantcode='$plantcode' group by lotno order by lotdgp_id asc") or die(mysqli_error($link));
+		$sql_arr_home=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr2['packtype']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') group by lotno order by lotdgp_id asc") or die(mysqli_error($link));
 		while($row_arr_home=mysqli_fetch_array($sql_arr_home))
 		{
 			if($withreprint=="yes")	
-			$sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where packtype='".$row_rr2['packtype']."'and lotno='".$row_arr_home['lotno']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') and balqty > 0 AND plantcode='$plantcode' order by lotdgp_id asc") or die(mysqli_error($link)); 
+			$sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where plantcode='$plantcode' and packtype='".$row_rr2['packtype']."'and lotno='".$row_arr_home['lotno']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') and balqty > 0 order by lotdgp_id asc") or die(mysqli_error($link)); 
 			else
-			$sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where packtype='".$row_rr2['packtype']."'and lotno='".$row_arr_home['lotno']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') and balqty > 0 AND plantcode='$plantcode' order by lotdgp_id asc") or die(mysqli_error($link)); 
+			$sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where plantcode='$plantcode' and packtype='".$row_rr2['packtype']."'and lotno='".$row_arr_home['lotno']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') and balqty > 0 order by lotdgp_id asc") or die(mysqli_error($link)); 
 			$t=mysqli_num_rows($sql_issuetbl);
 			if($t > 0)
 			{
@@ -171,14 +171,14 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 					$packtp=explode(".",$xc[0]);
 					if($xc[1]=="Gms")
 					{
-						$np=1000/$packtp[0];
+						$np=1000/$xc[0];
 					}
 					else
 					{
-						if($packtp[0]<=0)
-						$np=1000/$packtp[1];
+						if($packtp[0]<1)
+						$np=(1000/$packtp[1])/1000;
 						else
-						$np=$packtp[0];
+						$np=$xc[0];
 					}
 					if($xc[1]=="Gms")
 					$nob=$np*$row_issuetbl['balqty']; 

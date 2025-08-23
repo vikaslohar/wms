@@ -2,25 +2,25 @@
 	session_start();
 	if(!isset($_SESSION['sessionadmin']))
 	{
-	echo '<script language="JavaScript" type="text/JavaScript">';
-	echo "window.location='../login.php' ";
-	echo '</script>';
+		echo '<script language="JavaScript" type="text/JavaScript">';
+		echo "window.location='../login.php' ";
+		echo '</script>';
 	}
 	else
 	{
-	$year1=$_SESSION['ayear1'];
-	$year2=$_SESSION['ayear2'];
-	$username= $_SESSION['username'];
-	$yearid_id=$_SESSION['yearid_id'];
-	$role=$_SESSION['role'];
-    $loginid=$_SESSION['loginid'];
-    $logid=$_SESSION['logid'];
-	$lgnid=$_SESSION['logid'];
-	$plantcode=$_SESSION['plantcode'];
-	$plantcode1=$_SESSION['plantcode1'];
-	$plantcode2=$_SESSION['plantcode2'];
-	$plantcode3=$_SESSION['plantcode3'];
-	$plantcode4=$_SESSION['plantcode4'];
+		$year1=$_SESSION['ayear1'];
+		$year2=$_SESSION['ayear2'];
+		$username= $_SESSION['username'];
+		$yearid_id=$_SESSION['yearid_id'];
+		$role=$_SESSION['role'];
+		$loginid=$_SESSION['loginid'];
+		$logid=$_SESSION['logid'];
+		$lgnid=$_SESSION['logid'];
+		$plantcode=$_SESSION['plantcode'];
+		$plantcode1=$_SESSION['plantcode1'];
+		$plantcode2=$_SESSION['plantcode2'];
+		$plantcode3=$_SESSION['plantcode3'];
+		$plantcode4=$_SESSION['plantcode4'];
 	}
 	
 	require_once("../include/config.php");
@@ -141,6 +141,7 @@ $crp="ALL"; $ver="ALL";
 	<td width="17" align="center" valign="middle" class="tblheading">#</td>
 	<td width="160" align="center" valign="middle" class="tblheading">Crop</td>
 	<td width="226" align="center" valign="middle" class="tblheading">Variety</td>
+	<td align="center" valign="middle" class="tblheading">Variety Type</td>
 	<td align="center" valign="middle" class="tblheading">Raw Seed Qty</td>
 	<td align="center" valign="middle" class="tblheading">Condition Seed Qty</td>
 	<td align="center" valign="middle" class="tblheading">Pack Seed Qty</td>
@@ -259,7 +260,7 @@ if($crval<>"")
 		else
 		{
 		$verty=$verval;
-		$vtyp="";
+		if($verval==$$ver2){ $vtyp="OP";} else	{ $vtyp=""; }
 		}
 	 	
 		// Raw Seed Records
@@ -395,7 +396,7 @@ if($srno%2!=0)
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $srno;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $crop1?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $verty?></td>
-	<!--<td align="center" valign="middle" class="smalltbltext"><?php echo $totrnob;?></td>-->
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $vtyp;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $totrqty?></td>
 	<!--<td align="center" valign="middle" class="smalltbltext"><?php echo $totcnob;?></td>-->
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $totcqty?></td>
@@ -414,7 +415,7 @@ else
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $srno;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $crop1?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $verty?></td>
-	<!--<td align="center" valign="middle" class="smalltbltext"><?php echo $totrnob;?></td>-->
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $vtyp;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $totrqty?></td>
 	<!--<td align="center" valign="middle" class="smalltbltext"><?php echo $totcnob;?></td>-->
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $totcqty?></td>

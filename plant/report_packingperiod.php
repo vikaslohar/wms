@@ -2,25 +2,25 @@
 	session_start();
 	if(!isset($_SESSION['sessionadmin']))
 	{
-	echo '<script language="JavaScript" type="text/JavaScript">';
-	echo "window.location='../login.php' ";
-	echo '</script>';
+		echo '<script language="JavaScript" type="text/JavaScript">';
+		echo "window.location='../login.php' ";
+		echo '</script>';
 	}
 	else
 	{
-	$year1=$_SESSION['ayear1'];
-	$year2=$_SESSION['ayear2'];
-	$username= $_SESSION['username'];
-	$yearid_id=$_SESSION['yearid_id'];
-	$role=$_SESSION['role'];
-    $loginid=$_SESSION['loginid'];
-    $logid=$_SESSION['logid'];
-	$lgnid=$_SESSION['logid'];
-	$plantcode=$_SESSION['plantcode'];
-	$plantcode1=$_SESSION['plantcode1'];
-	$plantcode2=$_SESSION['plantcode2'];
-	$plantcode3=$_SESSION['plantcode3'];
-	$plantcode4=$_SESSION['plantcode4'];
+		$year1=$_SESSION['ayear1'];
+		$year2=$_SESSION['ayear2'];
+		$username= $_SESSION['username'];
+		$yearid_id=$_SESSION['yearid_id'];
+		$role=$_SESSION['role'];
+		$loginid=$_SESSION['loginid'];
+		$logid=$_SESSION['logid'];
+		$lgnid=$_SESSION['logid'];
+		$plantcode=$_SESSION['plantcode'];
+		$plantcode1=$_SESSION['plantcode1'];
+		$plantcode2=$_SESSION['plantcode2'];
+		$plantcode3=$_SESSION['plantcode3'];
+		$plantcode4=$_SESSION['plantcode4'];
 	}
 	require_once("../include/config.php");
 	require_once("../include/connection.php");
@@ -33,10 +33,19 @@
 		$txtvariety=trim($_POST['txtvariety']);
 		$txtupsdc=trim($_POST['txtupsdc']);	
 		$withreprint=trim($_POST['withreprint']);	
+		$withsummery=trim($_POST['withsummery']);	
+		
 		//exit;
 		if($sdate!="")
 		{
+			if($withsummery=="yes")
+			{
 			echo "<script>window.location='report_packingperiod1.php?sdate=$sdate&edate=$edate&txtcrop=$txtcrop&txtvariety=$txtvariety&txtupsdc=$txtupsdc&withreprint=$withreprint'</script>";
+			}
+			else
+			{
+			echo "<script>window.location='report_packingperiod3.php?sdate=$sdate&edate=$edate&txtcrop=$txtcrop&txtvariety=$txtvariety&txtupsdc=$txtupsdc&withreprint=$withreprint'</script>";
+			}
 		}
 		else
 		{?>
@@ -56,7 +65,7 @@
 <script type="text/javascript" src="../include/animatedcollapse.js"></script>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Plant Manager - Report - Periodical Packing Report</title>
+<title>Packaging-Report - Periodical Packing Report</title>
 <link href="../include/main_plantm.css" rel="stylesheet" type="text/css" />
 <link href="../include/vnrtrac_plantm.css" rel="stylesheet" type="text/css" />
 </head>
@@ -271,6 +280,11 @@ $quer3=mysqli_query($link,"SELECT cropid, cropname FROM tblcrop order by cropnam
                   
 	<td align="right"  valign="middle" class="tblheading" colspan="2" >With Re-Printing&nbsp;</td>
     <td align="left"  valign="middle" class="tbltext" id="vitem2" colspan="2">&nbsp;<input type="checkbox" name="withrpt" value="yes"  onclick="wtriprt(this.value)" /><input type="hidden" name="withreprint" value="no" /></td>
+                </tr>
+				<tr class="Light" height="25">
+                  
+	<td align="right"  valign="middle" class="tblheading" colspan="2" >With Re-Printing&nbsp;</td>
+    <td align="left"  valign="middle" class="tbltext" id="vitem2" colspan="2">&nbsp;<input type="radio" name="withsummery" value="yes"  />&nbsp;Summery&nbsp;&nbsp;<input type="radio" name="withsummery" value="no"  />&nbsp;Detail (Lot wise)</td>
                 </tr>
  </table><br />
 <table align="center" border="0" cellspacing="0" cellpadding="0" width="550" bordercolor="#2e81c1" style="border-collapse:collapse">

@@ -1,5 +1,5 @@
 <?php
-session_start();
+	session_start();
 	if(!isset($_SESSION['sessionadmin']))
 	{
 		echo '<script language="JavaScript" type="text/JavaScript">';
@@ -21,7 +21,8 @@ session_start();
 		$plantcode2=$_SESSION['plantcode2'];
 		$plantcode3=$_SESSION['plantcode3'];
 		$plantcode4=$_SESSION['plantcode4'];
-	}	
+	}
+	
 	require_once("../include/config.php");
 	require_once("../include/connection.php");
 	
@@ -34,13 +35,13 @@ session_start();
 	if($crop=="")$crop="ALL";
 	if($variety=="")$variety="ALL";
 	if($txtupsdc=="")$txtupsdc="ALL";
-			
+		
 	$sd=explode("-",$sdate);
 	$ed=explode("-",$edate);
 	$sdt=$sd[2]."-".sprintf("%02d",$sd[1])."-".sprintf("%02d",$sd[0]);
 	$edt=$ed[2]."-".sprintf("%02d",$ed[1])."-".sprintf("%02d",$ed[0]);
 	
-	$cp=""; 
+	$cp="";
 	$sql_crp=mysqli_query($link,"select * from tblcrop order by cropname ASC") or die(mysqli_error($link));
 	while($row_crp=mysqli_fetch_array($sql_crp))
 	{
@@ -52,9 +53,9 @@ session_start();
 		
 	$crp="ALL"; $ver="ALL"; $dt=date("Y-m-d");
 	if($withreprint=="yes")
-	$qry="select Distinct lotldg_crop from tbl_lot_ldg_pack where lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') and balqty > 0 ";
+	$qry="select Distinct lotldg_crop from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') and balqty > 0 ";
 	else
-	$qry="select Distinct lotldg_crop from tbl_lot_ldg_pack where lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') and balqty > 0 ";
+	$qry="select Distinct lotldg_crop from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') and balqty > 0 ";
 
 	if($crop!="ALL")
 	{	
@@ -83,24 +84,49 @@ session_start();
 //exit;
 	$sql_arr_home1=mysqli_query($link,$qry) or die(mysqli_error($link));
  	$tot_arr_home=mysqli_num_rows($sql_arr_home1);
-	//$dat=date("d-m-Y");		
-	
-	$dh="Periodical_Packing_From_".$sdate."_To_".$edate;
-	$datahead = array("Periodical Packing Report From ".$sdate." To ".$edate);
-	$filename=$dh.".xls";  
-	//$datahead1 = array("Arrival Report",$typ);
-	//$datahead2 = array("Item_on_Hold_Report_as_on ".$_REQUEST['sdate']);
-	$data1 = array();
-	header("Content-Disposition: attachment; filename=$filename"); 
-	header("Content-Type: application/vnd.ms-excel");
+?>
+<link href="../include/vnrtrac_plantm.css" rel="stylesheet" type="text/css" />
+<title>Packaging - Report - Periodical Packing Report</title>
+<table width="750" border="0" cellpadding="0" cellspacing="0" bordercolor="#ffffff" style="border-collapse:collapse" align="center">
+<tr >
+<td width="924" align="right">&nbsp;&nbsp;&nbsp;<img src="../images/Vista-printer.png" border="0" class="butn" height="29" width="35" alt="Print" style="display:inline;cursor:pointer;" onclick="javascript:window.print();" />&nbsp;<a href="excel_packingperiod5.php?txtcrop=<?php echo $_REQUEST['txtcrop']?>&txtvariety=<?php echo $_REQUEST['txtvariety']?>&sdate=<?php echo $sdate;?>&txtupsdc=<?php echo $txtupsdc;?>&edate=<?php echo $edate;?>&withreprint=<?php echo $withreprint;?>" target="_blank"><img src="../images/excelicon1.jpg" border="0" height="30" width="30" class="butn" alt="Export to Excel" style="display:inline;cursor:pointer;" /></a>&nbsp;<img src="../images/close_icon2.jpg" border="0" class="butn" height="30"  alt="Close" style="display:inline;cursor:pointer;" onClick="window.close()" /></td>
+</tr>
+</table>
 
-		$cnt=1;
+<?php
+if($tot_arr_home > 0)
+{
+?>
 
-	$totalbags=0; $totalqty=0;
-	$datahead1= array("Crop",$crp,"Variety",$variety,"UPS",$txtupsdc);
-	$datahead2= array("#","Date","Crop","Variety","Lot Number","UPS","Type","NoP","Total Qty"); 
-	
-$d=1; $totalbags=0;
+<table align="center" border="1" cellspacing="0" cellpadding="0" width="750" bordercolor="#2e81c1" style="border-collapse:collapse">
+  	<tr height="25">
+    <td align="center" class="subheading" style="color:#303918; " colspan="6">Periodical Packing Report</td>
+  </tr>
+<tr height="25" >
+	<td align="left" class="subheading" style="color:#303918;">&nbsp;&nbsp;Crop: <?php echo $crp;?>&nbsp;&nbsp;|&nbsp;&nbsp;Variety: <?php echo $variety;?>&nbsp;&nbsp;|&nbsp;&nbsp;UPS: <?php echo $txtupsdc;?>&nbsp;&nbsp;|&nbsp;&nbsp;From Date: <?php echo $sdate;?>&nbsp;&nbsp;|&nbsp;&nbsp;To Date: <?php echo $edate;?></td>
+
+</tr>
+</table>
+
+  <table align="center" border="1" cellspacing="0" cellpadding="0" width="750" bordercolor="#2e81c1" style="border-collapse:collapse">
+
+<tr class="tblsubtitle" height="20">
+	<td width="26" align="center" valign="middle" class="smalltblheading">#</td>
+	<td width="90"  align="center" valign="middle" class="smalltblheading">Date</td>
+	<td width="126"  align="center" valign="middle" class="smalltblheading">Crop</td>
+	<td width="90"  align="center" valign="middle" class="smalltblheading">Variety</td>
+	<td width="90"  align="center" valign="middle" class="smalltblheading">Lot Number</td>
+	<td width="55"  align="center" valign="middle" class="smalltblheading">UPS</td>
+	<td width="55"  align="center" valign="middle" class="smalltblheading">Type</td>
+	<td align="center" valign="middle" class="tblheading">Packing Machine Code</td>
+	<td align="center" valign="middle" class="tblheading">Picked for Packing Qty</td>
+	<td align="center" valign="middle" class="tblheading">Packing Loss</td>
+	<td align="center" valign="middle" class="tblheading">Packing Loss %</td>
+	<td width="70"  align="center" valign="middle" class="smalltblheading">Total Qty</td>
+</tr>
+
+<?php
+$srno=1; $totalbags=0;
 
 while($row_arr_home1=mysqli_fetch_array($sql_arr_home1))
 {
@@ -154,7 +180,8 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 		else
 		$sql_arr_home=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr2['packtype']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') group by lotno order by lotdgp_id asc") or die(mysqli_error($link));
 		while($row_arr_home=mysqli_fetch_array($sql_arr_home))
-		{$totqty=0; $totnob=0; $cnt=0; $txtdot=""; $type='';
+		{
+			$totqty=0; $totnob=0; $cnt=0; $txtdot=""; $type='';
 			if($withreprint=="yes")	
 			$sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where plantcode='$plantcode' and packtype='".$row_rr2['packtype']."'and lotno='".$row_arr_home['lotno']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') and balqty > 0 order by lotdgp_id asc") or die(mysqli_error($link)); 
 			else
@@ -194,36 +221,82 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 					$rday=substr($rdate,8,2);
 					$txtdot=$rday."-".$rmonth."-".$ryear;
 					
+					
+					$totcqty=0; $totpqty=0; $totsrqty=0; $pmc=''; $lossper='';
+					if($row_issuetbl['trtype']=='PNPSLIP' || $row_issuetbl['trtype']=='NSTPNPSLIP')
+					{
+						$sql_is=mysqli_query($link,"select pnpslipmain_id, pnpslipmain_promachcode from tbl_pnpslipmain where  pnpslipmain_id='".$row_issuetbl['lotldg_id']."'  order by pnpslipmain_id asc") or die(mysqli_error($link));
+						while($row_is=mysqli_fetch_array($sql_is))
+						{ 
+							$sql_istbl=mysqli_query($link,"select * from tbl_pnpslipsub where pnpslipmain_id='".$row_is['pnpslipmain_id']."'  order by pnpslipsub_id asc") or die(mysqli_error($link)); 
+							$t=mysqli_num_rows($sql_istbl);
+							if($t > 0)
+							{
+								while($row_pnpsub=mysqli_fetch_array($sql_istbl))
+								{ 
+									$totcqty=$totcqty+$row_pnpsub['pnpslipsub_pickpqty']; 
+									$totpqty=$totpqty+$row_pnpsub['pnpslipsub_packloss']; 
+									$totsrqty=$totsrqty+$row_pnpsub['pnpslipsub_packqty']; 
+									
+									$ccnt++;
+								}	
+							}
+							
+							$sql_pmc=mysqli_query($link,"select * from tbl_rm_promac where promac_id='".$row_is['pnpslipmain_promachcode']."' ") or die(mysqli_error($link));
+							$row_arr_pmc=mysqli_fetch_array($sql_pmc);
+							$pmc=$row_arr_pmc['promac_mac'].$row_arr_pmc['promac_macid'];
+						}
+						$lossper=round($totpqty/$totcqty*100,2);
+					}
+					else
+					{
+						$totcqty=0; $totpqty=0; $totsrqty=0; $pmc=''; $lossper='';
+					}
 					if($row_issuetbl['trtype']=='PNPSLIP') {	$type="ST"; }
 					if($row_issuetbl['trtype']=='NSTPNPSLIP') {	$type="NST"; }
 					if($row_issuetbl['trtype']=='PACKRV') {	$type="Re-Printing"; }
 					if($row_issuetbl['trtype']=='SRRV') {	$type="SR Re-Validation"; }	
 				}
 			}
-			$lotn=$row_arr_home['lotno'];
 		//}
 	//}
 			
-$ups=$row_rr2['packtype'];		
-	
+$ups=$row_rr2['packtype'];
 if($cnt>0)
 {
 //$totalqty=$totalqty+$totqty; 
 //$totalbags=$totalbags+$totnob;
-$data1[$d]=array($d,$txtdot,$crop,$variety,$lotn,$ups,$type,$totnob,$totqty);
-$d++;$cnt++;
+?>			  
+<tr class="Light">
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $srno;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $txtdot;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $crop?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $variety?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $row_arr_home['lotno']?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $ups;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $type;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $pmc;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $totcqty?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $totpqty?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $lossper?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $totqty;?></td>
+</tr>
+<?php
+ $srno++;
 }
 }
 }
 }
 }
-echo implode($datahead) ;
-echo "\n";
-echo implode("\t",$datahead1) ;
-echo "\n";
-echo implode("\t", $datahead2) ;
-echo "\n";
-foreach($data1 as $row1)
-{ 
-	echo implode("\t", array_values($row1))."\n"; 
-}	
+//}
+?>
+</table>			
+<?php
+}
+?>
+ 
+<table width="750" border="0" cellpadding="0" cellspacing="0" bordercolor="#ffffff" style="border-collapse:collapse" align="center">
+<tr >
+<td width="924" align="right">&nbsp;&nbsp;&nbsp;<img src="../images/Vista-printer.png" border="0" class="butn" height="29" width="35" alt="Print" style="display:inline;cursor:pointer;" onclick="javascript:window.print();" />&nbsp;<a href="excel_packingperiod5.php?txtcrop=<?php echo $_REQUEST['txtcrop']?>&txtvariety=<?php echo $_REQUEST['txtvariety']?>&sdate=<?php echo $sdate;?>&txtupsdc=<?php echo $txtupsdc;?>&edate=<?php echo $edate;?>&withreprint=<?php echo $withreprint;?>" target="_blank"><img src="../images/excelicon1.jpg" border="0" height="30" width="30" class="butn" alt="Export to Excel" style="display:inline;cursor:pointer;" /></a>&nbsp;<img src="../images/close_icon2.jpg" border="0" class="butn" height="30"  alt="Close" style="display:inline;cursor:pointer;" onClick="window.close()" /></td>
+</tr>
+</table>

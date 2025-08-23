@@ -2,9 +2,9 @@
 	session_start();
 	if(!isset($_SESSION['sessionadmin']))
 	{
-	echo '<script language="JavaScript" type="text/JavaScript">';
-	echo "window.location='../login.php' ";
-	echo '</script>';
+		echo '<script language="JavaScript" type="text/JavaScript">';
+		echo "window.location='../login.php' ";
+		echo '</script>';
 	}
 	else
 	{
@@ -25,12 +25,12 @@
 	require_once("../include/config.php");
 	require_once("../include/connection.php");
 		
-		$crop = $_REQUEST['txtcrop'];
-		$variety = $_REQUEST['txtvariety'];
-		$slchk = $_REQUEST['slchk'];
-		$slchk2 = $_REQUEST['slchk2'];
-		$sdate = $_REQUEST['sdate'];
-		$edate = $_REQUEST['edate'];
+	$crop = $_REQUEST['txtcrop'];
+	$variety = $_REQUEST['txtvariety'];
+	$slchk = $_REQUEST['slchk'];
+	$slchk2 = $_REQUEST['slchk2'];
+	$sdate = $_REQUEST['sdate'];
+	$edate = $_REQUEST['edate'];
 	
 	$sd=explode("-",$sdate);
 	$ed=explode("-",$edate);

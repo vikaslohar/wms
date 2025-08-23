@@ -98,7 +98,7 @@ session_start();
 
 	$totalbags=0; $totalqty=0;
 	$datahead1= array("Crop",$crp,"Variety",$variety,"UPS",$txtupsdc);
-	$datahead2= array("#","Date","Crop","Variety","Lot Number","UPS","Type","NoP","Total Qty"); 
+	$datahead2= array("#","Date","Crop","Variety","Lot Number","UPS","Type","Packing Machine Code","Picked for Packing Qty","Packing Loss","Packing Loss %","Total Qty"); 
 	
 $d=1; $totalbags=0;
 
@@ -194,6 +194,37 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 					$rday=substr($rdate,8,2);
 					$txtdot=$rday."-".$rmonth."-".$ryear;
 					
+					
+					$totcqty=0; $totpqty=0; $totsrqty=0; $pmc=''; $lossper='';
+					if($row_issuetbl['trtype']=='PNPSLIP' || $row_issuetbl['trtype']=='NSTPNPSLIP')
+					{
+						$sql_is=mysqli_query($link,"select pnpslipmain_id, pnpslipmain_promachcode from tbl_pnpslipmain where  pnpslipmain_id='".$row_issuetbl['lotldg_id']."'  order by pnpslipmain_id asc") or die(mysqli_error($link));
+						while($row_is=mysqli_fetch_array($sql_is))
+						{ 
+							$sql_istbl=mysqli_query($link,"select * from tbl_pnpslipsub where pnpslipmain_id='".$row_is['pnpslipmain_id']."'  order by pnpslipsub_id asc") or die(mysqli_error($link)); 
+							$t=mysqli_num_rows($sql_istbl);
+							if($t > 0)
+							{
+								while($row_pnpsub=mysqli_fetch_array($sql_istbl))
+								{ 
+									$totcqty=$totcqty+$row_pnpsub['pnpslipsub_pickpqty']; 
+									$totpqty=$totpqty+$row_pnpsub['pnpslipsub_packloss']; 
+									$totsrqty=$totsrqty+$row_pnpsub['pnpslipsub_packqty']; 
+									
+									$ccnt++;
+								}	
+							}
+							
+							$sql_pmc=mysqli_query($link,"select * from tbl_rm_promac where promac_id='".$row_is['pnpslipmain_promachcode']."' ") or die(mysqli_error($link));
+							$row_arr_pmc=mysqli_fetch_array($sql_pmc);
+							$pmc=$row_arr_pmc['promac_mac'].$row_arr_pmc['promac_macid'];
+						}
+						$lossper=round($totpqty/$totcqty*100,2);
+					}
+					else
+					{
+						$totcqty=0; $totpqty=0; $totsrqty=0; $pmc=''; $lossper='';
+					}
 					if($row_issuetbl['trtype']=='PNPSLIP') {	$type="ST"; }
 					if($row_issuetbl['trtype']=='NSTPNPSLIP') {	$type="NST"; }
 					if($row_issuetbl['trtype']=='PACKRV') {	$type="Re-Printing"; }
@@ -203,14 +234,14 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 			$lotn=$row_arr_home['lotno'];
 		//}
 	//}
-			
+				
 $ups=$row_rr2['packtype'];		
 	
 if($cnt>0)
 {
 //$totalqty=$totalqty+$totqty; 
 //$totalbags=$totalbags+$totnob;
-$data1[$d]=array($d,$txtdot,$crop,$variety,$lotn,$ups,$type,$totnob,$totqty);
+$data1[$d]=array($d,$txtdot,$crop,$variety,$lotn,$ups,$type,$pmc,$totcqty,$totpqty,$lossper,$totqty);
 $d++;$cnt++;
 }
 }

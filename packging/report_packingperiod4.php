@@ -117,6 +117,7 @@ if($tot_arr_home > 0)
 	<td width="90"  align="center" valign="middle" class="smalltblheading">Variety</td>
 	<td width="90"  align="center" valign="middle" class="smalltblheading">Lot Number</td>
 	<td width="55"  align="center" valign="middle" class="smalltblheading">UPS</td>
+	<td width="55"  align="center" valign="middle" class="smalltblheading">Type</td>
 	<td width="55"  align="center" valign="middle" class="smalltblheading">NoP</td>
 	<td width="70"  align="center" valign="middle" class="smalltblheading">Total Qty</td>
 </tr>
@@ -176,7 +177,7 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 		else
 		$sql_arr_home=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr2['packtype']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP') group by lotno order by lotdgp_id asc") or die(mysqli_error($link));
 		while($row_arr_home=mysqli_fetch_array($sql_arr_home))
-		{$totqty=0; $totnob=0; $cnt=0; $txtdot="";
+		{$totqty=0; $totnob=0; $cnt=0; $txtdot=""; $type='';
 			if($withreprint=="yes")	
 			$sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where plantcode='$plantcode' and packtype='".$row_rr2['packtype']."'and lotno='".$row_arr_home['lotno']."' and lotldg_trdate>='$sdt' and lotldg_trdate<='$edt' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='SRRV') and balqty > 0 order by lotdgp_id asc") or die(mysqli_error($link)); 
 			else
@@ -215,6 +216,11 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 					$rmonth=substr($rdate,5,2);
 					$rday=substr($rdate,8,2);
 					$txtdot=$rday."-".$rmonth."-".$ryear;
+					
+					if($row_issuetbl['trtype']=='PNPSLIP') {	$type="ST"; }
+					if($row_issuetbl['trtype']=='NSTPNPSLIP') {	$type="NST"; }
+					if($row_issuetbl['trtype']=='PACKRV') {	$type="Re-Printing"; }
+					if($row_issuetbl['trtype']=='SRRV') {	$type="SR Re-Validation"; }	
 				}
 			}
 		//}
@@ -233,6 +239,7 @@ if($cnt>0)
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $variety?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $row_arr_home['lotno']?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $ups;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $type;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $totnob;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $totqty;?></td>
 </tr>
