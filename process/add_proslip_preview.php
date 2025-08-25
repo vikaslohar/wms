@@ -14,7 +14,7 @@
 	$yearid_id=$_SESSION['yearid_id'];
 	$role=$_SESSION['role'];
    	$loginid=$_SESSION['loginid'];
-    	$logid=$_SESSION['logid'];
+    $logid=$_SESSION['logid'];
 	$lgnid=$_SESSION['logid'];
 	$plantcode=$_SESSION['plantcode'];
 	$plantcode1=$_SESSION['plantcode1'];
@@ -34,8 +34,6 @@
 	if(isset($_POST['frm_action'])=='submit')
 	{
 	//exit;
-	$connnew = mysqli_connect("localhost","wfuser","P1o5RSOloG8jCAN8") or die("Error:".mysqli_error($connnew));
-	$dbnew = mysqli_select_db($connnew,"wmsfocusdb") or die("Error:".mysqli_error($connnew));
 	
 	$sql_arr=mysqli_query($link,"select * from tbl_proslipmain where proslipmain_id='".$pid."' and plantcode='$plantcode'") or die(mysqli_error($link));
 	while($row_arr=mysqli_fetch_array($sql_arr))
@@ -515,185 +513,7 @@
 		
 		
 		
-		if($lotstage=="Raw")
-		{
-			$sql_fnyear=mysqli_query($link,"select * from tblfnyears where years_flg=1") or die(mysqli_error($link));
-			$row_fnyear=mysqli_fetch_array($sql_fnyear);
-			$fnyear=$row_fnyear['ycode'];
-			
-			$zzz=implode(",", str_split($row_arrsub['proslipsub_lotno']));
-			$abc=$zzz[0].$zzz[2].$zzz[4].$zzz[6].$zzz[8].$zzz[10].$zzz[12];
-			$abc2=$zzz[2].$zzz[4].$zzz[6].$zzz[8].$zzz[10].$zzz[12];
-			$lotnumb=$zzz[4];
-			$blendorlot=$abc."/00000/00";
-				
-			$sql_focusdbcode1="SELECT * FROM tbl_frn where wffrn_batch='$abc' and (wffrn_trtype='Processing' OR wffrn_trtype='GOT') ORDER BY wffrn_batch DESC";
-			$res_focusdbcode1=mysqli_query($connnew,$sql_focusdbcode1)or die(mysqli_error($connnew));
-			if(mysqli_num_rows($res_focusdbcode1) > 0)
-			{
-				while($row_focusdbcode1=mysqli_fetch_row($res_focusdbcode1))
-				{
-					$ploss=$row_focusdbcode1['wffrn_ploss']+$row_arrsub['proslipsub_tlqty'];
-					$plossper=($ploss/$row_arrsub['proslipsub_pqty'])*100;
-					$sqltblwfsub="update tbl_frn set wffrn_ploss='".$ploss."', wffrn_pper='".$plossper."' where wffrn_id='".$row_focusdbcode1['wffrn_id']."' ";
-					$cxwfcx=mysqli_query($connnew,$sqltblwfsub) or die(mysqli_error($connnew));
-				}
-			}
-			else
-			{
-				$tdt=explode("-",$arrival_date);
-				$monthNum  = $tdt[1];
-				$monthName = date('M', mktime(0, 0, 0, $monthNum, 10)); // Mar
-				
-				
-				$sql_focusdbcode1="SELECT MAX(wffrn_code) FROM tbl_frn where wffrn_month='$monthName' and wffrn_yearcode='$fnyear' and (wffrn_trtype='Processing' OR wffrn_trtype='GOT')  ORDER BY wffrn_code DESC";
-				$res_focusdbcode1=mysqli_query($connnew,$sql_focusdbcode1)or die(mysqli_error($connnew));
-				
-				if(mysqli_num_rows($res_focusdbcode1) > 0)
-				{
-					$row_focusdbcode1=mysqli_fetch_row($res_focusdbcode1);
-					$t_focusdbcode1=$row_focusdbcode1['0'];
-					$doccode=$t_focusdbcode1+1;
-					if($doccode==0){$doccode=1;}
-					$doccode2=sprintf("%00005d",$doccode);
-				}
-				else
-				{
-					$doccode=1; 
-					$doccode2=sprintf("%00005d",$doccode);
-				}
-				$sql_fnyear=mysqli_query($link,"select * from tblfnyears where years_flg=1") or die(mysqli_error($link));
-				$row_fnyear=mysqli_fetch_array($sql_fnyear);
-				$fnyear=$row_fnyear['ycode'];
-				
-				$sql_crp=mysqli_query($link,"select * from tblcrop where cropid='".$crop."'") or die(mysqli_error($link));
-				$row_crp=mysqli_fetch_array($sql_crp);
-				$crp=$row_crp['cropname'];
-				$cropcode=$row_crp['cropcode'];
-				$crptype="PRODUCTION - ".$row_crp['croptype'];
-				if($row_crp['croptype']=='Fruit Crop'){$crptype="PRODUCTION - ".'Vegetable Crop';}
 		
-				$sql_var=mysqli_query($link,"select * from tblvariety where varietyid='".$variety."'") or die(mysqli_error($link));
-				$row_var=mysqli_fetch_array($sql_var);
-				$ver=$row_var['popularname'];
-				$itemcode=$row_var['variety_newcode'];
-				
-				$sql_arrsubtbl=mysqli_query($link,"select * from tblarrival_sub where old='".$abc2."' and plantcode='$plantcode'") or die(mysqli_error($link));
-				$row_arrsubtbl=mysqli_fetch_array($sql_arrsubtbl);
-				$frnno=$row_arrsubtbl['ncode'];
-				$blendedcontlots='';
-				if($lotnumb==9)
-				{
-					$sql_arrsubtbl=mysqli_query($link,"select * from tbl_blends where blends_orlot='".$blendorlot."' and plantcode='$plantcode'") or die(mysqli_error($link));
-					while($row_arrsubtbl=mysqli_fetch_array($sql_arrsubtbl))
-					{
-						$zzz5=implode(",", str_split($blendorlot));
-						$abcnew=$zzz5[2].$zzz5[4].$zzz5[6].$zzz5[8].$zzz5[10].$zzz5[12];
-						
-						$qryarrsub="select * from tbllotimp where lotnumber='".$abcnew."' and plantcode='$plantcode'";
-						$sqlarrsub=mysqli_query($link,$qryarrsub) or die(mysqli_error($link));
-						$rowarrsub=mysqli_fetch_array($sqlarrsub);
-						$farmername=$rowarrsub['lotfarmer'];
-						if(trim($rowarrsub['farmer_id'])!='' && trim($rowarrsub['farmer_id'])!='0' && trim($rowarrsub['farmer_id'])!=NULL)
-						{ $farmercode=trim($rowarrsub['farmer_id']);  }
-						else if(trim($rowarrsub['farmer_code'])!='' && trim($rowarrsub['farmer_code'])!='0' && trim($rowarrsub['farmer_code'])!=NULL)
-						{ $farmercode=trim($rowarrsub['farmer_code']); }
-						else 
-						{
-							$sql_prodlocw=mysqli_query($link,"select * from tbl_productionlocation where productionlocation='".$rowarrsub['lotploc']."' and state='".$rowarrsub['lotstate']."' ") or die(mysqli_error($link)); 
-							$row_prodlocw=mysqli_fetch_array($sql_prodlocw);
-							
-							$sql_farmerw=mysqli_query($link,"select * from tblfarmer where farmername='".$rowarrsub['lotfarmer']."' and productionlocationid='".$row_prodlocw['productionlocationid']."'") or die(mysqli_error($link)); 
-							$row_farmerw=mysqli_fetch_array($sql_farmerw);
-							if(trim($row_farmerw['farmercode'])!='' && trim($row_farmerw['farmercode'])!='0' && trim($row_farmerw['farmercode'])!=NULL)
-							{ $farmercode=$row_farmerw['farmercode']; }
-							else if(trim($row_farmerw['farmer_code'])!='' && trim($row_farmerw['farmer_code'])!='0' && trim($row_farmerw['farmer_code'])!=NULL)
-							{ $farmercode=$row_farmerw['farmer_code']; }
-							else
-							{ $farmercode=''; }
-						}
-						$ltn=$row_arrsubtbl['blends_lotno']."~".$farmername."~".$farmercode;
-						if($blendedcontlots!='') { $blendedcontlots=$blendedcontlots.",".$ltn; }
-						else  { $blendedcontlots=$ltn; }
-					}
-				}
-				else if($lotnumb==8)
-				{
-					$sql_arrsubtbl=mysqli_query($link,"select * from tbl_cobdryingsub where norlot='".$blendorlot."' and plantcode='$plantcode'") or die(mysqli_error($link));
-					while($row_arrsubtbl=mysqli_fetch_array($sql_arrsubtbl))
-					{
-						$zzz5=implode(",", str_split($blendorlot));
-						$abcnew=$zzz5[2].$zzz5[4].$zzz5[6].$zzz5[8].$zzz5[10].$zzz5[12];
-						
-						$qryarrsub="select * from tbllotimp where lotnumber='".$abcnew."' and plantcode='$plantcode'";
-						$sqlarrsub=mysqli_query($link,$qryarrsub) or die(mysqli_error($link));
-						$rowarrsub=mysqli_fetch_array($sqlarrsub);
-						$farmername=$rowarrsub['lotfarmer'];
-						if(trim($rowarrsub['farmer_id'])!='' && trim($rowarrsub['farmer_id'])!='0' && trim($rowarrsub['farmer_id'])!=NULL)
-						{ $farmercode=trim($rowarrsub['farmer_id']);  }
-						else if(trim($rowarrsub['farmer_code'])!='' && trim($rowarrsub['farmer_code'])!='0' && trim($rowarrsub['farmer_code'])!=NULL)
-						{ $farmercode=trim($rowarrsub['farmer_code']); }
-						else 
-						{
-							$sql_prodlocw=mysqli_query($link,"select * from tbl_productionlocation where productionlocation='".$rowarrsub['lotploc']."' and state='".$rowarrsub['lotstate']."' ") or die(mysqli_error($link)); 
-							$row_prodlocw=mysqli_fetch_array($sql_prodlocw);
-							
-							$sql_farmerw=mysqli_query($link,"select * from tblfarmer where farmername='".$rowarrsub['lotfarmer']."' and productionlocationid='".$row_prodlocw['productionlocationid']."'") or die(mysqli_error($link)); 
-							$row_farmerw=mysqli_fetch_array($sql_farmerw);
-							if(trim($row_farmerw['farmercode'])!='' && trim($row_farmerw['farmercode'])!='0' && trim($row_farmerw['farmercode'])!=NULL)
-							{ $farmercode=$row_farmerw['farmercode']; }
-							else if(trim($row_farmerw['farmer_code'])!='' && trim($row_farmerw['farmer_code'])!='0' && trim($row_farmerw['farmer_code'])!=NULL)
-							{ $farmercode=$row_farmerw['farmer_code']; }
-							else
-							{ $farmercode=''; }
-						}
-						
-						$ltn=$row_arrsubtbl['blends_lotno']."~".$farmername."~".$farmercode;
-						if($blendedcontlots!='') { $blendedcontlots=$blendedcontlots.",".$ltn; }
-						else  { $blendedcontlots=$ltn; }
-					}
-				}
-				else
-				{
-					$qryarrsub="select * from tbllotimp where lotnumber='".$abc2."' and plantcode='$plantcode'";
-					$sqlarrsub=mysqli_query($link,$qryarrsub) or die(mysqli_error($link));
-					$rowarrsub=mysqli_fetch_array($sqlarrsub);
-					$farmername=$rowarrsub['lotfarmer'];
-					if(trim($rowarrsub['farmer_id'])!='' && trim($rowarrsub['farmer_id'])!='0' && trim($rowarrsub['farmer_id'])!=NULL)
-					{ $farmercode=trim($rowarrsub['farmer_id']);  }
-					else if(trim($rowarrsub['farmer_code'])!='' && trim($rowarrsub['farmer_code'])!='0' && trim($rowarrsub['farmer_code'])!=NULL)
-					{ $farmercode=trim($rowarrsub['farmer_code']); }
-					else 
-					{
-						$sql_prodlocw=mysqli_query($link,"select * from tbl_productionlocation where productionlocation='".$rowarrsub['lotploc']."' and state='".$rowarrsub['lotstate']."' ") or die(mysqli_error($link)); 
-						$row_prodlocw=mysqli_fetch_array($sql_prodlocw);
-						
-						$sql_farmerw=mysqli_query($link,"select * from tblfarmer where farmername='".$rowarrsub['lotfarmer']."' and productionlocationid='".$row_prodlocw['productionlocationid']."'") or die(mysqli_error($link)); 
-						$row_farmerw=mysqli_fetch_array($sql_farmerw);
-						if(trim($row_farmerw['farmercode'])!='' && trim($row_farmerw['farmercode'])!='0' && trim($row_farmerw['farmercode'])!=NULL)
-						{ $farmercode=$row_farmerw['farmercode']; }
-						else if(trim($row_farmerw['farmer_code'])!='' && trim($row_farmerw['farmer_code'])!='0' && trim($row_farmerw['farmer_code'])!=NULL)
-						{ $farmercode=$row_farmerw['farmer_code']; }
-						else
-						{ $farmercode=''; }
-					}
-				}
-				
-				$doc_code="DPN/".$fnyear."/".$monthName."/".$doccode2;
-				$tdt=date("Y-m-d");
-				
-				$ploss=$row_arrsub['proslipsub_tlqty'];
-				$plossper=($ploss/$row_arrsub['proslipsub_pqty'])*100;
-				
-				$narration='Processing Slip  No. '.$row_arr['proslipmain_proslipno']." FRN NO ".$frnno; 
-				
-				$sql_focusdb="insert into tbl_frn (wffrn_arrid, wffrn_docno, wffrn_date, wffrn_businessentity, wffrn_narration, wffrn_crop, wffrn_item, wffrn_batch, wffrn_code, wffrn_month, wffrn_yearcode, wffrn_trtype, wffrn_unit, wffrn_warehouse, wffrn_qty, wffrn_farmername, Doc_Type, wffrn_ploss, wffrn_pper, wffrn_vendorac, wffrn_department, wffrn_itemcode, account_code, account_name, wffrn_cropcode, constituent_lotnos) values('$pid', '".$doc_code."', '".$arrival_date."', 'HEAD OFFICE', '".$narration."', '".$crp."', '".$ver."', '".$abc."', '".$doccode."', '".$monthName."', '".$fnyear."', 'Processing', 'KGS', 'Raw Seed', '".$conqty."', '".$farmername."', 'Purchase Debit-CS-Seedtrac', '".$ploss."', '".$plossper."', '".$farmercode."', '".$crptype."', '".$itemcode."', 'DEBIT NOTE PROCESSING LOSS', 'DEBIT NOTE PROCESSING LOSS', '".$cropcode."', '".$blendedcontlots."')";
-				if($focusdb_xz=mysqli_query($connnew,$sql_focusdb) or die(mysqli_error($connnew)))
-				{
-					//$wfid=mysqli_insert_id($connnew);
-				}
-			}
-		}
 		
 	}
 	}

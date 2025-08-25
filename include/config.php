@@ -6,14 +6,8 @@
 	
 	set_time_limit(0);
 	
-	/*$db_host="localhost";
-	$db_user="root";
-	$db_pass="ispl123";
-	$db_name="seedtracwms_djl";*/
-	
 	$db_host="localhost";
 	$db_user="root";
 	$db_pass="ispl123";
 	$db_name="seedtracwms_djl";
-	
 ?>
