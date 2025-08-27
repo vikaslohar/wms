@@ -544,8 +544,8 @@ if($aq[1]==000){$ac=$aq[0];}else{$ac=$row_tbl_sub1['moist'];}
 	$trday=substr($trdate11,8,2);
 	$trdate11=$trday."-".$trmonth."-".$tryear;	
 $qc=$row_tbl_sub1['qcstatus'];
-$zzz=split(" ", $row_tbl['lotldg_got1']);
-//$zzz=split("",$gggg[0]);
+$zzz=explode(" ", $row_tbl['lotldg_got1']);
+//$zzz=explode("",$gggg[0]);
 $got=$zzz[0]." ".$row_tbl['lotldg_got'];
 
 $sqltbl12=mysqli_query($link,"select max(lotdgp_id) from tbl_lot_ldg_pack where orlot='".$lotno."'") or die(mysqli_error($link));
@@ -655,11 +655,14 @@ $sql_pp333=mysqli_query($link,"select * from tbl_pmupdate where lotno='".$lotno.
 $tot_pp333=mysqli_num_rows($sql_pp333);
 while($row_pp333=mysqli_fetch_array($sql_pp333))
 {
+echo $row_pp333['pmup_id']."<br/>";
+
 if($dt!="")
-$dt=$dt.",".$row_pp333['pmup_date'];
+$dt=$dt.",".$row_pp333['pmup_id'];
 else
-$dt=$row_pp333['pmup_date'];
+$dt=$row_pp333['pmup_id'];
 }
+//echo $dt;
 $d1=explode(",",$dt);
 $dt1=array_unique($d1);
 rsort($dt1);
@@ -695,7 +698,7 @@ $srno=1;
   $sql_tbl=mysqli_query($link,"select * from tbl_qctest where oldlot='".$lotno."' and tid='".$dval."'group by testdate order by srdate desc, tid desc") or die(mysqli_error($link));
 $tot1=mysqli_num_rows($sql_tbl);
  
- $sql_pp=mysqli_query($link,"select * from tbl_pmupdate where lotno='".$lotno."' and pmup_date='".$dval."' order by pmup_date desc") or die(mysqli_error($link));
+ $sql_pp=mysqli_query($link,"select * from tbl_pmupdate where lotno='".$lotno."' and pmup_id='".$dval."' order by pmup_date desc") or die(mysqli_error($link));
 $tot2=mysqli_num_rows($sql_pp);
  
 
@@ -886,7 +889,7 @@ while($row_tbl_sub=mysqli_fetch_array($sql_tbl2))
 	$tdate3=$tday3."-".$tmonth3."-".$tyear3;
 	if($row_tbl_sub['gottest_dosdate']=="")$tdate3="--";
 	
-	$z=split(" ", $row_lotldg['lotldg_got1']);
+	$z=explode(" ", $row_lotldg['lotldg_got1']);
 	
 	$lot22=$z[0]." ".$row_lotldg['lotldg_got'];
 	$docref2=$row_tbl_sub['gottest_gotrefno'];
@@ -1850,7 +1853,7 @@ else
 			if($tot_softr > 0)
 			{
 				$trdate=$row_softr['softr_date'];
-				$trdate=split("-",$trdate);
+				$trdate=explode("-",$trdate);
 				$qcdot2=$trdate[2]."-".$trdate[1]."-".$trdate[0];
 				$softstatus=$row_softr['softrsub_srtyp'];
 			}
@@ -1869,7 +1872,7 @@ else
 				if($tot_softr2 > 0)
 				{
 					$trdate=$row_softr2['softr_date'];
-					$trdate=split("-",$trdate);
+					$trdate=explode("-",$trdate);
 					$qcdot2=$trdate[2]."-".$trdate[1]."-".$trdate[0];
 					$softstatus=$row_softr2['softrsub_srtyp'];
 				}
@@ -3619,7 +3622,7 @@ while($row_pack=mysqli_fetch_array($sql_pack))
 	$ups=$aqs." ".$dq[1];*/
 	if($ups!="")
 	{
-	$packtp2=split(" ",$ups);
+	$packtp2=explode(" ",$ups);
 	$packtyp=$packtp2[0];
 	//echo $packtp2[0]; 
 	if($packtp2[1]=="Gms")

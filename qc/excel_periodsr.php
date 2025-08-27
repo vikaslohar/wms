@@ -39,8 +39,8 @@
 	
 	if($txtpp=="C" || $txtpp=="CandF" || $txtpp=="CnF")	{$txtpp="C&F";}
 	
-	$sd=split("-",$sdate);
-	$ed=split("-",$edate);
+	$sd=explode("-",$sdate);
+	$ed=explode("-",$edate);
 	$sdt=$sd[2]."-".sprintf("%02d",$sd[1])."-".sprintf("%02d",$sd[0]);
 	$edt=$ed[2]."-".sprintf("%02d",$ed[1])."-".sprintf("%02d",$ed[0]);
 	

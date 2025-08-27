@@ -141,7 +141,7 @@ if(isset($_GET['txtvn']))
 		$sql_tbl=mysqli_query($link,"select * from tbl_gotqc where arr_role='".$logid."' and arrival_id='".$tid."'") or die(mysqli_error($link));
 		$row=mysqli_fetch_array($sql_tbl);	
 		$date=$row['arrival_date'];
-		$flnid = split(",",$row['lotno']);
+		$flnid =explode(",",$row['lotno']);
 		foreach($flnid as $fid)
 		{		
 			$sql_arr_home3=mysqli_query($link,"select distinct sampleno from tbl_qctest where tid='".$fid."' and aflg=0 and bflg=1 and cflg=0 and gotflg=0 and gotsmpdflg=0 and got='UT' and qcstatus!='RT' order by sampleno desc") or die(mysqli_error($link));

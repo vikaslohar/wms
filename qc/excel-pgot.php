@@ -31,7 +31,7 @@ session_start();
 	$variety = $_REQUEST['txtvariety'];
 	$loc = $_REQUEST['result'];
  	
-$t=split("-",$sdate);
+$t=explode("-",$sdate);
 $z=sprintf("%02d",$t[0]);
 $sdate=$z."-".$t[1]."-".$t[2];
 		$tdate=$sdate;

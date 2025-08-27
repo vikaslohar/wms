@@ -347,7 +347,7 @@ function unselectall()
 <?php
 
 $sdate=$_REQUEST['sdate'];
-$t=split("-", $sdate);
+$t=explode("-", $sdate);
 $sdate=$t[2]."-".$t[1]."-".$t[0];
 //echo "select distinct gottest_sampleno from tbl_gottest where gottest_aflg=0 and gottest_bflg=1 and gottest_cflg=0 and gottest_gotflg=0 and gottest_gotsampdflg=0 and gottest_got='UT' and gottest_srdate='$sdate' order by gottest_spdate asc, gottest_sampleno asc <br />";
 

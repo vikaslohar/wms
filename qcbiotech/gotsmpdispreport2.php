@@ -58,10 +58,10 @@
 </tr>
 </table>
 <?php	
-		$ddate1=split("-",$sdate);
+		$ddate1=explode("-",$sdate);
 		$sdate=$ddate1[2]."-".$ddate1[1]."-".$ddate1[0];
 		
-		$pdate1=split("-",$edate);
+		$pdate1=explode("-",$edate);
 		$edate=$pdate1[2]."-".$pdate1[1]."-".$pdate1[0];
 	
 	 	$sql_class=mysqli_query($link,"select * from tblcrop where cropid='".$itemid."'") or die(mysqli_error($link));

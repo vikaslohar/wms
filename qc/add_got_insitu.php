@@ -95,11 +95,11 @@ if(isset($_POST['frm_action'])=='submit')
 	$step=trim($_POST['step']);
 	//exit;
 	$recdate1=trim($_POST['recdate']);
-	$ddate=split("-",$recdate1);
+	$ddate=explode("-",$recdate1);
 	$recdate=$ddate[2]."-".$ddate[1]."-".$ddate[0];
 	
 	$dnaextdate1=trim($_POST['dnaextdate']);
-	$ddate1=split("-",$dnaextdate1);
+	$ddate1=explode("-",$dnaextdate1);
 	$dnaextdate=$ddate1[2]."-".$ddate1[1]."-".$ddate1[0];
 	
 	$dnaextfrom=trim($_POST['txtdnaextfrom']);
@@ -108,7 +108,7 @@ if(isset($_POST['frm_action'])=='submit')
 	$sampage=trim($_POST['txtsampage']);
 	
 	$pcrdate1=trim($_POST['pcrdate']);
-	$ddate2=split("-",$pcrdate1);
+	$ddate2=explode("-",$pcrdate1);
 	$pcrdate=$ddate2[2]."-".$ddate2[1]."-".$ddate2[0];
 	
 	$markerno=trim($_POST['txtmarkerno']);
@@ -116,7 +116,7 @@ if(isset($_POST['frm_action'])=='submit')
 	$markername=trim($_POST['txtmarkername']);
 	 
 	$gdate1=trim($_POST['gdate']);
-	$ddate3=split("-",$gdate1);
+	$ddate3=explode("-",$gdate1);
 	$gdate=$ddate3[2]."-".$ddate3[1]."-".$ddate3[0];
 	
 	$sampsize=trim($_POST['txtsampsize']);

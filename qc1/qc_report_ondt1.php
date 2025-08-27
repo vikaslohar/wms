@@ -148,7 +148,7 @@ alert("While Launching New Window...\nYour browser maybe blocking up Popup windo
 <td width="30"></td> <td>
 
 <?php	
-	$t=split("-", $edate);
+	$t=explode("-", $edate);
 	$edate=$t[2]."-".$t[1]."-".$t[0];
 	
 	$reslt="";

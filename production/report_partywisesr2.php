@@ -58,8 +58,8 @@ img.butn { display:none; visibility:hidden; }
 </tr>
 </table> 
 <?php
-$sd=split("-",$sdate);
-$ed=split("-",$edate);
+$sd=explode("-",$sdate);
+$ed=explode("-",$edate);
 $sdt=$sd[2]."-".sprintf("%02d",$sd[0])."-".sprintf("%02d",$sd[1]);
 $edt=$ed[2]."-".sprintf("%02d",$ed[0])."-".sprintf("%02d",$ed[1]);
 ?>

@@ -14,7 +14,7 @@
 	$yearid_id=$_SESSION['yearid_id'];
 	$role=$_SESSION['role'];
    	$loginid=$_SESSION['loginid'];
-    $logid=$_SESSION['logid'];
+    	$logid=$_SESSION['logid'];
 	$lgnid=$_SESSION['logid'];
 	$plantcode=$_SESSION['plantcode'];
 	$plantcode1=$_SESSION['plantcode1'];
@@ -34,6 +34,8 @@
 	if(isset($_POST['frm_action'])=='submit')
 	{
 	//exit;
+	//$connnew = mysqli_connect("localhost","wfuser","P1o5RSOloG8jCAN8") or die("Error:".mysqli_error($connnew));
+	//$dbnew = mysqli_select_db($connnew,"wmsfocusdb") or die("Error:".mysqli_error($connnew));
 	
 	$sql_arr=mysqli_query($link,"select * from tbl_proslipmain where proslipmain_id='".$pid."' and plantcode='$plantcode'") or die(mysqli_error($link));
 	while($row_arr=mysqli_fetch_array($sql_arr))

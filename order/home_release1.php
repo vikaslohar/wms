@@ -73,7 +73,7 @@ $ycode=$noticia3['ycode'];
 		if($orrltyp=="Full")
 		{	
 			$fln=trim($_POST['tt']);
-			$flnid = split(",",$fln);
+			$flnid = explode(",",$fln);
 			foreach($flnid as $fid)
 		  	{		
 				$sql_orderm=mysqli_query($link,"select * from tbl_orderm where plantcode='$plantcode' and orderm_id='".$fid."'")or die(mysqli_error($link));
@@ -128,8 +128,8 @@ $ycode=$noticia3['ycode'];
 			$fln=trim($_POST['tt']);
 			$fln1=trim($_POST['tt1']);
 			$foccode1=trim($_POST['foccode1']);
-			$flnid = split(",",$ssid);
-			$flnid1 = split(",",$foccode1);
+			$flnid = explode(",",$ssid);
+			$flnid1 = explode(",",$foccode1);
 			
 			$sql_orderm=mysqli_query($link,"select * from tbl_orderm where plantcode='$plantcode' and orderm_id='".$fln."'")or die(mysqli_error($link));
 			$tot_orderm=mysqli_num_rows($sql_orderm);

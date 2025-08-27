@@ -221,7 +221,7 @@ while($row_arr_home1=mysqli_fetch_array($sql_arr_home1))
 					if($tot_softr > 0)
 					{
 						$trdate=$row_softr['softr_date'];
-						$trdate=split("-",$trdate);
+						$trdate=explode("-",$trdate);
 						$qcdot2=$trdate[2]."-".$trdate[1]."-".$trdate[0];
 						$softstatus="SR";//$row_softr['softrsub_srtyp'];
 					}
@@ -241,7 +241,7 @@ while($row_arr_home1=mysqli_fetch_array($sql_arr_home1))
 						if($tot_softr2 > 0)
 						{
 							$trdate=$row_softr2['softr_date'];
-							$trdate=split("-",$trdate);
+							$trdate=explode("-",$trdate);
 							$qcdot2=$trdate[2]."-".$trdate[1]."-".$trdate[0];
 							$softstatus="SSR";//$row_softr2['softrsub_srtyp'];
 						}

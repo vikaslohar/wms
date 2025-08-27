@@ -50,7 +50,7 @@
 		$lotno=$pcode.$ycode.$txtlot2."/".$stcode."/".$stcode2;	
 	 //$samplno="3";
 	//$txt.$txtlot4."/".$txtlo;
-/*$arr2 = split($samplno,2);
+/*$arr2 =explode($samplno,2);
 echo $arr2;*/
 	if(isset($_POST['frm_action'])=='submit')
 	{
@@ -397,8 +397,8 @@ if($aq[1]==000){$ac=$aq[0];}else{$ac=$row_tbl['lotldg_moisture'];}
 	$trday=substr($trdate11,8,2);
 	$trdate11=$trday."-".$trmonth."-".$tryear;	
 $qc=$row_tbl['lotldg_qc'];
-$zzz=split(" ", $row_tbl['lotldg_got1']);
-//$zzz=split(" ",$gggg[1]);
+$zzz=explode(" ", $row_tbl['lotldg_got1']);
+//$zzz=explode(" ",$gggg[1]);
 $got=$zzz[0]." ".$row_tbl['lotldg_got'];
 
 if($srno%2!=0)

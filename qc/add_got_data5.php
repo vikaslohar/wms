@@ -135,7 +135,7 @@ if(isset($_POST['frm_action'])=='submit')
 	
 	
 	$obdate1=trim($_POST['obdate']);
-	$ddate3=split("-",$obdate1);
+	$ddate3=explode("-",$obdate1);
 	$obdate=$ddate3[2]."-".$ddate3[1]."-".$ddate3[0];
 	/*echo "insert into tbl_gottestsub_sub4(gottest_tid, gottests_id, gottestss_id, bedno, direction, state, gotlocation, plotno, prange, plantpopl, tentenno, tentenper, redtpno, redtpper, finegrainno, finegrainper, otherno, otherper, alineno, alineper, outcrno, outcrper, blineno, blineper, longgrainno, longgrainper, ootfinegrainno, ootfinegrainper, boldgrainno, boldgrainper, tallplantno, tallplantper, lateplantno, lateplantper, totalno, totalper, gottestss4_genpurity, gottestss4_doobr) values('$id', '$gots_id', '$gotss_id', '$bedno','$direction','$state', '$location','$plot','$range','$plantpopn','$tenno','$tenper','$redtipno','$redtipper','$fgrainno','$fgrainper','$otherno','$otherper','$alineno','$alineper','$outcrno','$outcrper','$blineno','$blineper','$lgrainno','$lgrainper','$fgrainno1','$fgrainper1','$bgrainno','$bgrainper','$tallno','$tallper','$lplantno','$lplantper','$genpurity','$obdate')";*/
 	//exit;

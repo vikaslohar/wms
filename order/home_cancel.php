@@ -58,7 +58,7 @@ $ycode=$noticia3['ycode'];
 		$party=trim($_POST['txtparty']);
 		$type=trim($_POST['txttype']);
 		$fln=trim($_POST['tt']);
-		$flnid = split(",",$fln);
+		$flnid =explode(",",$fln);
 		$txtpp=trim($_POST['txtpp']);
 		$txtptype=trim($_POST['txtptype']);
 		

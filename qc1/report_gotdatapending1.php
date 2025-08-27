@@ -430,13 +430,13 @@ while($row_arr_home6=mysqli_fetch_array($sql_max6))
 				if($cropage!="" && $cropage>0)
 				{
 					$trplntdt=$row_ahome22['gottestss_doswdate'];
-					$trdate6=split("-", $trplntdt);
+					$trdate6=explode("-", $trplntdt);
 					$tryear=$trdate6[0];
 					$trmonth=$trdate6[1];
 					$trday=$trdate6[2];
 					$trdates=$trday."-".$trmonth."-".$tryear;
 					
-					$trdate6=split("-", $trplntdt);
+					$trdate6=explode("-", $trplntdt);
 					$tryear=$trdate6[0];
 					$trmonth=$trdate6[1];
 					$trday=$trdate6[2];
@@ -449,7 +449,7 @@ while($row_arr_home6=mysqli_fetch_array($sql_max6))
 					if($cropage>=$days)
 					{
 						$z++;
-						$trdate6=split("-", $row_ahome22['gottestss_dateoftr']);
+						$trdate6=explode("-", $row_ahome22['gottestss_dateoftr']);
 						$tryear=$trdate6[0];
 						$trmonth=$trdate6[1];
 						$trday=$trdate6[2];

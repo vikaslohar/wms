@@ -82,10 +82,10 @@
 			$rqitlkg=trim($_POST[$rqitlkg2]);
 			$rpitl=trim($_POST[$rpitl2]);
 		
-			$tdate11=split("-",$arrivaldate);
+			$tdate11=explode("-",$arrivaldate);
 			$arrivaldate1=$tdate11[2]."-".$tdate11[1]."-".$tdate11[0];
 			
-			$tdate12=split("-",$prodate);
+			$tdate12=explode("-",$prodate);
 			$prodate1=$tdate12[2]."-".$tdate12[1]."-".$tdate12[0];
 			
 			$sql_blends=mysqli_query($link,"select * from tbl_blends where blends_newlot='$blendlotno'  order by blends_orlot asc") or die(mysqli_error($link));

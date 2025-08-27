@@ -117,9 +117,9 @@ alert("While Launching New Window...\nYour browser maybe blocking up Popup windo
   <table  width="974" border="0" cellpadding="0" cellspacing="0" bordercolor="#ef0388" >
   <tr><td>
    <?php
-	$sd=split("-",$sdate);
+	$sd=explode("-",$sdate);
 	$stdate=$sd[2]."-".sprintf("%02d",$sd[1])."-".sprintf("%02d",$sd[0]);
-	$ed=split("-",$edate);
+	$ed=explode("-",$edate);
 	$etdate=$ed[2]."-".sprintf("%02d",$ed[1])."-".sprintf("%02d",$ed[0]);
 	
 	

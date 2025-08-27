@@ -114,7 +114,7 @@ $dot=$row_qctbl4['testdate'];
 
 if($dot!='' && $dot!='0000-00-00' && $dot!='--' && $dot!='- -')
 {
-	$dot2=split("-",$dot);
+	$dot2=explode("-",$dot);
 	$dot=$dot2[2]."-".$dot2[1]."-".$dot2[0];
 }
 else
@@ -248,7 +248,7 @@ if($t_densitytbl > 0)
 	$prsldate="";
 	if($prosldate!="")
 	{
-		$prsdt=split("-",$prosldate);
+		$prsdt=explode("-",$prosldate);
 		$prsldate=$prsdt[2]."/".$prsdt[1]."/".$prsdt[0];
 	}
 	

@@ -51,9 +51,9 @@ $m= date("m");
 $de= date("d");
 $y= date("Y");
 
-for($i=0; $i<$dt[0]; $i++) { $dt1=date('Y-m-d',mktime(0,0,0,$m,($de-$i),$y)); } 
-for($i=0; $i<$dt[1]; $i++) { $dt2=date('Y-m-d',mktime(0,0,0,$m,($de-$i),$y)); } 
-for($i=0; $i<$dt[2]; $i++) { $dt3=date('Y-m-d',mktime(0,0,0,$m,($de-$i),$y)); } 
+for($i=0; $i<$dt[0]; $i++) {$dt1=date('Y-m-d', mktime(0,0,0,$m,($de-$i),$y)); } 
+for($i=0; $i<$dt[1]; $i++) { $dt2=date('Y-m-d', mktime(0,0,0,$m,($de-$i),$y)); } 
+for($i=0; $i<$dt[2]; $i++) { $dt3=date('Y-m-d', mktime(0,0,0,$m,($de-$i),$y)); } 
 
 if($typ[0]=="Sales") $tp1="Order Sales";
 if($typ[0]=="Stock Transfer") $tp1="Order Stock";

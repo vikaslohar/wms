@@ -312,7 +312,7 @@ while($row_arr_home6=mysqli_fetch_array($sql_max6))
 			{$flg=0;}
 			
 			$trplntdt=$row_ahome22['gottestss_doswdate'];
-			$trdate6=split("-", $trplntdt);
+			$trdate6=explode("-", $trplntdt);
 			$tryear=$trdate6[0];
 			$trmonth=$trdate6[1];
 			$trday=$trdate6[2];

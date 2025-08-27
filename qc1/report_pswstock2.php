@@ -208,7 +208,7 @@ if($t > 0)
 	if($totqty<0) $totqty=0;
 
 	$totqc=$row_issuetbl['lotldg_qc']; 
-	$tgot=split(" ", $row_issuetbl['lotldg_got1']); 
+	$tgot=explode(" ", $row_issuetbl['lotldg_got1']); 
 	$totgot=$tgot[0]." ".$row_issuetbl['lotldg_got'];
 	$totmost=$row_issuetbl['lotldg_moisture']; 
 	$totgemp=$row_issuetbl['lotldg_gemp']; 

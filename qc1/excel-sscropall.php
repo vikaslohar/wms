@@ -41,11 +41,11 @@
 	header("Content-Disposition: attachment; filename=$filename"); 
 	header("Content-Type: application/vnd.ms-excel");
 
-	$t=split("-",$sdate);
+	$t=explode("-",$sdate);
 	$z=sprintf("%02d",$t[0]);
 	$sdate=$z."-".$t[1]."-".$t[2];
 
-	$t=split("-",$edate);
+	$t=explode("-",$edate);
 	$z=sprintf("%02d",$t[0]);
 	$edate=$z."-".$t[1]."-".$t[2];
 	
@@ -501,7 +501,7 @@ if($ccnt>0)
 							
 							$stage=$row_issuetbl['lotldg_sstage']; 
 							$totqc=$row_issuetbl['lotldg_qc']; 
-							$tgot=split(" ", $row_issuetbl['lotldg_got1']); 
+							$tgot=explode(" ", $row_issuetbl['lotldg_got1']); 
 							$totgot=$tgot[0]." ".$row_issuetbl['lotldg_got'];
 							$totmost=$row_issuetbl['lotldg_moisture']; 
 							$totgemp=$row_issuetbl['lotldg_gemp']; 
@@ -515,13 +515,13 @@ if($ccnt>0)
 							}
 							if($txtdot=="")
 							{
-							$rdate=split("-",$row_issuetbl['lotldg_qctestdate']);
+							$rdate=explode("-",$row_issuetbl['lotldg_qctestdate']);
 							$txtdot=$rdate[2]."-".$rdate[1]."-".$rdate[0];
 							}
 							
 							if($dogr=="")
 							{
-							$rdate=split("-",$row_issuetbl['lotldg_gottestdate']);
+							$rdate=explode("-",$row_issuetbl['lotldg_gottestdate']);
 							$dogr=$rdate[2]."-".$rdate[1]."-".$rdate[0];
 							}
 							
@@ -606,7 +606,7 @@ if($ccnt>0)
 							
 							$stage="Pack"; 
 							$totqc=$row_issuetbl['lotldg_qc']; 
-							$tgot=split(" ", $row_issuetbl['lotldg_got1']); 
+							$tgot=explode(" ", $row_issuetbl['lotldg_got1']); 
 							$totgot=$tgot[0]." ".$row_issuetbl['lotldg_got'];
 							$totmost=$row_issuetbl['lotldg_moisture']; 
 							$totgemp=$row_issuetbl['lotldg_gemp']; 
@@ -620,13 +620,13 @@ if($ccnt>0)
 							}
 							if($txtdot=="")
 							{
-								$rdate=split("-",$row_issuetbl['lotldg_qctestdate']);
+								$rdate=explode("-",$row_issuetbl['lotldg_qctestdate']);
 								$txtdot=$rdate[2]."-".$rdate[1]."-".$rdate[0];
 							}
 							
 							if($dogr=="")
 							{
-								$rdate=split("-",$row_issuetbl['lotldg_gottestdate']);
+								$rdate=explode("-",$row_issuetbl['lotldg_gottestdate']);
 								$dogr=$rdate[2]."-".$rdate[1]."-".$rdate[0];
 							}
 							
@@ -710,7 +710,7 @@ if($ccnt>0)
 							
 						$stage=$row_issuetbl['lotldg_sstage']; 
 						$totqc=$row_issuetbl['lotldg_qc']; 
-						$tgot=split(" ", $row_issuetbl['lotldg_got1']); 
+						$tgot=explode(" ", $row_issuetbl['lotldg_got1']); 
 						$totgot=$tgot[0]." ".$row_issuetbl['lotldg_got'];
 						$totmost=$row_issuetbl['lotldg_moisture']; 
 						$totgemp=$row_issuetbl['lotldg_gemp']; 
@@ -724,13 +724,13 @@ if($ccnt>0)
 						}
 						if($txtdot=="")
 						{
-							$rdate=split("-",$row_issuetbl['lotldg_qctestdate']);
+							$rdate=explode("-",$row_issuetbl['lotldg_qctestdate']);
 							$txtdot=$rdate[2]."-".$rdate[1]."-".$rdate[0];
 						}
 								
 						if($dogr=="")
 						{
-							$rdate=split("-",$row_issuetbl['lotldg_gottestdate']);
+							$rdate=explode("-",$row_issuetbl['lotldg_gottestdate']);
 							$dogr=$rdate[2]."-".$rdate[1]."-".$rdate[0];
 						}
 								
@@ -811,7 +811,7 @@ if($ccnt>0)
 						
 						$stage="Pack"; 
 						$totqc=$row_issuetbl['lotldg_qc']; 
-						$tgot=split(" ", $row_issuetbl['lotldg_got1']); 
+						$tgot=explode(" ", $row_issuetbl['lotldg_got1']); 
 						$totgot=$tgot[0]." ".$row_issuetbl['lotldg_got'];
 						$totmost=$row_issuetbl['lotldg_moisture']; 
 						$totgemp=$row_issuetbl['lotldg_gemp']; 
@@ -825,13 +825,13 @@ if($ccnt>0)
 						}
 						if($txtdot=="")
 						{
-							$rdate=split("-",$row_issuetbl['lotldg_qctestdate']);
+							$rdate=explode("-",$row_issuetbl['lotldg_qctestdate']);
 							$txtdot=$rdate[2]."-".$rdate[1]."-".$rdate[0];
 						}
 							
 						if($dogr=="")
 						{
-							$rdate=split("-",$row_issuetbl['lotldg_gottestdate']);
+							$rdate=explode("-",$row_issuetbl['lotldg_gottestdate']);
 							$dogr=$rdate[2]."-".$rdate[1]."-".$rdate[0];
 						}
 							

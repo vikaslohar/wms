@@ -151,8 +151,8 @@ alert("While Launching New Window...\nYour browser maybe blocking up Popup windo
 	$sdate = $_REQUEST['sdate'];
 	$edate = $_REQUEST['edate'];
 	
-	$sdt1=split("-",$sdate);
-	$sdt2=split("-",$edate);
+	$sdt1=explode("-",$sdate);
+	$sdt2=explode("-",$edate);
 	$sdate=$sdt1[2]."-".$sdt1[1]."-".$sdt1[0];
 	$edate=$sdt2[2]."-".$sdt2[1]."-".$sdt2[0];
 //echo $rettyp;

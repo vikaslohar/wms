@@ -50,7 +50,7 @@
 		$lotno=$pcode.$ycode.$txtlot2."/".$stcode."/".$stcode2;	
 	 //$samplno="3";
 	//$txt.$txtlot4."/".$txtlo;
-/*$arr2 = split($samplno,2);
+/*$arr2 =explode($samplno,2);
 echo $arr2;*/
 	if(isset($_POST['frm_action'])=='submit')
 	{
@@ -307,7 +307,7 @@ $row_tbl=mysqli_fetch_array($sql_tbl);
 //$lotldg_trid=$row_tbl['lotldg_trid'];
 $stage=$row_tbl_sub1['trstage'];
 $pp=$row_tbl['lotldg_qc'];	
-$got123=split("-", $row_tbl['lotldg_got1']);
+$got123=explode("-", $row_tbl['lotldg_got1']);
 $got=$got123[1];	
 $aq=explode(".",$row_tbl_sub['act']);
 if($aq[1]==000){$ac=$aq[0];}else{$ac=$row_tbl['lotldg_balbags'];}

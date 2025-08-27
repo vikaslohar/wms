@@ -97,11 +97,11 @@ if(isset($_POST['frm_action'])=='submit')
 		echo $trdate1." // ";*/
 		
 		$recdate1=$pdate1;
-		$ddate=split("-",$recdate1);
+		$ddate=explode("-",$recdate1);
 		$pdate=$ddate[2]."-".$ddate[1]."-".$ddate[0];
 		
 		$recdate1=$trdate1;
-		$ddate=split("-",$recdate1);
+		$ddate=explode("-",$recdate1);
 		$trdate=$ddate[2]."-".$ddate[1]."-".$ddate[0];
 		//echo $pdate;
 		//echo $trdate;

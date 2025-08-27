@@ -240,7 +240,7 @@ QRcode::png($samplenumber, $file, $ecc, $pixel_Size, $frame_size);
       <tr class="Light" height="16">
         <td width="54" align="right"  valign="middle" class="smalltblheading">&nbsp;Crop&nbsp;</td>
         <td align="left"  valign="middle" class="smalltblheading"  colspan="2" >&nbsp;<?php echo $row31['cropname'];?></td>
-		<td width="54" align="center"  valign="middle" class="smalltblheading"rowspan="4">&nbsp;<img src="<?php echo $file;?>" height="50px;"  /><!--<img src="https://chart.googleapis.com/chart?chs=80x80&cht=qr&chl=<?php echo $samplenumber;?>&choe=UTF-8"  />-->&nbsp;</td>
+		<td width="54" align="center"  valign="middle" class="smalltblheading"rowspan="4">&nbsp;<!--<img src="<?php echo $file;?>" height="50px;"  />--><img src="https://quickchart.io/chart?cht=qr&chs=60x60&chl=<?php echo $samplenumber;?>"  />&nbsp;</td>
       </tr>
       <tr class="Dark" height="16">
         <td align="right"  valign="middle" class="smalltblheading">&nbsp;Variety&nbsp;</td>

@@ -31,8 +31,28 @@
 			$filename=$_FILES['brouse']['name'];
 			$filepath='../ExcelFileData/'.$filename;
 			$name_tmp = $_FILES['brouse']['tmp_name'];
-			move_uploaded_file($name_tmp,$filepath);
-			chmod($filepath, 0755); 
+			if (!is_writable(dirname($filepath))) {
+    				?>	
+					<script>
+					alert('File import failed.\n\n Reason: Target directory is not writable.');
+					window.location='add_stlotimp.php';
+					</script>
+				<?php
+			}
+			if(move_uploaded_file($name_tmp,$filepath))
+			{
+				chmod($filepath, 0755); 
+			}
+			else
+			{
+				?>	
+					<script>
+					alert('File import failed');
+					window.location='add_stlotimp.php';
+					</script>
+				<?php
+
+			}
 //error_reporting(E_ALL);
 //echo "fgtrdhdgfh"; 
 //print_r($link);//exit;
@@ -40,8 +60,25 @@ set_time_limit(0);
 $flg1=0; $flg2=0;
 function insertdata($xlsfilepath,$link, $plantcode)
 {
-$row = 0; $dt=date("Y-m-d"); $plname=""; $plcode=""; 
+$row=0; $dt=date("Y-m-d"); $plname=""; $plcode=""; 
 //echo "fgtrdhdgfh"; exit;
+if (!file_exists($xlsfilepath)) {
+    ?>	
+	<script>
+	alert('File not uploaded');
+	window.location='add_stlotimp.php';
+	</script>
+    <?php
+}
+if (!is_readable($xlsfilepath)) {
+    ?>	
+	<script>
+	alert('File not readable!');
+	window.location='add_stlotimp.php';
+	</script>
+    <?php
+}
+
 if(($handle = fopen($xlsfilepath, "r")) !== FALSE) 
 {
     while(($data = fgetcsv($handle, 1000, ",")) !== FALSE) 
@@ -144,17 +181,17 @@ if(($handle = fopen($xlsfilepath, "r")) !== FALSE)
 					if($lt[13]!="/")$flag=1;
 					//echo $flag;
 					$pc=explode(",",$pcode);
-						if(!in_array($lt[0],$pc))
-						{
-							$flag=1;
-						}
+					if(!in_array($lt[0],$pc))
+					{
+						$flag=1;
+					}
 					
 //exit;
 					$yc=explode(",",$ycode);
-						if(!in_array($lt[1],$yc))
-						{
-							$flag=1;
-						}
+					if(!in_array($lt[1],$yc))
+					{
+						$flag=1;
+					}
 					
 					if($data[0]=="")$flag=1;
 					if($data[1]=="")$flag=1;
@@ -189,7 +226,7 @@ if(($handle = fopen($xlsfilepath, "r")) !== FALSE)
 					if($data[11]!="" && ($data[11]<=0 || $data[10]>99))$flag=1;
 					if($data[8]!="Not-Acceptable" && $data[8]!="Acceptable")$flag=1;
 					//if($data[8]=="Not-Acceptable" && $data[9]=="")$flag=1;
-					
+					//echo "SELECT COUNT(*)  FROM tbl_stlotimp where stlotimp_ddate='".$final_date."' and stlotimp_lotno='".$data[3]."' and stlotimp_qty='".$data[6]."' ";
 					$total_results3 =mysqli_query($link,"SELECT COUNT(*)  FROM tbl_stlotimp where stlotimp_ddate='".$final_date."' and stlotimp_lotno='".$data[3]."' and stlotimp_qty='".$data[6]."' ");
 					$total_results4 = mysqli_fetch_array($total_results3);
 					$total_results = $total_results4[0]; 
@@ -221,7 +258,18 @@ if(($handle = fopen($xlsfilepath, "r")) !== FALSE)
 		}
 	}
     fclose($handle);
-} 
+}
+else
+{ 
+?>	
+	<script>
+	alert('Can not Import Lots.\nReason: File open failed');
+	window.location='add_stlotimp.php';
+	</script>
+<?php
+
+}
+
 //echo $flg1." = ".$flg2;
 //exit;
 if($flg1 > 0)

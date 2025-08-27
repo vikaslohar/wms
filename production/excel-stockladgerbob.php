@@ -34,9 +34,9 @@
 	$sdate = $_REQUEST['sdate'];
 	$edate = $_REQUEST['edate'];
 	
-	$sd=split("-",$sdate);
+	$sd=explode("-",$sdate);
 	$stdate=$sd[2]."-".sprintf("%02d",$sd[1])."-".sprintf("%02d",$sd[0]);
-	$ed=split("-",$edate);
+	$ed=explode("-",$edate);
 	$etdate=$ed[2]."-".sprintf("%02d",$ed[1])."-".sprintf("%02d",$ed[0]);
 	
 	$dt2=date('Y-m-d',mktime(0,0,0,$sd[1],($sd[0]-1),$sd[2]));

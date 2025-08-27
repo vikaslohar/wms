@@ -147,7 +147,7 @@ alert("While Launching New Window...\nYour browser maybe blocking up Popup windo
 <td width="30"></td> <td>
 
 <?php	
-	$t=split("-", $sdate);
+	$t=explode("-", $sdate);
 	$sdate=$t[2]."-".$t[1]."-".$t[0];
 	if($gottest_trstage!="ALL")
 	{$sql_arr_home=mysqli_query($link,"select distinct(gottest_sampleno) from tbl_gottest where gottest_gotdate='$sdate' and gottest_trstage='$gottest_trstage' and gottest_gotflg=1 order by gottest_dosdate asc, gottest_oldlot asc") or die(mysqli_error($link));}

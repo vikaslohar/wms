@@ -432,7 +432,7 @@ $sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg where lotldg_id='".$
  while($row_issuetbl=mysqli_fetch_array($sql_issuetbl))
  { 
 	$totqc=$row_issuetbl['lotldg_qc']; 
-	$tgot=split(" ", $row_issuetbl['lotldg_got1']); 
+	$tgot=explode(" ", $row_issuetbl['lotldg_got1']); 
 	$totgot=$tgot[0]." ".$row_issuetbl['lotldg_got'];
 	if($qc!="")
 	{
@@ -685,7 +685,7 @@ $sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg where lotldg_id='".$
  while($row_issuetbl=mysqli_fetch_array($sql_issuetbl))
  { 
 	$totqc=$row_issuetbl['lotldg_qc']; 
-	$tgot=split(" ", $row_issuetbl['lotldg_got1']); 
+	$tgot=explode(" ", $row_issuetbl['lotldg_got1']); 
 	$totgot=$tgot[0]." ".$row_issuetbl['lotldg_got'];
 	if($qc!="")
 	{

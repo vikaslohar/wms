@@ -21,8 +21,8 @@
 	
 	require_once("../include/config.php");
 	require_once("../include/connection.php");
-	require_once('../include/reader.php'); // include the class
-	require_once("../include/insertxlsdata_bar.php");	
+	//require_once('../include/reader.php'); // include the class
+	//require_once("../include/insertxlsdata_bar.php");	
 	
 	if(isset($_REQUEST['tid'])) { $tid = $_REQUEST['tid']; }
 	if(isset($_REQUEST['subtid'])) { $subtid = $_REQUEST['subtid']; }

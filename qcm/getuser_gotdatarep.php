@@ -145,7 +145,7 @@ while($row_arr_home6=mysqli_fetch_array($sql_max6))
 			//if($row_ahome22['gottestss_dateoftr']==NULL || $row_ahome22['gottestss_dateoftr']=='0000-00-00' || $row_ahome22['gottestss_dateoftr']=='--')
 			if($tot_arr_home223=mysqli_num_rows($sql_arr_home223)>0)
 			{
-				$trdate6=split("-", $row_ahome22['gottestss_dateoftr']);
+				$trdate6=explode("-", $row_ahome22['gottestss_dateoftr']);
 				$tryear=$trdate6[0];
 				$trmonth=$trdate6[1];
 				$trday=$trdate6[2];
@@ -283,7 +283,7 @@ while($row_arr_home6=mysqli_fetch_array($sql_max6))
 			//if($row_ahome22['gottestss_dateoftr']==NULL || $row_ahome22['gottestss_dateoftr']=='0000-00-00' || $row_ahome22['gottestss_dateoftr']=='--')
 			if($tot_arr_home223=mysqli_num_rows($sql_arr_home223)>0)
 			{
-				$trdate6=split("-", $row_ahome22['gottestss_dateoftr']);
+				$trdate6=explode("-", $row_ahome22['gottestss_dateoftr']);
 				$tryear=$trdate6[0];
 				$trmonth=$trdate6[1];
 				$trday=$trdate6[2];
@@ -434,7 +434,7 @@ while($row_arr_home6=mysqli_fetch_array($sql_max6))
 			//if($row_ahome22['gottestss_dateoftr']==NULL || $row_ahome22['gottestss_dateoftr']=='0000-00-00' || $row_ahome22['gottestss_dateoftr']=='--')
 			if($tot_arr_home223=mysqli_num_rows($sql_arr_home223)>0)
 			{
-				$trdate6=split("-", $row_ahome22['gottestss_dateoftr']);
+				$trdate6=explode("-", $row_ahome22['gottestss_dateoftr']);
 				$tryear=$trdate6[0];
 				$trmonth=$trdate6[1];
 				$trday=$trdate6[2];

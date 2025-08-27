@@ -50,7 +50,7 @@
 		$explotno=trim($_POST['explotno']);
 		
 		
-		$hdate13=split("-",$leupto);
+		$hdate13=explode("-",$leupto);
 		$ledate=$hdate13[2]."-".$hdate13[1]."-".$hdate13[0];
 		
 		$sql1=mysqli_query($link,"select * from tbl_blendm where blendm_id=$pid")or die(mysqli_error($link));
@@ -490,7 +490,7 @@ while($row_is=mysqli_fetch_array($sql_is))
 		{ 
 			$qc=$row_issuetbl['lotldg_qc']; 
 			$germ=$row_issuetbl['lotldg_gemp']; 
-			$got1=split(" ",$row_issuetbl['lotldg_got1']);
+			$got1=explode(" ",$row_issuetbl['lotldg_got1']);
 			$got2=$row_issuetbl['lotldg_got']; 
 			$got=$got1[0]." ".$got2;
 			
@@ -596,10 +596,7 @@ if($row_tbl_gottest['grade']!='' && $row_tbl_gottest['grade']!=NULL && $row_tbl_
 if($sr%2!=0)
 {
 ?>		  
-	<tr <? $zz=str_split($row_eindent_sub['blends_lotno']);
-$mlot=$zz[2].$zz[3].$zz[4].$zz[5].$zz[6];
-$llot=$zz[8].$zz[9].$zz[10].$zz[11].$zz[12];
-if($mlot>=90000 && $llot=="00000") {echo "bgcolor='#EE9A4D'";} else if($mlot>=90000 && $llot!="00000") {if($trtype=="Merger")$trtype="SR Merger";echo "bgcolor='#FFE5B4'"; }else ""?> height="20" class="smalltbltext">
+	<tr <?php $zz=str_split($row_eindent_sub['blends_lotno']);$mlot=$zz[2].$zz[3].$zz[4].$zz[5].$zz[6];$llot=$zz[8].$zz[9].$zz[10].$zz[11].$zz[12];if($mlot>=90000 && $llot=="00000") {echo "bgcolor='#EE9A4D'";} else if($mlot>=90000 && $llot!="00000") {if($trtype=="Merger")$trtype="SR Merger";echo "bgcolor='#FFE5B4'"; }else ""; ?> height="20" class="smalltbltext">
 		<td align="center" valign="middle" class="smalltbltext"><?php echo $sr;?></td>
 		<td align="center" valign="middle" class="smalltbltext"><?php echo $ltno?></td>
 		<td align="center" valign="middle" class="smalltbltext"><?php echo $totnob?></td>
@@ -624,10 +621,8 @@ if($mlot>=90000 && $llot=="00000") {echo "bgcolor='#EE9A4D'";} else if($mlot>=90
 else
 {
 ?>
-	<tr <? $zz=str_split($row_eindent_sub['blends_lotno']);
-$mlot=$zz[2].$zz[3].$zz[4].$zz[5].$zz[6];
-$llot=$zz[8].$zz[9].$zz[10].$zz[11].$zz[12];
-if($mlot>=90000 && $llot=="00000") {echo "bgcolor='#EE9A4D'";} else if($mlot>=90000 && $llot!="00000"){if($trtype=="Merger")$trtype="SR Merger";echo "bgcolor='#FFE5B4'"; } else ""?> height="20" class="smalltbltext">
+	<tr <?php $zz=str_split($row_eindent_sub['blends_lotno']);$mlot=$zz[2].$zz[3].$zz[4].$zz[5].$zz[6];$llot=$zz[8].$zz[9].$zz[10].$zz[11].$zz[12];
+if($mlot>=90000 && $llot=="00000") {echo "bgcolor='#EE9A4D'";} else if($mlot>=90000 && $llot!="00000"){if($trtype=="Merger")$trtype="SR Merger";echo "bgcolor='#FFE5B4'"; } else ""; ?> height="20" class="smalltbltext">
 		<td align="center" valign="middle" class="smalltbltext"><?php echo $sr;?></td>
 		<td align="center" valign="middle" class="smalltbltext"><?php echo $ltno?></td>
 		<td align="center" valign="middle" class="smalltbltext"><?php echo $totnob?></td>

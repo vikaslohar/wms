@@ -70,7 +70,7 @@
 		{
 			$val2=$sd2[$i];
 			$val=$sd3[$i];
-			$asd=split(" ",$val);
+			$asd=explode(" ",$val);
 			$vl=$asd[1];
 			//echo $asd;
 			if($asd[0]=="Group")
@@ -118,7 +118,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title>QC -Transaction - Lot Blending</title>
 <link href="../include/main_quality.css" rel="stylesheet" type="text/css" />
-<link href="../include/vnrtrac_quality_quality.css" rel="stylesheet" type="text/css" />
+<link href="../include/vnrtrac_quality.css" rel="stylesheet" type="text/css" />
 </head>
 <script src="lotmerger.js"></script>
 <script type="text/javascript">
@@ -991,6 +991,7 @@ $explotno=$row_indent_sub6['blends_newlot'];
 <?php
 $grs=""; $drs=""; $grpflg=0; $delflg=0; $gflg=0;
 $sql_sub=mysqli_query($link,"select distinct blends_group from tbl_blends where blendm_id='$trid' and blends_group>0 group by blends_group order by blends_group asc") or die(mysqli_error($link));
+$tttt=mysqli_num_rows($sql_sub);
 while($row_sub=mysqli_fetch_array($sql_sub))
 {
 	if($grs!="")
@@ -1046,7 +1047,7 @@ $trtype=$row_is3['lotldg_trtype'];
 
 $totnob=0; $totqty=0; $sloc="";  $qc=""; $dot=""; $germ=""; $dogt="";
 $sql_is=mysqli_query($link,"select distinct lotldg_subbinid, lotldg_whid, lotldg_binid from tbl_lot_ldg where lotldg_crop='".$row['blendm_crop']."' and lotldg_lotno='".$ltno."' and lotldg_variety='".$row['blendm_variety']."' group by lotldg_subbinid order by lotldg_id asc") or die(mysqli_error($link));
-		
+	
 while($row_is=mysqli_fetch_array($sql_is))
 { 
 	$slups=0; $slqty=0; $wareh=""; $binn=""; $subbinn="";
@@ -1061,7 +1062,7 @@ while($row_is=mysqli_fetch_array($sql_is))
 		{ 
 			$qc=$row_issuetbl['lotldg_qc']; 
 			$germ=$row_issuetbl['lotldg_gemp']; 
-			$got1=split(" ",$row_issuetbl['lotldg_got1']);
+			$got1=explode(" ",$row_issuetbl['lotldg_got1']);
 			$got2=$row_issuetbl['lotldg_got']; 
 			$got=$got1[0]." ".$got2;
 			
@@ -1109,7 +1110,7 @@ while($row_is=mysqli_fetch_array($sql_is))
 		}	
 	}
 }
-
+//echo 'test';
 if($trtype=="Fresh Seed with PDN")$trtype="Fresh Seed";
 
 if($row_eindent_sub['blends_group']>0)$grpflg++;
@@ -1167,10 +1168,7 @@ if($row_tbl_gottest['grade']!='' && $row_tbl_gottest['grade']!=NULL && $row_tbl_
 if($sr%2!=0)
 {
 ?>		  
-	<tr <? $zz=str_split($row_eindent_sub['blends_lotno']);
-$mlot=$zz[2].$zz[3].$zz[4].$zz[5].$zz[6];
-$llot=$zz[8].$zz[9].$zz[10].$zz[11].$zz[12];
-if($mlot>=90000 && $llot=="00000") {echo "bgcolor='#EE9A4D'";} else if($mlot>=90000 && $llot!="00000") {if($trtype=="Merger")$trtype="SR Merger";echo "bgcolor='#FFE5B4'"; }else ""?> height="20" class="smalltbltext">
+	<tr <?php $zz=str_split($row_eindent_sub['blends_lotno']); $mlot=$zz[2].$zz[3].$zz[4].$zz[5].$zz[6]; $llot=$zz[8].$zz[9].$zz[10].$zz[11].$zz[12]; if($mlot>=90000 && $llot=="00000"){echo "bgcolor='#EE9A4D'";} else if($mlot>=90000 && $llot!="00000") {if($trtype=="Merger")$trtype="SR Merger"; echo "bgcolor='#FFE5B4'"; }else ""; ?> height="20" class="smalltbltext">
 		<td align="center" valign="middle" class="smalltbltext"><?php echo $sr;?></td>
 		<td align="center" valign="middle" class="smalltbltext"><?php echo $ltno?></td>
 		<td align="center" valign="middle" class="smalltbltext"><?php echo $totnob?></td>
@@ -1200,10 +1198,7 @@ if($mlot>=90000 && $llot=="00000") {echo "bgcolor='#EE9A4D'";} else if($mlot>=90
 else
 {
 ?>
-	<tr <? $zz=str_split($row_eindent_sub['blends_lotno']);
-$mlot=$zz[2].$zz[3].$zz[4].$zz[5].$zz[6];
-$llot=$zz[8].$zz[9].$zz[10].$zz[11].$zz[12];
-if($mlot>=90000 && $llot=="00000") {echo "bgcolor='#EE9A4D'";} else if($mlot>=90000 && $llot!="00000"){if($trtype=="Merger")$trtype="SR Merger";echo "bgcolor='#FFE5B4'"; } else ""?> height="20" class="smalltbltext">
+	<tr <?php $zz=str_split($row_eindent_sub['blends_lotno']); $mlot=$zz[2].$zz[3].$zz[4].$zz[5].$zz[6]; $llot=$zz[8].$zz[9].$zz[10].$zz[11].$zz[12]; if($mlot>=90000 && $llot=="00000") {echo "bgcolor='#EE9A4D'";} else if($mlot>=90000 && $llot!="00000"){if($trtype=="Merger")$trtype="SR Merger"; echo "bgcolor='#FFE5B4'"; } else ""; ?> height="20" class="smalltbltext">
 		<td align="center" valign="middle" class="smalltbltext"><?php echo $sr;?></td>
 		<td align="center" valign="middle" class="smalltbltext"><?php echo $ltno?></td>
 		<td align="center" valign="middle" class="smalltbltext"><?php echo $totnob?></td>

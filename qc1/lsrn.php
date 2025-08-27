@@ -187,7 +187,7 @@ while($row_arr_home=mysqli_fetch_array($sql_srsub))
 
 $totqty=0; $totnob=0; $totqc=""; $totdot=""; $totmost=""; $totgemp=""; $totgot=""; $reserve=""; $totsst=""; $stage="";	$sloc="";
 
-$sql_issue=mysqli_query($link,"select distinct lotldg_whid, lotldg_subbinid, lotldg_binid from tbl_lot_ldg where  orlot='".$row_arr_home['softrsub_lotno']."'  and lotldg_balqty > 0  ") or die(mysqli_error($link));
+$sql_issue=mysqli_query($link,"select distinct lotldg_whid, lotldg_subbinid, lotldg_binid from tbl_lot_ldg where  orlot='".$row_arr_home['softrsub_lotno']."'   ") or die(mysqli_error($link));
 
  while($row_issue=mysqli_fetch_array($sql_issue))
  { 
@@ -196,7 +196,7 @@ $txtdot="";
 $sql_issue1=mysqli_query($link,"select max(lotldg_id) from tbl_lot_ldg where lotldg_subbinid='".$row_issue['lotldg_subbinid']."' and lotldg_binid='".$row_issue['lotldg_binid']."' and lotldg_whid='".$row_issue['lotldg_whid']."' and orlot='".$row_arr_home['softrsub_lotno']."'") or die(mysqli_error($link));
 $row_issue1=mysqli_fetch_array($sql_issue1); 
 
-$sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg where lotldg_id='".$row_issue1[0]."' and lotldg_balqty > 0  and (lotldg_got='UT' OR lotldg_got='RT' OR lotldg_qc='UT' OR lotldg_qc='RT')") or die(mysqli_error($link)); 
+$sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg where lotldg_id='".$row_issue1[0]."' and lotldg_balqty > 0  ") or die(mysqli_error($link)); 
 
 
  while($row_issuetbl=mysqli_fetch_array($sql_issuetbl))
@@ -206,7 +206,7 @@ $sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg where lotldg_id='".$
 	$totnob=$totnob+$row_issuetbl['lotldg_balbags']; 
 
 	$totqc=$row_issuetbl['lotldg_qc']; 
-	$tgot=split(" ", $row_issuetbl['lotldg_got1']); 
+	$tgot=explode(" ", $row_issuetbl['lotldg_got1']); 
 	$totgot=$tgot[0]." ".$row_issuetbl['lotldg_got'];
 	$totmost=$row_issuetbl['lotldg_moisture']; 
 	$totgemp=$row_issuetbl['lotldg_gemp']; 
@@ -247,7 +247,7 @@ $sloc=$wareh.$binn.$subbinn." | ".$slups." | ".$slqty."<br/>";
 }
 }
 
-$sql_issue=mysqli_query($link,"select distinct whid, subbinid, binid from tbl_lot_ldg_pack where  orlot='".$row_arr_home['softrsub_lotno']."'  and balqty > 0  ") or die(mysqli_error($link));
+$sql_issue=mysqli_query($link,"select distinct whid, subbinid, binid from tbl_lot_ldg_pack where  orlot='".$row_arr_home['softrsub_lotno']."'   ") or die(mysqli_error($link));
 
  while($row_issue=mysqli_fetch_array($sql_issue))
  { 
@@ -256,7 +256,7 @@ $txtdot="";
 $sql_issue1=mysqli_query($link,"select max(lotdgp_id) from tbl_lot_ldg_pack where subbinid='".$row_issue['subbinid']."' and binid='".$row_issue['binid']."' and whid='".$row_issue['whid']."' and orlot='".$row_arr_home['softrsub_lotno']."'") or die(mysqli_error($link));
 $row_issue1=mysqli_fetch_array($sql_issue1); 
 
-$sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where lotdgp_id='".$row_issue1[0]."' and balqty > 0  and (lotldg_got='UT' OR lotldg_got='RT' OR lotldg_qc='UT' OR lotldg_qc='RT')") or die(mysqli_error($link)); 
+$sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where lotdgp_id='".$row_issue1[0]."' and balqty > 0  ") or die(mysqli_error($link)); 
 
 
  while($row_issuetbl=mysqli_fetch_array($sql_issuetbl))
@@ -266,7 +266,7 @@ $sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where lotdgp_id
 	//$totnob=$totnob+$row_issuetbl['lotldg_balbags']; 
 
 	$totqc=$row_issuetbl['lotldg_qc']; 
-	$tgot=split(" ", $row_issuetbl['lotldg_got1']); 
+	$tgot=explode(" ", $row_issuetbl['lotldg_got1']); 
 	$totgot=$tgot[0]." ".$row_issuetbl['lotldg_got'];
 	$totmost=$row_issuetbl['lotldg_moisture']; 
 	$totgemp=$row_issuetbl['lotldg_gemp']; 

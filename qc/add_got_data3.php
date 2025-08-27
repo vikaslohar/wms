@@ -107,7 +107,7 @@ if(isset($_POST['frm_action'])=='submit')
 	$genpurity=trim($_POST['txtgenpurity']);
 	
 	$obdate1=trim($_POST['obdate']);
-	$ddate3=split("-",$obdate1);
+	$ddate3=explode("-",$obdate1);
 	$obdate=$ddate3[2]."-".$ddate3[1]."-".$ddate3[0];
 	//exit;
 	$sql_sub_sub2="insert into tbl_gottestsub_sub3(gottest_tid, gottests_id, gottestss_id, gottestss3_bedno, gottestss3_direction, gottestss3_state, gottestss3_gotlocation,  gottestss3_plantpopln, gottestss3_maleno, gottestss3_maleper, gottestss3_femaleno, gottestss3_femaleper, gottestss3_oofno, gottestss3_oofper, gottestss3_totno, gottestss3_totper, gottestss3_genpurity, gottestss3_doobrdate) values('$id', '$gots_id', '$gotss_id', '$bedno','$direction','$state', '$location','$plantpopn','$maleno','$maleper','$femaleno','$femaleper','$oofno','$oofper','$totno','$totper','$genpurity','$obdate')";

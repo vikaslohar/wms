@@ -42,7 +42,7 @@
 </table>
   <br/>
 <?php	
-	$t=split("-", $edate);
+	$t=explode("-", $edate);
 	$edate=$t[2]."-".$t[1]."-".$t[0];
 	
 	$reslt="";
@@ -521,7 +521,7 @@ if($result!="ALL" && $result!=$qcresult)$flg++;
 if($qcresult=="NUT")$flg++;	
 if(($qcresult=="OK" || $qcresult=="Fail") && $qty==0)$flg++;
 
-$trdate6=split("-", $edate);
+$trdate6=explode("-", $edate);
 $tryear=$trdate6[0];
 $trmonth=$trdate6[1];
 $trday=$trdate6[2];
@@ -642,7 +642,7 @@ else
 		}
 		if($trdate!="")
 		{
-			$trdate5=split("-", $edate);
+			$trdate5=explode("-", $edate);
 			$tryear5=$trdate5[0];
 			$trmonth5=$trdate5[1];
 			$trday5=$trdate5[2];
@@ -700,7 +700,7 @@ $days = floor($diff / (60*60*24));
 //printf("%d days\n", $days);
 //echo $row_arr_home['lotldg_qctestdate']."  -  ".$dt2."  -  ".$dt24."<br />";
 $days=$days;
-$gotres=split(" ", $gotresult);
+$gotres=explode(" ", $gotresult);
 if($gotres[1]=="Fail")$flg=1;
 if($flg==0)
 {$cnt++;

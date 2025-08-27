@@ -71,10 +71,10 @@ if(isset($_POST['frm_action'])=='submit')
 			$samp= $_POST['txtsamp'];
 			//if($result=="BL")$purity='';
 	
-	$tdate22=split("-",$e);
+	$tdate22=explode("-",$e);
 	$tdate=$tdate22[2]."-".$tdate22[1]."-".$tdate22[0];
 	
-	$ddate=split("-",$dos);
+	$ddate=explode("-",$dos);
 	$doswdate=$ddate[2]."-".$ddate[1]."-".$ddate[0];
 	 //exit;
 	 

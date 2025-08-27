@@ -536,7 +536,7 @@ $tdate=$row_tbl_sub['srdate'];
 $sql_lotldg=mysqli_query($link,"Select * from tbl_lot_ldg where orlot='".$lot."' order by lotldg_id desc") or die(mysqli_error($link));
 $row_lotldg=mysqli_fetch_array($sql_lotldg);
 
-	$z=split(" ", $row_lotldg['lotldg_got1']);
+	$z=explode(" ", $row_lotldg['lotldg_got1']);
 	$lot22=$z[0]." ".$row_lotldg['lotldg_got'];
 	
 	$tdate2=$row_lotldg['lotldg_gottestdate'];

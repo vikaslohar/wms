@@ -350,7 +350,7 @@ if($t > 0)
 	$totnob=$totnob+$row_issuetbl['lotldg_balbags']; 
 
 	$totqc=$row_issuetbl['lotldg_qc']; 
-	$tgot=split(" ", $row_issuetbl['lotldg_got1']); 
+	$tgot=explode(" ", $row_issuetbl['lotldg_got1']); 
 	if($row_issuetbl['lotldg_got']!="" && $row_issuetbl['lotldg_got']!="NULL")
 	$totgot=$tgot[0]." ".$row_issuetbl['lotldg_got'];
 	else

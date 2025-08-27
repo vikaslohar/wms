@@ -25,8 +25,8 @@
 	
 	require_once("../include/config.php");
 	require_once("../include/connection.php");
-	require_once('../include/reader.php'); // include the class
-	require_once("../include/insertxlsdata_rembar.php");	
+	//require_once('../include/reader.php'); // include the class
+	//require_once("../include/insertxlsdata_rembar.php");	
 	
 	if(isset($_POST['frm_action'])=='submit')
 	{

@@ -26,7 +26,7 @@
 </table>
   <br/>
 <?php	
-	$t=split("-", $sdate);
+	$t=explode("-", $sdate);
 	$sdate=$t[2]."-".$t[1]."-".$t[0];
 	
 	if($trstage!="ALL")

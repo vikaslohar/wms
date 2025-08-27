@@ -52,7 +52,7 @@ $ycode=$noticia3['ycode'];
 		$party=trim($_POST['txtparty']);
 		$type=trim($_POST['txttype']);
 		$fln=trim($_POST['tt']);
-		$flnid = split(",",$fln);
+		$flnid =explode(",",$fln);
 		$txtpp=trim($_POST['txtpp']);
 		$txtptype=trim($_POST['txtptype']);
 		$fln1=trim($_POST['tt1']);
@@ -63,7 +63,7 @@ $ycode=$noticia3['ycode'];
 					$aa=mysqli_query($link,$sql_in1)or die(mysqli_error($link));	
 					
 			}	
-		$flnid1 = split(",",$fln);
+		$flnid1 =explode(",",$fln);
 		foreach($flnid1 as $fid)
 		  	{		
 					 $sql_in1="update tbl_orderm set orderm_cancelflag=2 where orderm_id='$fid'";	

@@ -97,7 +97,7 @@ if(isset($_REQUEST['tid']))
 				{$dp1="";}
 				$leupto=$dp1;
 				
-				$hdate13=split("-",$leupto);
+				$hdate13=explode("-",$leupto);
 				$ledate=$hdate13[2]."-".$hdate13[1]."-".$hdate13[0];
 					
 				$xamp=str_split($samplenumber);

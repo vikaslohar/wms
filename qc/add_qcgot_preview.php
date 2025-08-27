@@ -40,7 +40,7 @@
 		$sql_tbl=mysqli_query($link,"select * from tbl_gotqc where arrival_id='".$tid."'") or die(mysqli_error($link));
 		$row=mysqli_fetch_array($sql_tbl);	
 		$date=$row['arrival_date'];
-		$flnid = split(",",$row['lotno']);
+		$flnid =explode(",",$row['lotno']);
 		foreach($flnid as $fid)
 		{		
 			$gtiddo='';

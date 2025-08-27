@@ -78,13 +78,13 @@ if(isset($_POST['frm_action'])=='submit')
 	$gotloc= $_POST['txtlocation'];
 	//if($result=="BL")$purity='';
 	//exit;
-	$tdate22=split("-",$e);
+	$tdate22=explode("-",$e);
 	$tdate=$tdate22[2]."-".$tdate22[1]."-".$tdate22[0];
 	
-	$ddate=split("-",$dos);
+	$ddate=explode("-",$dos);
 	$doswdate=$ddate[2]."-".$ddate[1]."-".$ddate[0];
 	//exit;
-	$ddate1=split("-",$dotr);
+	$ddate1=explode("-",$dotr);
 	$dotr=$ddate1[2]."-".$ddate1[1]."-".$ddate1[0];
 	
 	$xamp=str_split($samp);

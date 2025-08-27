@@ -28,7 +28,7 @@ session_start();
 	 //$pid = $_GET['pid'];	
 	 $sdate = $_REQUEST['sdate'];
  	
-	$t=split("-", $sdate);
+	$t=explode("-", $sdate);
 	$sdate=$t[2]."-".$t[1]."-".$t[0];
 	
 	$sql_arr_home=mysqli_query($link,"select distinct(sampleno) from tbl_qctest where testdate='$sdate' order by crop asc, variety asc, oldlot asc") or die(mysqli_error($link));

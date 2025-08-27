@@ -102,17 +102,17 @@ if(isset($_POST['frm_action'])=='submit')
 	$step=trim($_POST['step']);
 	//exit;
 	$recdate1=trim($_POST['recdate']);
-	$ddate=split("-",$recdate1);
+	$ddate=explode("-",$recdate1);
 	$recdate=$ddate[2]."-".$ddate[1]."-".$ddate[0];
 	
 	$sowingdate1=trim($_POST['pdate']);
-	$ddate1=split("-",$sowingdate1);
+	$ddate1=explode("-",$sowingdate1);
 	$sowingdate=$ddate1[2]."-".$ddate1[1]."-".$ddate1[0];
 	$poltno=trim($_POST['txtpoltno']);
 	$noseeds=trim($_POST['txtnoseeds']);
 	
 	$trdate1=trim($_POST['trdate']);
-	$ddate2=split("-",$trdate1);
+	$ddate2=explode("-",$trdate1);
 	$trdate=$ddate2[2]."-".$ddate2[1]."-".$ddate2[0];
 	$trplot=trim($_POST['txttrplot']);
 	$range=trim($_POST['txtrange']);
@@ -124,7 +124,7 @@ if(isset($_POST['frm_action'])=='submit')
 	$plantpopn=trim($_POST['txtnoofplants']);
 	 
 	$gdate1=trim($_POST['gdate']);
-	$ddate3=split("-",$gdate1);
+	$ddate3=explode("-",$gdate1);
 	$gdate=$ddate3[2]."-".$ddate3[1]."-".$ddate3[0];
 	
 	$sampsize=trim($_POST['txtsampsize']);

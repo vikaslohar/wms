@@ -284,7 +284,7 @@ while($row_arr_home=mysqli_fetch_array($sql_arr_home3))
 	$trday=substr($trdate,8,2);
 	$trdate=$trday."-".$trmonth."-".$tryear;
 	
-	$trdate2=split("-",$row_arr_home['spdate']);
+	$trdate2=explode("-",$row_arr_home['spdate']);
 	$trdate=$trdate2[2]."-".$trdate2[1]."-".$trdate2[0];
 	if($trdate=="" || $trdate=="--" || $trdate=="00-00-0000" || $trdate=="0000-00-00")$trdate="";
 //echo $trdate;

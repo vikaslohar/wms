@@ -374,7 +374,7 @@ while($row_tbl_sub=mysqli_fetch_array($sql_tbl_sub))
 	
 $fln=$row_cls['dest'];
 
-			$flnid = split(",",$fln);
+			$flnid =explode(",",$fln);
 			foreach($flnid as $fid)
 		  	{	
 				if($fid<>"")

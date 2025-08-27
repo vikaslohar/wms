@@ -25,8 +25,8 @@
 	
 	require_once("../include/config.php");
 	require_once("../include/connection.php");
-	require_once('../include/reader.php'); // include the class
-	require_once("../include/insertxlsdata_rembar.php");	
+	//require_once('../include/reader.php'); // include the class
+	//require_once("../include/insertxlsdata_rembar.php");	
 	
 	if(isset($_REQUEST['pid'])) { $pid = $_REQUEST['pid']; }
 	
@@ -36,7 +36,7 @@
 	
 	if(isset($_POST['frm_action'])=='submit')
 	{
-		//exit;
+		
 		$mainid=trim($_POST['maintrid']);
 		$remarks=trim($_POST['txtremarks1']);
 		$remarks=str_replace("&","and",$remarks);
@@ -107,7 +107,7 @@
 				}
 			}
 			
-			//exit;
+			
 			echo "<script>window.location='add_disppackalc_preview.php?pid=$p_id'</script>";	
 			
 		}

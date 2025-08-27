@@ -101,16 +101,16 @@ if(isset($_POST['frm_action'])=='submit')
 	
 	//if($result=="BL")$purity='';
 	
-	$tdate22=split("-",$e);
+	$tdate22=explode("-",$e);
 	$tdate=$tdate22[2]."-".$tdate22[1]."-".$tdate22[0];
 	
-	$ddate=split("-",$dos);
+	$ddate=explode("-",$dos);
 	$doswdate=$ddate[2]."-".$ddate[1]."-".$ddate[0];
 	//exit;
-	$ddate1=split("-",$dotr);
+	$ddate1=explode("-",$dotr);
 	$dotr=$ddate1[2]."-".$ddate1[1]."-".$ddate1[0];
 	
-	$ddate12=split("-",$doobr);
+	$ddate12=explode("-",$doobr);
 	$doobr=$ddate12[2]."-".$ddate12[1]."-".$ddate12[0];
 	
 	$xamp=str_split($samp);

@@ -38,7 +38,7 @@
 	$eurlnew = $_REQUEST['eurlnew'];
 	}
 	/*$newLink = substr($_SERVER['QUERY_STRING'],0);  
-	$zz=split("eurl=",$newLink);
+	$zz=explode("eurl=",$newLink);
 	$eurl=$zz[1];*/
 	
 	
@@ -62,7 +62,7 @@
 	echo "<br />";
 	echo $newLink = substr($_SERVER['QUERY_STRING'],0); 
 	echo "<br />";	
-	$zz=split("eurl=",$newLink);
+	$zz=explode("eurl=",$newLink);
 	echo $eurl=$zz[1]; 
 	echo "<br />";	
 	echo $URL = 'https://'.$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT'].$_SERVER['REQUEST_URI'];*/
@@ -92,7 +92,7 @@
 	$tyear=substr($tdate,6,4);
 	$tdate=$tyear."-".$tmonth."-".$tday;
 	
-	$hdate13=split("-",$leupto);
+	$hdate13=explode("-",$leupto);
 	$ledate=$hdate13[2]."-".$hdate13[1]."-".$hdate13[0];
 		
 	$xamp=str_split($samp);

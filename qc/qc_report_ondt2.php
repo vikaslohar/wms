@@ -37,7 +37,7 @@
 </table>
   <br/>
 <?php	
-	$t=split("-", $edate);
+	$t=explode("-", $edate);
 	$edate=$t[2]."-".$t[1]."-".$t[0];
 	
 	$reslt="";

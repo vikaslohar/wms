@@ -118,7 +118,7 @@ if(isset($_POST['frm_action'])=='submit')
 	$genpurity=trim($_POST['txtgenpurity']);
 	
 	$sdate1=trim($_POST['sdate']);
-	$ddate3=split("-",$sdate1);
+	$ddate3=explode("-",$sdate1);
 	$obdate=$ddate3[2]."-".$ddate3[1]."-".$ddate3[0];
 	
 	if($crop=="Maize Seed" || $crop=="Pearl Millet" || $crop=="Paddy Seed")

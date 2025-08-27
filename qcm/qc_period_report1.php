@@ -162,7 +162,7 @@ alert("While Launching New Window...\nYour browser maybe blocking up Popup windo
 <td width="30"></td> <td>
 
 <?php	
-	$t=split("-", $sdate);
+	$t=explode("-", $sdate);
 	$sdate=$t[2]."-".$t[1]."-".$t[0];
 	/*$tdate=$sdate;
 		$tday=substr($tdate,0,2);
@@ -170,7 +170,7 @@ alert("While Launching New Window...\nYour browser maybe blocking up Popup windo
 		$tyear=substr($tdate,6,4);
 		echo $sdate=$tyear."-".$tmonth."-".$tday;*/
 	
-	$t=split("-", $edate);
+	$t=explode("-", $edate);
 	$edate=$t[2]."-".$t[1]."-".$t[0];
 	/*$tdate=$edate;
 		$tday=substr($tdate,0,2);

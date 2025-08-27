@@ -21,8 +21,8 @@
 	
 	require_once("../include/config.php");
 	require_once("../include/connection.php");
-	require_once('../include/reader.php'); // include the class
-	require_once("../include/insertxlsdata_bar.php");	
+	//require_once('../include/reader.php'); // include the class
+	//require_once("../include/insertxlsdata_bar.php");	
 	
 	if(isset($_REQUEST['tid'])) { $tid = $_REQUEST['tid']; }
 	if(isset($_REQUEST['subtid'])) { $subtid = $_REQUEST['subtid']; }
@@ -67,7 +67,8 @@
 				if($row>=2)
 				{
 					//if(trim($lotchk)==trim($data[3]))
-					{
+					{//echo "select wb_mpbarcode from tbl_wbqrcode where wb_mpbarcode='".$data[9]."' and wb_pnptrid='".$tid."' ";echo "<br>";
+
 						$sql_mainbarc=mysqli_query($link,"select wb_mpbarcode from tbl_wbqrcode where wb_mpbarcode='".$data[9]."' and wb_pnptrid='".$tid."' ") or die(mysqli_error($link));
 					 	$a_mainbarc=mysqli_num_rows($sql_mainbarc);
 						if($a_mainbarc > 0)
@@ -93,8 +94,8 @@
 		//exit;
 		$sqlmainbarc2=mysqli_query($link,"select wb_mpbarcode from tbl_wbqrcode where wb_pnptrid='".$tid."' and wb_mpblinkflg=1 and wb_mpgrosswt>0 ") or die(mysqli_error($link));
 		$amainbarc2=mysqli_num_rows($sqlmainbarc2);
-//echo $cnt." = ".$amainbarc2."  =  ".$amainbarc;
-//exit;
+	//echo $cnt." = ".$amainbarc2."  =  ".$amainbarc;
+	//exit;
 		if($cnt>0 && $amainbarc2==$amainbarc)
 		{?>
 			<script>opener.document.frmaddDepartment.gwupdflg.value=<?php echo $cnt;?>; opener.document.getElementById('gwupdate').innerHTML='Updated'; window.close();</script>

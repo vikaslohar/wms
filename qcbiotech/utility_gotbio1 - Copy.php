@@ -320,7 +320,7 @@ $tdate=$row_tbl_sub['srdate'];
 	$sql_whouse=mysqli_query($link,"select * from tblarrival_sub where orlot='".$lot."'") or die(mysqli_error($link));
 	$row_whouse=mysqli_fetch_array($sql_whouse);
 
-	$z=split(" ", $row_whouse['got1']);
+	$z=explode(" ", $row_whouse['got1']);
 	if($row_tbl_sub['gotstatus']!="")
 	$lot22=$z[0]." ".$row_tbl_sub['gotstatus'];
 	else

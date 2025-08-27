@@ -120,6 +120,7 @@
 </tr>
 </table>
 
+
 <table align="center" cellpadding="0" cellspacing="5" border="0">
 <tr  height="25">
 <TD align="center"><?php if((date("Y-m-d")>="2023-01-01") && (date("Y-m-d")<="2023-01-10")){?><img src="images/vnr-happy-new-year.jpg" border="0" width="23%" ><?php }else {?><img src="images/congratulations.png" border="0" width="90%" ><?php }?>

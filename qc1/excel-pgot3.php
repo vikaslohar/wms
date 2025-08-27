@@ -52,7 +52,7 @@ $edate=$edate;
 	$dt2="";
 	}
 	//echo $dt2;
-$t=split("-",$dt2);
+$t=explode("-",$dt2);
 //$z=sprintf("%02d",$t[0]);
 $sdate=$t[2]."-".$t[1]."-".$t[0];
 		$tdate=$sdate;

@@ -271,7 +271,7 @@ $t=mysqli_num_rows($sql_issuetbl);
 	$prsldate="";
 	if($prosldate!="")
 	{
-		$prsdt=split("-",$prosldate);
+		$prsdt=explode("-",$prosldate);
 		$prsldate=$prsdt[2]."/".$prsdt[1]."/".$prsdt[0];
 	}
 $seedsstatus="";	

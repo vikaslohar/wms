@@ -52,11 +52,11 @@ if(isset($_POST['frm_action'])=='submit')
 
 }
 		
-$t=split("-",$sdate);
+$t=explode("-",$sdate);
 	$z=sprintf("%02d",$t[0]);
 	$sdate=$z."-".$t[1]."-".$t[2];
 
-	$t=split("-",$edate);
+	$t=explode("-",$edate);
 	$z=sprintf("%02d",$t[0]);
 	$edate=$z."-".$t[1]."-".$t[2];
 	

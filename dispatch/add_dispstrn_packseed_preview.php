@@ -30,8 +30,8 @@
 	
 	if(isset($_POST['frm_action'])=='submit')
 	{
-		$connnew = mysqli_connect("localhost","wfuser","P1o5RSOloG8jCAN8") or die("Error:".mysqli_error($connnew));
-		$dbnew = mysqli_select_db($connnew,"wmsfocusdb") or die("Error:".mysqli_error($connnew));
+		//$connnew = mysqli_connect("localhost","wfuser","P1o5RSOloG8jCAN8") or die("Error:".mysqli_error($connnew));
+		//$dbnew = mysqli_select_db($connnew,"wmsfocusdb") or die("Error:".mysqli_error($connnew));
 		
 		$todaydate=date('Y-m-d');
 		$sql_mp=mysqli_query($link,"select * from tbl_stoutmpack where stoutmp_id='".$pid."'") or die(mysqli_error($link));
@@ -127,69 +127,7 @@
 			
 
 
-
-
-				
-// Focus data updation queries start
-				
-				
-				/*$sql_focusdbcode1="SELECT MAX(wffrn_code) FROM tbl_frn where wffrn_month='$monthName' and wffrn_yearcode='$fnyear' and wffrn_trtype='Arrival' ORDER BY wffrn_code DESC";
-				$res_focusdbcode1=mysqli_query($connnew,$sql_focusdbcode1)or die(mysqli_error($connnew));
-				
-				if(mysqli_num_rows($res_focusdbcode1) > 0)
-				{
-					$row_focusdbcode1=mysqli_fetch_row($res_focusdbcode1);
-					$t_focusdbcode1=$row_focusdbcode1['0'];
-					$doccode=$t_focusdbcode1+1;
-					if($doccode==0){$doccode=1;}
-					$doccode2=sprintf("%00005d",$doccode);
-				}
-				else
-				{
-					$doccode=1;
-					$doccode2=sprintf("%00005d",$doccode);
-				}
-				
-				$doc_code="GRN/".$fnyear."/".$monthName."/".$doccode2;*/
-			
-			
-				$sql_partymaster=mysqli_query($link,"select * from tbl_partymaser where p_id='".$row_arr['stoutmp_plantid']."' order by business_name")or die(mysqli_error($link));
-				$noticia_partymaster = mysqli_fetch_array($sql_partymaster);
-				
-				$partycity='';
-				$partyname=$noticia_partymaster['business_name'];
-				
-				if($noticia_partymaster['city']!="") { $partycity=$noticia_partymaster['city']; }
-				
-				
-				$tname='';
-				if($row_arr['stoutmp_tmode']=="Transport"){ $tname=$row_arr['stoutmp_tname'];}
-				else if($row_arr['stoutmp_tmode']=="Courier"){ $tname=$row_arr['stoutmp_couriername'];}
-				else { $tname=$row_arr['stoutmp_pnamebyhand'];}
-				
-				$classqry=mysqli_query($link,"select cropid, cropname from tblcrop where cropid='".$row_arrsub['stoutsp_crop']."' order by cropname") or die(mysqli_error($link));
-				$noticia_class=mysqli_fetch_array($classqry);
-				$crop=$noticia_class['cropname'];
-				
-				$itemqry=mysqli_query($link,"select varietyid, popularname from tblvariety where varietyid='".$row_arrsub['stoutsp_variety']."' and actstatus='Active'") or die(mysqli_error($link));
-				$noticia_item=mysqli_fetch_array($itemqry);
-				$variety=$noticia_item['popularname'];
-				
-				$sql_lotpack=mysqli_query($link,"select * from tbl_lot_ldg_pack where plantcode='".$plantcode."' and  lotno='".$row_arrsub['stoutsp_lotno']."' order by lotdgp_id DESC") or die(mysqli_error($link)); 
-				$row_lotpack=mysqli_fetch_array($sql_lotpack);
-						
-				$sql_focusdb="insert into tbl_stdn (stdn_date, party_name, location, business_entity, transport_name, vehicle_no, lr_no, crop, variety, packing_size, lot_no, qty, gt_nomp, mfg_date, validity_date) values('".$arrival_date."', '".$partyname."', '".$partycity."', 'HEAD OFFICE', '".$tname."', '".$row_arr['stoutmp_tvehno']."', '".$row_arr['stoutmp_lorryrepno']."', '".$crop."', '".$variety."', '".$row_arrsub['stoutsp_ups']."', '".$row_arrsub['stoutsp_lotno']."', '".$row_arrsub['stoutsp_loadqty']."', '".$row_arrsub['stoutsp_loadnomp']."', '".$row_lotpack['lotldg_dop']."', '".$row_lotpack['lotldg_valupto']."')";
-				$focusdb_xz=mysqli_query($connnew,$sql_focusdb) or die(mysqli_error($connnew));
-
-
-
-// Focus data updation queries end				
-				
-				
-				
-				
-				
-			
+		
 			
 			
 

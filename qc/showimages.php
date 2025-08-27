@@ -56,7 +56,7 @@ $row_gea=mysqli_fetch_array($sql_gea);
 
  /*$path=$row_gea['gottestss2_image']; 
 
-$imagename=split("/",$path);  
+$imagename=explode("/",$path);  
 
 echo $imagename[2]; */
 

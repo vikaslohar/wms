@@ -31,7 +31,7 @@ session_start();
 	 $vv= $_REQUEST['txtvariety'];
 	 $result = $_REQUEST['result'];
  	
-	$t=split("-", $edate);
+	$t=explode("-", $edate);
 	$edate=$t[2]."-".$t[1]."-".$t[0];
 	
 	$reslt="";

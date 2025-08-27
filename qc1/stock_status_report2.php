@@ -44,7 +44,7 @@
 </table>
 
 <?php
-	$sd=split("-",$sdate);
+	$sd=explode("-",$sdate);
 	$stdate=$sd[2]."-".sprintf("%02d",$sd[1])."-".sprintf("%02d",$sd[0]);
 		
 	$crp="ALL"; $ver="ALL";

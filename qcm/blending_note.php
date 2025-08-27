@@ -255,7 +255,7 @@ while($row_is=mysqli_fetch_array($sql_is))
 		{ 
 			$qc=$row_issuetbl['lotldg_qc']; 
 			$germ=$row_issuetbl['lotldg_gemp']; 
-			$got1=split(" ",$row_issuetbl['lotldg_got1']);
+			$got1=explode(" ",$row_issuetbl['lotldg_got1']);
 			$got2=$row_issuetbl['lotldg_got']; 
 			$got=$got1[0]." ".$got2;
 			

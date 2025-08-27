@@ -115,10 +115,10 @@ alert("While Launching New Window...\nYour browser maybe blocking up Popup windo
 </script>
 <style>
 /*th, td { white-space: nowrap; }
-    div.dataTables_wrapper {
-        width: 800px;
-        margin: 0 auto;
-    }*/
+ï¿½ï¿½ï¿½ï¿½div.dataTables_wrapper {
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½width: 800px;
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½margin: 0 auto;
+ï¿½ï¿½ï¿½ï¿½}*/
 </style>
 <body>
 <table width="1003" height="600" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
@@ -375,7 +375,7 @@ $row_arr_home1=mysqli_fetch_array($sql_arr_home1);
 					if($tot_softr > 0)
 					{
 						$trdate=$row_softr['softr_date'];
-						$trdate=split("-",$trdate);
+						$trdate=explode("-",$trdate);
 						$qcdot2=$trdate[2]."-".$trdate[1]."-".$trdate[0];
 						$softstatus="SR";//$row_softr['softrsub_srtyp'];
 					}
@@ -395,7 +395,7 @@ $row_arr_home1=mysqli_fetch_array($sql_arr_home1);
 						if($tot_softr2 > 0)
 						{
 							$trdate=$row_softr2['softr_date'];
-							$trdate=split("-",$trdate);
+							$trdate=explode("-",$trdate);
 							$qcdot2=$trdate[2]."-".$trdate[1]."-".$trdate[0];
 							$softstatus="SSR";//$row_softr2['softrsub_srtyp'];
 						}
@@ -738,17 +738,17 @@ $srno=$srno+1;
 </table>
 <script>
 $(document).ready(function() {
-    var table = $('#example').DataTable( {
-        scrollY:        "300px",
-        scrollX:        true,
-        scrollCollapse: true,
-        paging:         false,
+ï¿½ï¿½ï¿½ï¿½var table = $('#example').DataTable( {
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½scrollY:        "300px",
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½scrollX:        true,
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½scrollCollapse: true,
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½paging:         false,
 		searching: false,
-	    ordering:  false,
-        fixedColumns:   {
-            left: 5
-        }
-    } );
+	ï¿½ï¿½ï¿½ï¿½ordering:  false,
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½fixedColumns:   {
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½left: 5
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½}
+ï¿½ï¿½ï¿½ï¿½} );
 } );
 </script>
 </body>

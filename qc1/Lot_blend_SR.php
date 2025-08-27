@@ -427,13 +427,13 @@ $trtype=$row_is3['lotldg_trtype'];
 
 $totnob=0; $totqty=0; $sloc="";  $qc=""; $dot=""; $germ=""; $dogt="";
 $sql_is=mysqli_query($link,"select distinct lotldg_subbinid, lotldg_whid, lotldg_binid from tbl_lot_ldg where lotldg_crop='".$row2['blendm_crop']."' and lotldg_lotno='".$ltno."' and lotldg_variety='".$row2['blendm_variety']."' $sdsd group by lotldg_subbinid order by lotldg_id asc") or die(mysqli_error($link));
-		
+
 while($row_is=mysqli_fetch_array($sql_is))
 { 
 	$slups=0; $slqty=0; $wareh=""; $binn=""; $subbinn="";
 	$sql_is1=mysqli_query($link,"select max(lotldg_id) from tbl_lot_ldg where lotldg_subbinid='".$row_is['lotldg_subbinid']."' and lotldg_binid='".$row_is['lotldg_binid']."' and lotldg_crop='".$row2['blendm_crop']."' and lotldg_lotno='".$ltno."' and lotldg_variety='".$row2['blendm_variety']."' $sdsd order by lotldg_id desc ") or die(mysqli_error($link));
 	$row_is1=mysqli_fetch_array($sql_is1); 
-				
+			
 	$sql_istbl=mysqli_query($link,"select * from tbl_lot_ldg where lotldg_id='".$row_is1[0]."'  order by lotldg_id asc") or die(mysqli_error($link)); 
 	$t=mysqli_num_rows($sql_istbl);
 	if($t > 0)
@@ -442,7 +442,7 @@ while($row_is=mysqli_fetch_array($sql_is))
 		{ 
 			$qc=$row_issuetbl['lotldg_qc']; 
 			$germ=$row_issuetbl['lotldg_gemp']; 
-			$got1=split(" ",$row_issuetbl['lotldg_got1']);
+			$got1=explode(" ",$row_issuetbl['lotldg_got1']);
 			$got2=$row_issuetbl['lotldg_got']; 
 			$got=$got1[0]." ".$got2;
 			

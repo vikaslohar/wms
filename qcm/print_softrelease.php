@@ -243,12 +243,12 @@ if($xxz=mysqli_num_rows($sql_issuetbl)>0)
 	$totnob=$totnob+$row_issuetbl['lotldg_balbags']; 
 
 	$totqc=$row_issuetbl['lotldg_qc']; 
-	$tgot=split(" ", $row_issuetbl['lotldg_got1']); 
+	$tgot=explode(" ", $row_issuetbl['lotldg_got1']); 
 	$totgot=$tgot[0]." ".$row_issuetbl['lotldg_got'];
 	$totmost=$row_issuetbl['lotldg_moisture']; 
 	$totgemp=$row_issuetbl['lotldg_gemp']; 
 	$totsst=$row_issuetbl['lotldg_sstatus']; 
-	//$tgotchk=split(" ", $row_arr_home['lotldg_got1']); 
+	//$tgotchk=explode(" ", $row_arr_home['lotldg_got1']); 
 	if($row_issuetbl['lotldg_balqty'] > 0)
 	{
 		//if($row_issuetbl['lotldg_got']=="Fail" || $row_issuetbl['lotldg_qc']=="Fail")
@@ -330,12 +330,12 @@ $sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where lotdgp_id
 	$totnob=$totnob+0; 
 
 	$totqc=$row_issuetbl['lotldg_qc']; 
-	$tgot=split(" ", $row_issuetbl['lotldg_got1']); 
+	$tgot=explode(" ", $row_issuetbl['lotldg_got1']); 
 	$totgot=$tgot[0]." ".$row_issuetbl['lotldg_got'];
 	$totmost=$row_issuetbl['lotldg_moisture']; 
 	$totgemp=$row_issuetbl['lotldg_gemp']; 
 	$totsst=$row_issuetbl['lotldg_sstatus']; 
-	//$tgotchk=split(" ", $row_arr_home['lotldg_got1']); 
+	//$tgotchk=explode(" ", $row_arr_home['lotldg_got1']); 
 	if($row_issuetbl['balqty'] > 0)
 	{
 		//if($row_issuetbl['lotldg_got']=="Fail" || $row_issuetbl['lotldg_qc']=="Fail")

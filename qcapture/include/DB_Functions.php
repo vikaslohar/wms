@@ -6788,7 +6788,7 @@ public function GetTranSetupLotyrcodelist() {
 			}
 		}
 //return "SELECT packaging_id, macoprname FROM tbl_rpspackaging WHERE packaging_id = $trid and (packaging_dop='0000-00-00' OR packaging_dop IS NULL OR packaging_dop='' )";		
-		$stmt_2 = $this->conn_ps->prepare("SELECT packaging_id, macoprname FROM tbl_rpspackaging WHERE packaging_id = ? and (packaging_dop='0000-00-00' OR packaging_dop IS NULL OR packaging_dop='' )");
+		$stmt_2 = $this->conn_ps->prepare("SELECT packaging_id, macoprname FROM tbl_rpspackaging WHERE packaging_id = ? and (packaging_dop='0000-00-00' OR packaging_dop IS NULL OR packaging_dop='00-00-0000' )");
 		$stmt_2->bind_param("i", $trid);
 		$result2=$stmt_2->execute();
 		$stmt_2->store_result();

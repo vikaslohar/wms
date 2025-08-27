@@ -186,23 +186,29 @@ class DB_Functions {
         }
     }
 
-	public function GetTrList($lasttrid) {
+
+
+
+
+
+	/*public function GetTrList($lasttrid) {
 		//$plantcode = $this->getPlantcode($scode);
-		$mainarray=array();
+	//return "Testing ";	
+		$mainarray=array(); $userSR = array(); $user24=array(); $barcd='';
 		if($lasttrid>0)
 		{
-			$stmt = $this->conn_ps->prepare("SELECT disp_id, disp_date, disp_partytype, disp_state, disp_location, disp_party, disp_dodc FROM tbl_disp WHERE disp_id>? and disp_tflg=1  ORDER BY disp_id ASC");
-			$stmt->bind_param("1", $lasttrid);
+			$stmt = $this->conn_ps->prepare("SELECT disp_id, disp_date, disp_partytype, disp_state, disp_location, disp_party, disp_dodc FROM tbl_disp WHERE disp_id=? and disp_tflg=1 and disp_partytype IN ('Branch','C&F','Dealer')  ORDER BY disp_id ASC");
+			$stmt->bind_param("i", $lasttrid);
 		}
 		else
 		{
-			 $stmt = $this->conn_ps->prepare("SELECT disp_id, disp_date, disp_partytype, disp_state, disp_location, disp_party, disp_dodc FROM tbl_disp WHERE disp_tflg=1  ORDER BY disp_id ASC");
+			 $stmt = $this->conn_ps->prepare("SELECT disp_id, disp_date, disp_partytype, disp_state, disp_location, disp_party, disp_dodc FROM tbl_disp WHERE disp_tflg=1 and disp_partytype IN ('Branch','C&F','Dealer')  ORDER BY disp_id ASC");
 			//$stmt->bind_param("ss", $email, $password);
 		}
         $stmt->execute();
         $stmt->store_result();
-		$userSR = array(); $user24=array(); $barcd='';
-		$disp_id=0; $disp_date=''; $disp_partytype='' $disp_state='';, $disp_location=''; $disp_party=''; $disp_dodc='';
+	//return "Test ".$stmt->num_rows;	
+		$disp_id=0; $disp_date=''; $disp_partytype=''; $disp_state=''; $disp_location=''; $disp_party=''; $disp_dodc='';
         if ($stmt->num_rows > 0) {
             // user existed 
 			$stmt->bind_result($disp_id, $disp_date, $disp_partytype, $disp_state, $disp_location, $disp_party, $disp_dodc);
@@ -244,7 +250,7 @@ class DB_Functions {
 						$stmt_variety->bind_result($productionlocation, $locstate);
 						//looping through all the records 
 						$stmt_variety->fetch();
-						$promachname=$promac_mac.$promac_macid;
+						$location=$productionlocation;
 						$stmt_variety->close();
 					}
 				}
@@ -255,29 +261,34 @@ class DB_Functions {
 				$stmt_2->bind_param("i", $disp_id);
 				$result2=$stmt_2->execute();
 				$stmt_2->store_result();
+				return $stmt_2->num_rows;
 				if ($stmt_2->num_rows == 0) {
-					$dpss_barcode=''; $dpss_crop=''; $dpss_variety=''; $dpss_ups=''; $dpss_lotno=''; $dpss_qty=''; $dpss_grosswt=''; $dpss_dov=''; $dpss_qc=''; $dpss_dot=''; $wbavailable=''; $cropname=''; $popularname='';
+					$dpss_barcode=''; $dpss_crop=''; $dpss_variety=''; $dpss_ups=''; $dpss_lotno=''; $dpss_qty=''; $dpss_grosswt=''; $dpss_dov=''; $dpss_qc=''; $dpss_dot=''; $wbavailable=''; $cropname=''; $popularname=''; $croptype=''; $dop='';
 					$temp=array();
-					$temp["disp_id"] = $disp_id;
-					$temp["disp_date"] = $disp_dodc;
-					$temp["disp_partytype"] = $disp_partytype;
-					$temp["partyname"] = $partyname;
-					$temp["location"] = $location;
-					$temp["disp_date"] = $disp_date;
-					$temp["cropname"] = $cropname;
-					$temp["varietyname"] = $popularname;
-					$temp["dpss_ups"] = $dpss_ups;
-					$temp["dpss_lotno"] = $dpss_lotno;
-					$temp["dpss_qty"] = $dpss_qty;
-					$temp["dpss_grosswt"] = $dpss_grosswt;
-					$temp["dpss_dov"] = $dpss_dov;
-					$temp["dpss_qc"] = $dpss_qc;
-					$temp["dpss_dot"] = $dpss_dot;
-					$temp["wbavailable"] = $wbavailable;
-					$temp["dpss_barcode"] = $dpss_barcode;
-					array_push($user24,$temp);
-					
-					$stmt_2->close();
+					if($croptype=="Field Crop" || $croptype=="Vegetable Crop")
+					{
+						$temp["disp_id"] = $disp_id;
+						$temp["disp_date"] = $disp_dodc;
+						$temp["disp_partytype"] = $disp_partytype;
+						$temp["partyname"] = $partyname;
+						$temp["location"] = $location;
+						$temp["disp_date"] = $disp_date;
+						$temp["croptype"] = $croptype;
+						$temp["cropname"] = $cropname;
+						$temp["varietyname"] = $popularname;
+						$temp["dpss_ups"] = $dpss_ups;
+						$temp["dpss_lotno"] = $dpss_lotno;
+						$temp["dpss_qty"] = $dpss_qty;
+						$temp["dpss_grosswt"] = $dpss_grosswt;
+						$temp["dpss_dov"] = $dpss_dov;
+						$temp["dpss_qc"] = $dpss_qc;
+						$temp["dpss_dot"] = $dpss_dot;
+						$temp["dpss_dop"] = $dop;
+						$temp["wbavailable"] = $wbavailable;
+						$temp["dpss_barcode"] = $dpss_barcode;
+						array_push($user24,$temp);
+					}
+					//$stmt_2->close();
 	
 				} else {
 					$stmt_2->bind_result($dpss_barcode, $dpss_crop, $dpss_variety, $dpss_ups, $dpss_lotno, $dpss_qty, $dpss_grosswt, $dpss_dov, $dpss_qc, $dpss_dot);
@@ -287,12 +298,12 @@ class DB_Functions {
 						$temp=array();
 						
 						if($dpss_crop!=''){
-							$stmt_crop = $this->conn_ps->prepare("SELECT cropid, cropname FROM tblcrop WHERE cropid = ? ");
+							$stmt_crop = $this->conn_ps->prepare("SELECT cropid, cropname, croptype FROM tblcrop WHERE cropid = ? ");
 							$stmt_crop->bind_param("i", $dpss_crop);
 							$result_crop=$stmt_crop->execute();
 							$stmt_crop->store_result();
 							if ($stmt_crop->num_rows > 0) {
-								$stmt_crop->bind_result($cropid, $cropname);
+								$stmt_crop->bind_result($cropid, $cropname, $croptype);
 								//looping through all the records 
 								$stmt_crop->fetch();
 								$stmt_crop->close();
@@ -311,14 +322,33 @@ class DB_Functions {
 								$stmt_variety->close();
 							}
 						}
+
+						$dop='';
+						if($dpss_lotno!=''){
+							$stmt_ldgpack = $this->conn_ps->prepare("SELECT lotldg_dop FROM tbl_lot_ldg_pack WHERE lotno = ? ");
+							$stmt_ldgpack->bind_param("s", $dpss_lotno);
+							$result_ldgpack=$stmt_ldgpack->execute();
+							$stmt_ldgpack->store_result();
+							if ($stmt_ldgpack->num_rows > 0) {
+								$stmt_ldgpack->bind_result($lotldg_dop);
+								//looping through all the records 
+								$stmt_ldgpack->fetch();
+								if($lotldg_dop!='' && $lotldg_dop!='0000-00-00' && $lotldg_dop!=NULL)
+								{
+									$lotldg_dop1=explode("-",$lotldg_dop);
+									$dop=$lotldg_dop1[2]."-".$lotldg_dop1[1]."-".$lotldg_dop1[0];
+								}
+								$stmt_ldgpack->close();
+							}
+						}
 						
-						$wbavailable='No';
-						$stmt_wbqrcode = $this->conn_ps->prepare("SELECT wb_mpbarcode FROM tbl_wbqrcode WHERE wb_mpbarcode = ? ");
+						$wbavailable='No'; $wbmpqrcode='';
+						$stmt_wbqrcode = $this->conn_ps->prepare("SELECT wb_mpbarcode, wb_mpqrcode FROM tbl_wbqrcode WHERE wb_mpbarcode = ? ");
 						$stmt_wbqrcode->bind_param("i", $dpss_barcode);
 						$result_wbqrcode=$stmt_wbqrcode->execute();
 						$stmt_wbqrcode->store_result();
 						if ($stmt_wbqrcode->num_rows > 0) {
-							$stmt_wbqrcode->bind_result($wb_mpbarcode);
+							$stmt_wbqrcode->bind_result($wb_mpbarcode, $wbmpqrcode);
 							//looping through all the records 
 							$stmt_wbqrcode->fetch();
 							$wbavailable='Yes';
@@ -326,32 +356,40 @@ class DB_Functions {
 							$stmt_wbqrcode->close();
 						}
 						
+						$diq2=explode(" ",$dpss_ups);
+						$diq=explode(".",$diq2[0]);
+						if($diq[1]==000){$difq=$diq[0];}else{$difq=$$diq2[0];}
+						$dpss_ups=$difq." ".$diq2[1];
 						
-						
-						$temp["disp_id"] = $disp_id;
-						$temp["disp_date"] = $disp_dodc;
-						$temp["disp_partytype"] = $disp_partytype;
-						$temp["partyname"] = $partyname;
-						$temp["location"] = $location;
-						$temp["disp_date"] = $disp_date;
-						$temp["cropname"] = $cropname;
-						$temp["varietyname"] = $popularname;
-						$temp["dpss_ups"] = $dpss_ups;
-						$temp["dpss_lotno"] = $dpss_lotno;
-						$temp["dpss_qty"] = $dpss_qty;
-						$temp["dpss_grosswt"] = $dpss_grosswt;
-						$temp["dpss_dov"] = $dpss_dov;
-						$temp["dpss_qc"] = $dpss_qc;
-						$temp["dpss_dot"] = $dpss_dot;
-						$temp["wbavailable"] = $wbavailable;
-						$temp["dpss_barcode"] = $dpss_barcode;
-						//$temp["disp_date"] = $disp_date;
-						
-						array_push($user24,$temp);
-						
-						$stmt_2->close();
+						if($croptype=="Field Crop" || $croptype=="Vegetable Crop")
+						{
+							$temp["disp_id"] = $disp_id;
+							$temp["disp_date"] = $disp_dodc;
+							$temp["disp_partytype"] = $disp_partytype;
+							$temp["partyname"] = $partyname;
+							$temp["location"] = $location;
+							$temp["disp_date"] = $disp_date;
+							$temp["croptype"] = $croptype;
+							$temp["cropname"] = $cropname;
+							$temp["varietyname"] = $popularname;
+							$temp["dpss_ups"] = $dpss_ups;
+							$temp["dpss_lotno"] = $dpss_lotno;
+							$temp["dpss_qty"] = $dpss_qty;
+							$temp["dpss_grosswt"] = $dpss_grosswt;
+							$temp["dpss_dov"] = $dpss_dov;
+							$temp["dpss_qc"] = $dpss_qc;
+							$temp["dpss_dot"] = $dpss_dot;
+							$temp["dpss_dop"] = $dop;
+							$temp["wbavailable"] = $wbavailable;
+							$temp["dpss_barcode"] = $dpss_barcode;
+							$temp["wb_mpqrcode"] = $wbmpqrcode;
+							
+							array_push($user24,$temp);
+						}
+						//$stmt_2->close();
 					}
 				}
+				$stmt_2->close();
 				
 			}
 			$stmt->close();
@@ -364,7 +402,8 @@ class DB_Functions {
            // return false;
         }
 		
-		array_push($mainarray,$user24);
+		//array_push($mainarray,$user24);
+		$mainarray['MParray']=$user24;
 		
 		if($barcd!="")
 		{
@@ -385,12 +424,12 @@ class DB_Functions {
 						{
 						
 							if($wb_crop!=''){
-								$stmt_crop = $this->conn_ps->prepare("SELECT cropid, cropname FROM tblcrop WHERE cropid = ? ");
+								$stmt_crop = $this->conn_ps->prepare("SELECT cropid, cropname, croptype FROM tblcrop WHERE cropid = ? ");
 								$stmt_crop->bind_param("i", $wb_crop);
 								$result_crop=$stmt_crop->execute();
 								$stmt_crop->store_result();
 								if ($stmt_crop->num_rows > 0) {
-									$stmt_crop->bind_result($cropid, $cropname);
+									$stmt_crop->bind_result($cropid, $cropname, $croptype);
 									//looping through all the records 
 									$stmt_crop->fetch();
 									$stmt_crop->close();
@@ -423,13 +462,32 @@ class DB_Functions {
 								}
 							}
 							
-							$disp_id=0; $dpss_lotno=''; $dpss_qty=''; $dpss_grosswt=''; $dpss_dov=''; $dpss_qc=''; $dpss_dot=''; $disp_date=''; $disp_partytype='' $disp_state='';, $disp_location=''; $disp_party=''; $disp_dodc='';
-							$stmt_dispsub = $this->conn_ps->prepare("SELECT disp_id, dpss_lotno, dpss_qty, dpss_grosswt, dpss_dov, dpss_qc, dpss_dot FROM tbl_dispsub_sub WHERE dpss_barcode = ? ");
+							$dop='';
+							if($wb_lotno!=''){
+								$stmt_ldgpack = $this->conn_ps->prepare("SELECT lotldg_dop FROM tbl_lot_ldg_pack WHERE lotno = ? ");
+								$stmt_ldgpack->bind_param("s", $wb_lotno);
+								$result_ldgpack=$stmt_ldgpack->execute();
+								$stmt_ldgpack->store_result();
+								if ($stmt_ldgpack->num_rows > 0) {
+									$stmt_ldgpack->bind_result($lotldg_dop);
+									//looping through all the records 
+									$stmt_ldgpack->fetch();
+									if($lotldg_dop!='' && $lotldg_dop!='0000-00-00' && $lotldg_dop!=NULL)
+									{
+										$lotldg_dop1=explode("-",$lotldg_dop);
+										$dop=$lotldg_dop1[2]."-".$lotldg_dop1[1]."-".$lotldg_dop1[0];
+									}
+									$stmt_ldgpack->close();
+								}
+							}
+							
+							$disp_id=0; $dpss_lotno=''; $dpss_qty=''; $dpss_grosswt=''; $dpss_dov=''; $dpss_qc=''; $dpss_dot=''; $disp_date=''; $disp_partytype=''; $disp_state=''; $disp_location=''; $disp_party=''; $disp_dodc=''; $dpss_ups='';
+							$stmt_dispsub = $this->conn_ps->prepare("SELECT disp_id, dpss_lotno, dpss_qty, dpss_grosswt, dpss_dov, dpss_qc, dpss_dot, dpss_ups FROM tbl_dispsub_sub WHERE dpss_barcode = ? ");
 							$stmt_dispsub->bind_param("s", $wb_mpbarcode);
 							$result_dispsub=$stmt_dispsub->execute();
 							$stmt_dispsub->store_result();
 							if ($stmt_dispsub->num_rows > 0) {
-								$stmt_dispsub->bind_result($disp_id, $dpss_lotno, $dpss_qty, $dpss_grosswt, $dpss_dov, $dpss_qc, $dpss_dot);
+								$stmt_dispsub->bind_result($disp_id, $dpss_lotno, $dpss_qty, $dpss_grosswt, $dpss_dov, $dpss_qc, $dpss_dot, $dpss_ups);
 								//looping through all the records 
 								$stmt_dispsub->fetch();
 								$stmt_dispsub->close();
@@ -459,32 +517,43 @@ class DB_Functions {
 									$stmt_dispmain->close();
 								}
 							}
-							$temp=array();
-							$temp["disp_id"] = $disp_id;
-							$temp["disp_date"] = $disp_dodc;
-							$temp["disp_partytype"] = $disp_partytype;
-							$temp["partyname"] = $partyname;
-							$temp["location"] = $location;
-							$temp["disp_date"] = $disp_date;
-							$temp["cropname"] = $cropname;
-							$temp["varietyname"] = $popularname;
-							$temp["dpss_ups"] = $dpss_ups;
-							$temp["dpss_lotno"] = $dpss_lotno;
-							$temp["dpss_qty"] = $dpss_qty;
-							$temp["dpss_grosswt"] = $dpss_grosswt;
-							$temp["dpss_dov"] = $dpss_dov;
-							$temp["dpss_qc"] = $dpss_qc;
-							$temp["dpss_dot"] = $dpss_dot;
-							$temp["wb_intqrcode"] = $wb_intqrcode;
-							$temp["wb_extqrcode"] = $wb_extqrcode;
-							$temp["wb_mpqrcode"] = $wb_mpqrcode;
-							$temp["dpss_barcode"] = $dpss_barcode;
-							$temp["nop_inwb"] = $wb_nop;
-							$temp["wb_weight"] = $wb_qty;
-							$temp["wb_inmp"] = $pnpslipsub_wbinmp;
 							
-							array_push($userSR,$temp);
-						
+							$diq2=explode(" ",$dpss_ups);
+							$diq=explode(".",$diq2[0]);
+							if($diq[1]==000){$difq=$diq[0];}else{$difq=$$diq2[0];}
+							$dpss_ups=$difq." ".$diq2[1];
+							
+							
+							$temp=array();
+							if($croptype=="Field Crop" || $croptype=="Vegetable Crop")
+							{
+								$temp["disp_id"] = $disp_id;
+								$temp["disp_date"] = $disp_dodc;
+								$temp["disp_partytype"] = $disp_partytype;
+								$temp["partyname"] = $partyname;
+								$temp["location"] = $location;
+								$temp["disp_date"] = $disp_date;
+								$temp["croptype"] = $croptype;
+								$temp["cropname"] = $cropname;
+								$temp["varietyname"] = $popularname;
+								$temp["dpss_ups"] = $dpss_ups;
+								$temp["dpss_lotno"] = $dpss_lotno;
+								$temp["dpss_qty"] = $dpss_qty;
+								$temp["dpss_grosswt"] = $dpss_grosswt;
+								$temp["dpss_dov"] = $dpss_dov;
+								$temp["dpss_qc"] = $dpss_qc;
+								$temp["dpss_dot"] = $dpss_dot;
+								$temp["dpss_dop"] = $dop;
+								$temp["wb_intqrcode"] = $wb_intqrcode;
+								$temp["wb_extqrcode"] = $wb_extqrcode;
+								$temp["wb_mpqrcode"] = $wb_mpqrcode;
+								$temp["dpss_barcode"] = $dpss_barcode;
+								$temp["nop_inwb"] = $wb_nop;
+								$temp["wb_weight"] = $wb_qty;
+								$temp["wb_inmp"] = $pnpslipsub_wbinmp;
+								
+								array_push($userSR,$temp);
+							}
 						}
 						$stmt_wbqrcode->close();
 					}
@@ -492,2569 +561,665 @@ class DB_Functions {
 				}
 			}
 		}
-		array_push($mainarray,$userSR);
+		//array_push($mainarray,$userSR);
+		$mainarray['WBarray']=$userSR;
 		if(empty($mainarray))
+		{return false;}
+		else
+		{return $mainarray;}
+    }*/
+
+	public function GetNextMinDispatchID($d_id) {
+	
+		$stmt = $this->conn_ps->prepare("SELECT d.disp_id, crp.croptype, w.wb_mpqrcode
+			FROM tbl_disp d
+			LEFT JOIN tbl_dispsub_sub dp ON d.disp_id = dp.disp_id
+			LEFT JOIN tbl_wbqrcode w ON dp.dpss_barcode = w.wb_mpbarcode
+			LEFT JOIN tblcrop crp ON dp.dpss_crop = crp.cropid
+			WHERE d.disp_tflg = 1 AND d.disp_dodc>='2024-02-01' AND d.disp_partytype IN ('Branch', 'C&F', 'Dealer') AND d.disp_id>? AND crp.croptype in ('Field Crop','Vegetable Crop')  GROUP BY  d.disp_id having ((crp.croptype = 'Field Crop') OR (crp.croptype = 'Vegetable Crop' AND w.wb_mpqrcode!='' AND w.wb_mpqrcode IS NOT NULL)) order by d.disp_id ASC ");
+		$stmt->bind_param("i", $d_id);
+		$result_dispmain=$stmt->execute();
+		$stmt->store_result();
+		if ($stmt->num_rows > 0) {
+			$stmt->bind_result($disp_id, $croptype, $wb_mpqrcode);
+			$stmt->fetch();
+			$stmt->close();
+			//return "ID - ".$disp_id;
+		}
+		else
+		{
+			$disp_id=$d_id+1;
+		}	
+		return $disp_id;
+	}
+
+
+
+
+public function GetTrList($lasttrid,$dflag) {
+		//$plantcode = $this->getPlantcode($scode);
+		$mainarray=array(); $userSR = array(); $user24=array(); $barcd='';
+		//$min_disp_id = $lasttrid + 5;
+		if($dflag>0)
+		{$min_disp_id = $lasttrid;}
+		else
+		{$min_disp_id = $this->GetNextMinDispatchID($lasttrid);}
+		//$min_disp_id = 20569;
+		$max_disp_id = $min_disp_id + 0;
+
+
+		$stmt = $this->conn_ps->prepare("SELECT d.disp_id, d.disp_date, d.disp_partytype, d.disp_state, d.disp_location, d.disp_party, d.disp_dodc, ds.disps_nvariety,
+			dp.dpss_barcode, dp.dpss_crop, dp.dpss_variety, dp.dpss_ups, dp.dpss_lotno, dp.dpss_qty, dp.dpss_grosswt, dp.dpss_dov, dp.dpss_qc, dp.dpss_dot,
+			w.wb_mpbarcode, w.wb_mpqrcode, p.business_name, l.productionlocation, crp.cropname, crp.croptype, vr.popularname, lot.lotldg_dop, lot.orlot, count(DISTINCT w.wb_id) as pnpslipsub_wbinmp, dp.dpss_barcodetype, w.wb_type 
+			FROM tbl_disp d
+			LEFT JOIN tbl_dispsub_sub dp ON d.disp_id = dp.disp_id
+			LEFT JOIN tbl_disp_sub ds ON dp.disps_id = ds.disps_id
+			LEFT JOIN tbl_wbqrcode w ON dp.dpss_barcode = w.wb_mpbarcode
+			LEFT JOIN tbl_partymaser p ON d.disp_party = p.p_id
+			LEFT JOIN tblproductionlocation l ON d.disp_location = l.productionlocationid
+			LEFT JOIN tblcrop crp ON dp.dpss_crop = crp.cropid
+			LEFT JOIN tblvariety vr ON dp.dpss_variety = vr.varietyid
+			LEFT JOIN tbl_lot_ldg_pack lot ON dp.dpss_lotno = lot.lotno
+			LEFT JOIN tbl_pnpslipsub pnp ON dp.dpss_lotno = pnp.pnpslipsub_plotno
+			WHERE d.disp_tflg = 1 AND disp_dodc>='2024-02-01' AND d.disp_partytype IN ('Branch', 'C&F', 'Dealer') AND (d.disp_id  BETWEEN $min_disp_id AND $max_disp_id) AND crp.croptype in ('Field Crop','Vegetable Crop') AND (dp.dpss_barcode!='' AND dp.dpss_barcode IS NOT NULL)  GROUP BY dp.dpss_barcode ");
+		//$stmt->bind_param("i", $lasttrid); 
+		$stmt->execute();
+		$stmt->store_result();
+		
+		$disp_id=0; $disp_date=''; $disp_partytype=''; $disp_state=''; $disp_location=''; $disp_party=''; $disp_dodc=''; $partyname=''; $location=''; 	$pper=''; $ploc=''; $lotstate=''; $wbmpqrcode=''; $dpss_barcode=''; $dpss_crop=''; $dpss_variety=''; $dpss_ups=''; $dpss_lotno=''; $dpss_qty=''; $dpss_grosswt=''; $dpss_dov=''; $dpss_qc=''; $dpss_dot=''; $wbavailable=''; $cropname=''; $popularname=''; $croptype=''; $dop=''; $pnpslipsub_wbinmp=''; $orlot=''; $dpss_barcodetype=''; $wb_mptype=''; $disps_nvariety='';
+//	return $stmt->num_rows;	
+        if ($stmt->num_rows > 0) {
+            // user existed 
+		$stmt->bind_result($disp_id, $disp_date, $disp_partytype, $disp_state, $disp_location, $disp_party, $disp_dodc, $disps_nvariety, $dpss_barcode, $dpss_crop, $dpss_variety, $dpss_ups, $dpss_lotno, $dpss_qty, $dpss_grosswt, $dpss_dov, $dpss_qc, $dpss_dot, $wb_mpbarcode, $wb_mpqrcode, $partyname, $productionlocation, $cropname, $croptype, $popularname, $lotldg_dop, $orlot, $pnpslipsub_wbinmp, $dpss_barcodetype, $wb_mptype); 
+		
+		while($stmt->fetch())
+		{ 
+			$comma_cropname=$cropname; $comma_popularname=$popularname; $comma_dpss_ups=$dpss_ups; $comma_orlot=$orlot; $comma_dpss_qty=$dpss_qty; $comma_dpss_dov=$dpss_dov; $comma_dpss_qc=$dpss_qc; $comma_dpss_dot=$dpss_dot; $comma_lotldg_dop=$lotldg_dop; 
+			if($disps_nvariety!='' && $disps_nvariety!=NULL) {$comma_popularname=$disps_nvariety;}
+			if (in_array($dpss_barcodetype, ['LMC','NLC','MMC'])) {
+				$comma_cropname=''; $comma_popularname=''; $comma_dpss_ups=''; $comma_orlot=''; $comma_dpss_qty=''; $comma_dpss_dov=''; $comma_dpss_qc=''; $comma_dpss_dot=''; $comma_lotldg_dop=''; $comma_lotno='';
+				$stmt_sub = $this->conn_ps->prepare("SELECT GROUP_CONCAT(crp.cropname ORDER BY dp.dpss_lotno) as comma_cropname, 
+				GROUP_CONCAT(vr.popularname ORDER BY dp.dpss_lotno) as comma_popularname, 
+				GROUP_CONCAT(dp.dpss_ups ORDER BY dp.dpss_lotno) as comma_dpss_ups, 
+				GROUP_CONCAT(dp.dpss_lotno ORDER BY dp.dpss_lotno) as comma_lotno, 
+				GROUP_CONCAT(dp.dpss_qty ORDER BY dp.dpss_lotno) as comma_dpss_qty, 
+				GROUP_CONCAT(dp.dpss_dov ORDER BY dp.dpss_lotno) as comma_dpss_dov, 
+				GROUP_CONCAT(dp.dpss_qc ORDER BY dp.dpss_lotno) as comma_dpss_qc, 
+				GROUP_CONCAT(dp.dpss_dot ORDER BY dp.dpss_lotno) as comma_dpss_dot 
+				FROM tbl_dispsub_sub dp 
+				INNER JOIN tblcrop crp ON dp.dpss_crop = crp.cropid 
+				INNER JOIN tblvariety vr ON dp.dpss_variety = vr.varietyid 
+				WHERE dp.dpss_barcode='$dpss_barcode' GROUP BY dp.dpss_barcode ");
+				//$stmt->bind_param("i", $lasttrid); 
+				$stmt_sub->execute();
+				$stmt_sub->store_result();
+				if ($stmt_sub->num_rows > 0) {
+				
+					$stmt_sub->bind_result($comma_cropname, $comma_popularname, $comma_dpss_ups, $comma_lotno, $comma_dpss_qty, $comma_dpss_dov, $comma_dpss_qc, $comma_dpss_dot);
+				
+					$stmt_sub->fetch();
+				 }
+				 $stmt_sub->close();
+				 
+				$lotno_array= explode(',', $comma_lotno);
+				$lotno_string=array_map(function($lotn) {
+					return "'" . $lotn . "'";
+				    }, $lotno_array);
+				$lotno_string=implode(",",$lotno_string);
+				$orlot_array=array(); 
+				$lotdop_array=array();
+			
+				$stmt_pnpsub = $this->conn_ps->prepare("SELECT orlot, lotldg_dop FROM tbl_lot_ldg_pack where trtype='Dispatch' AND lotno in ($lotno_string) GROUP BY lotno order BY lotno ASC");
+				//$stmt_pnpsub->bind_param("i", $pnpslipmain_id);
+				$result_pnpsub=$stmt_pnpsub->execute();
+				$stmt_pnpsub->store_result();
+				if ($stmt_pnpsub->num_rows > 0) {
+					$stmt_pnpsub->bind_result($orlot, $lotldg_dop);
+					while($stmt_pnpsub->fetch())
+					{
+						array_push($orlot_array, $orlot);
+						array_push($lotdop_array, $lotldg_dop);
+					}
+					//looping through all the records 
+					
+					$stmt_pnpsub->close();
+				}
+				$comma_orlot=implode(",",$orlot_array);
+				$comma_lotldg_dop=implode(",",$lotdop_array);
+			 }
+			//return $dpss_barcodetype; 
+			
+			$wbavailable='No'; 
+			if($wb_mpqrcode!='' && $wb_mpqrcode!=NULL )
+			{
+				$wbavailable='Yes';
+				if($barcd!=""){$barcd=$barcd.",".$wb_mpbarcode;} else {$barcd=$wb_mpbarcode;}
+			}
+			
+			$temp=array();
+			
+			$upss = []; $upsstype = [];
+			$ups_units = [];
+			$comma_ups=explode(",",$comma_dpss_ups);
+			foreach($comma_ups as $ups)
+			{
+				$ups_arr=explode(" ",$ups);
+				$upss[] = $ups_arr[0];
+				$ups_units[] = $ups_arr[1];
+				
+				$stmt_ups = $this->conn_ps->prepare("SELECT upsname FROM tblups WHERE upsname = ? ");
+				$stmt_ups->bind_param("i", $ups);
+				$result_ups=$stmt_ups->execute();
+				$stmt_ups->store_result();
+				if ($stmt_ups->num_rows > 0) {
+					$stmt_ups->bind_result($upsname);
+					//looping through all the records 
+					$stmt_ups->fetch();
+					$stmt_ups->close();
+					$upsstype[] = "ST";
+				}
+				else
+				{
+					$upsstype[] = "NST";
+				}
+			}
+
+			if($partyname=="VNR Seeds Private Limited-Tatibandh" || $partyname=="VNR Seeds Pvt Ltd-Raipur_Old Branch" || $partyname=="VNR Seeds Private Limited-Raipur Depot" || $partyname=="VNR Seeds Private Limited-Tekari(Godown)" || $partyname=="Trial Pack-All Party") {$partyname="VNR Seeds Pvt Ltd-Raipur";}
+	//return $croptype;
+			if($croptype=="Field Crop" || $croptype=="Vegetable Crop")
+			{ 
+				if($croptype=="Field Crop")// && $dpss_barcode!='' &&  $dpss_barcode!=NULL)
+				{				
+					
+					$temp["disp_id"] = $disp_id;
+					$temp["disp_date"] = $disp_dodc;
+					$temp["disp_partytype"] = $disp_partytype;
+					$temp["partyname"] = $partyname;
+					$temp["location"] = $productionlocation;
+					$temp["state"] = $disp_state;
+					$temp["disp_date"] = $disp_date;
+					$temp["croptype"] = $croptype;
+					$temp["cropname"] = $comma_cropname;
+					$temp["varietyname"] = $comma_popularname;
+					$temp["dpss_ups"] = implode(',', $upss);
+					$temp["dpss_upsunit"] = implode(',', $ups_units);
+					$temp["dpss_lotno"] = $comma_orlot;
+					$temp["dpss_qty"] = $comma_dpss_qty;
+					$temp["dpss_grosswt"] = $dpss_grosswt;
+					$temp["dpss_dov"] = $comma_dpss_dov;
+					$temp["dpss_qc"] = $comma_dpss_qc;
+					$temp["dpss_dot"] = $comma_dpss_dot;
+					$temp["dpss_dop"] = $comma_lotldg_dop;
+					$temp["wbavailable"] = $wbavailable;
+					$temp["dpss_barcode"] = $dpss_barcode;
+					$temp["wb_mpqrcode"] = $wb_mpqrcode;
+					$temp["wb_inmp"] = $pnpslipsub_wbinmp;
+					$temp["mptype"] = $dpss_barcodetype;
+					//$temp["wbtype"] = $wb_mptype;
+					$temp["ups_type"] = implode(',', $upsstype);
+					array_push($user24,$temp);
+				}
+				
+//return "Test - ".$wb_mpqrcode;
+				if($croptype=="Vegetable Crop")// && $wb_mpqrcode!='' && $wb_mpqrcode!=NULL)
+				{				
+					$temp["disp_id"] = $disp_id;
+					$temp["disp_date"] = $disp_dodc;
+					$temp["disp_partytype"] = $disp_partytype;
+					$temp["partyname"] = $partyname;
+					$temp["location"] = $productionlocation;
+					$temp["state"] = $disp_state;
+					$temp["disp_date"] = $disp_date;
+					$temp["croptype"] = $croptype;
+					$temp["cropname"] = $comma_cropname;
+					$temp["varietyname"] = $comma_popularname;
+					$temp["dpss_ups"] = implode(',', $upss);
+					$temp["dpss_upsunit"] = implode(',', $ups_units);
+					$temp["dpss_lotno"] = $comma_orlot;
+					$temp["dpss_qty"] = $comma_dpss_qty;
+					$temp["dpss_grosswt"] = $dpss_grosswt;
+					$temp["dpss_dov"] = $comma_dpss_dov;
+					$temp["dpss_qc"] = $comma_dpss_qc;
+					$temp["dpss_dot"] = $comma_dpss_dot;
+					$temp["dpss_dop"] = $comma_lotldg_dop;
+					$temp["wbavailable"] = $wbavailable;
+					$temp["dpss_barcode"] = $dpss_barcode;
+					$temp["wb_mpqrcode"] = $wb_mpqrcode;
+					$temp["wb_inmp"] = $pnpslipsub_wbinmp;
+					$temp["mptype"] = $dpss_barcodetype;
+					//$temp["wbtype"] = $wb_mptype;
+					$temp["ups_type"] = implode(',', $upsstype);
+
+					array_push($user24,$temp);
+					//return $user24;	
+				}
+			}
+
+			
+		}
+		$stmt->close();
+		//return $user24;	
+           
+        } else {
+            // user not existed
+			$user24 = array();
+            $stmt->close();
+           // return false;
+        }
+	
+		//array_push($mainarray,$user24);
+		$mainarray['MParray']=$user24;
+	//return "testing ".$barcd;	
+		if($barcd!="")
+		{
+			$barcod=explode(",",$barcd);
+			foreach($barcod as $barcods)
+			{
+				if($barcods<>"")
+				{
+//return "SELECT d.wb_intqrcode, d.wb_extqrcode, d.wb_crop, d.wb_variety, d.wb_ups, d.wb_lotno, d.wb_nop, d.wb_qty, d.wb_mptype, d.wb_mpqrcode, d.wb_mpbarcode, d.wb_mpwt, d.wb_mpgrosswt, crp.cropname, crp.croptype, vr.popularname, pnp.pnpslipsub_wbinmp, lot.lotldg_dop,
+//					dp.disp_id, dp.dpss_lotno, dp.dpss_qty, dp.dpss_grosswt, dp.dpss_dov, dp.dpss_qc, dp.dpss_dot, dp.dpss_ups, 	
+//					dm.disp_date, dm.disp_partytype, dm.disp_state, dm.disp_location, dm.disp_party, dm.disp_dodc, p.business_name, l.productionlocation
+//					FROM tbl_wbqrcode d
+//					LEFT JOIN tblcrop crp ON d.wb_crop = crp.cropid
+//					LEFT JOIN tblvariety vr ON d.wb_variety = vr.varietyid
+//					LEFT JOIN tbl_pnpslipsub pnp ON d.wb_lotno = pnp.pnpslipsub_plotno
+//					LEFT JOIN tbl_lot_ldg_pack lot ON d.wb_lotno = lot.lotno
+//					LEFT JOIN tbl_dispsub_sub dp ON d.wb_mpbarcode = dp.dpss_barcode
+//					LEFT JOIN tbl_disp dm ON dp.disp_id = dm.disp_id
+//					LEFT JOIN tbl_partymaser p ON dm.disp_party = p.p_id
+//					LEFT JOIN tblproductionlocation l ON dm.disp_location = l.productionlocationid
+//					WHERE d.wb_mpbarcode=$barcods";
+				
+					
+					$stmt_wbqrcode = $this->conn_ps->prepare("SELECT d.wb_intqrcode, d.wb_extqrcode, d.wb_crop, d.wb_variety, d.wb_ups, d.wb_lotno, d.wb_nop, d.wb_qty, d.wb_mptype, d.wb_mpqrcode, d.wb_mpbarcode, d.wb_mpwt, d.wb_mpgrosswt, crp.cropname, crp.croptype, vr.popularname, pnp.pnpslipsub_wbinmp, lot.lotldg_dop, lot.orlot,
+					dp.disp_id, dp.dpss_lotno, dp.dpss_qty, dp.dpss_grosswt, dp.dpss_dov, dp.dpss_qc, dp.dpss_dot, dp.dpss_ups, 	
+					dm.disp_date, dm.disp_partytype, dm.disp_state, dm.disp_location, dm.disp_party, dm.disp_dodc, ds.disps_nvariety, p.business_name, l.productionlocation, dp.dpss_barcodetype, d.wb_type, dp.dpss_barcodetype
+					FROM tbl_wbqrcode d
+					LEFT JOIN tblcrop crp ON d.wb_crop = crp.cropid
+					LEFT JOIN tblvariety vr ON d.wb_variety = vr.varietyid
+					LEFT JOIN tbl_pnpslipsub pnp ON d.wb_lotno = pnp.pnpslipsub_plotno
+					LEFT JOIN tbl_lot_ldg_pack lot ON d.wb_lotno = lot.lotno
+					LEFT JOIN tbl_dispsub_sub dp ON d.wb_mpbarcode = dp.dpss_barcode
+					LEFT JOIN tbl_disp dm ON dp.disp_id = dm.disp_id
+					LEFT JOIN tbl_disp_sub ds ON dp.disps_id = ds.disps_id
+					LEFT JOIN tbl_partymaser p ON dm.disp_party = p.p_id
+					LEFT JOIN tblproductionlocation l ON dm.disp_location = l.productionlocationid
+					WHERE d.wb_mpbarcode='$barcods' group by wb_intqrcode");
+				
+					
+					
+					$pnpslipsub_wbinmp=0; $dop=''; $disp_id=0; $dpss_lotno=''; $dpss_qty=''; $dpss_grosswt=''; $dpss_dov=''; $dpss_qc=''; $dpss_dot=''; $disp_date=''; $disp_partytype='';  $disp_state=''; $disp_location=''; $disp_party=''; $disp_dodc=''; $dpss_ups=''; $orlot=''; $dpss_barcodetype=''; $wb_mptype=''; $disps_nvariety=''; $dpss_barcodetype='';
+					//$stmt_wbqrcode = $this->conn_ps->prepare("SELECT wb_intqrcode, wb_extqrcode, wb_crop, wb_variety, wb_ups, wb_lotno, wb_nop, wb_qty, wb_mptype, wb_mpqrcode, wb_mpbarcode, wb_mpwt, wb_mpgrosswt  FROM tbl_wbqrcode WHERE wb_mpbarcode = ? ");
+					//$stmt_wbqrcode->bind_param("s", $barcods);
+					$result_wbqrcode=$stmt_wbqrcode->execute();
+					$stmt_wbqrcode->store_result();
+//return $stmt_wbqrcode->num_rows;
+					if ($stmt_wbqrcode->num_rows > 0) {
+						$stmt_wbqrcode->bind_result($wb_intqrcode, $wb_extqrcode, $wb_crop, $wb_variety, $wb_ups, $wb_lotno, $wb_nop, $wb_qty, $wb_mptype, $wb_mpqrcode, $wb_mpbarcode, $wb_mpwt, $wb_mpgrosswt, $cropname, $croptype, $popularname, $pnpslipsub_wbinmp, $lotldg_dop, $orlot, $disp_id, $dpss_lotno, $dpss_qty, $dpss_grosswt, $dpss_dov, $dpss_qc, $dpss_dot, $dpss_ups, $disp_date, $disp_partytype, $disp_state, $disp_location, $disp_party, $disp_dodc, $disps_nvariety, $partyname, $productionlocation, $dpss_barcodetype, $wb_mptype, $dpss_barcodetype);
+						//looping through all the records 
+						while($stmt_wbqrcode->fetch())
+						{
+							if (in_array($wb_mptype, ['LWB','NLW'])) 
+							{	
+								$dpss_dov=''; $dpss_qc=''; $dpss_dot=''; $lotldg_dop=''; $orlot=$wb_lotno;  $dpss_qty=$wb_qty; 
+								$wblotno=explode(",",$wb_lotno);
+								foreach($wblotno as $ltn)
+								{
+								
+									if($ltn<>"")
+									{
+										$stmt_ldgpack = $this->conn_ps->prepare("SELECT pnpslipsub_qcdot, pnpslipsub_valupto, pnpslipsub_qc, pnpslipmain_id FROM tbl_pnpslipsub WHERE pnpslipsub_plotno = ? ");
+										$stmt_ldgpack->bind_param("s", $ltn);
+										$result_ldgpack=$stmt_ldgpack->execute();
+										$stmt_ldgpack->store_result();
+										if ($stmt_ldgpack->num_rows > 0) {
+											$stmt_ldgpack->bind_result($pnpslipsub_qcdot, $pnpslipsub_valupto, $pnpslipsub_qc, $pnpslipmain_id);
+											//looping through all the records 
+											$stmt_ldgpack->fetch();
+											
+											$stmt_pnpsub = $this->conn_ps->prepare("SELECT pnpslipmain_dop FROM tbl_pnpslipmain WHERE pnpslipmain_id = ? ");
+											$stmt_pnpsub->bind_param("i", $pnpslipmain_id);
+											$result_pnpsub=$stmt_pnpsub->execute();
+											$stmt_pnpsub->store_result();
+											if ($stmt_pnpsub->num_rows > 0) {
+												$stmt_pnpsub->bind_result($pnpslipmain_dop);
+												//looping through all the records 
+												$stmt_pnpsub->fetch();
+												$stmt_pnpsub->close();
+											}
+											$dop=""; $dov=""; $dot="";
+											if($pnpslipmain_dop!='' && $pnpslipmain_dop!='0000-00-00' && $pnpslipmain_dop!=NULL)
+											{
+												$lotldg_dop1=explode("-",$pnpslipmain_dop);
+												$dop=$lotldg_dop1[2]."-".$lotldg_dop1[1]."-".$lotldg_dop1[0];
+											}
+											else {$dop="00-00-0000"; }
+											if($pnpslipsub_qcdot!='' && $pnpslipsub_qcdot!='0000-00-00' && $pnpslipsub_qcdot!=NULL)
+											{
+												$pnpslipsub_qcdot1=explode("-",$pnpslipsub_qcdot);
+												$dot=$pnpslipsub_qcdot1[2]."-".$pnpslipsub_qcdot1[1]."-".$pnpslipsub_qcdot1[0];
+											}
+											else {$dot="00-00-0000"; }
+											if($pnpslipsub_valupto!='' && $pnpslipsub_valupto!='0000-00-00' && $pnpslipsub_valupto!=NULL)
+											{
+												$pnpslipsub_valupto1=explode("-",$pnpslipsub_valupto);
+												$dov=$pnpslipsub_valupto1[2]."-".$pnpslipsub_valupto1[1]."-".$pnpslipsub_valupto1[0];
+											}
+											else {$dov="00-00-0000"; }
+											$stmt_ldgpack->close();
+											
+											if($dov!="")
+											{
+												if($dpss_dov!="")$dpss_dov=$dpss_dov.",".$dov; else $dpss_dov=$dov; 
+											}
+											if($pnpslipsub_qc!="")
+											{
+												if($dpss_qc!="")$dpss_qc=$dpss_qc.",".$pnpslipsub_qc; else $dpss_qc=$pnpslipsub_qc;
+											}
+											if($dot!="")
+											{
+												if($dpss_dot!="")$dpss_dot=$dpss_dot.",".$dot; else $dpss_dot=$dot;
+											}
+											if($dop!="")
+											{
+												if($lotldg_dop!="")$lotldg_dop=$lotldg_dop.",".$dop; else $lotldg_dop=$dop;
+											}
+											
+										}
+									
+									}
+								
+								}	
+							}
+							if($dpss_barcodetype!='MMC' && $disps_nvariety!='' && $disps_nvariety!=NULL) {$popularname=$disps_nvariety;}
+							$upsstype='';
+							$stmt_ups = $this->conn_ps->prepare("SELECT upsname FROM tblups WHERE upsname = ? ");
+							$stmt_ups->bind_param("i", $ups);
+							$result_ups=$stmt_ups->execute();
+							$stmt_ups->store_result();
+							if ($stmt_ups->num_rows > 0) {
+								$stmt_ups->bind_result($upsname);
+								//looping through all the records 
+								$stmt_ups->fetch();
+								$stmt_ups->close();
+								$upsstype = "ST";
+							}
+							else
+							{
+								$upsstype = "NST";
+							}
+							$diq2=explode(" ",$dpss_ups);
+							if($partyname=="VNR Seeds Private Limited-Tatibandh" || $partyname=="VNR Seeds Pvt Ltd-Raipur_Old Branch" || $partyname=="VNR Seeds Private Limited-Raipur Depot" || $partyname=="VNR Seeds Private Limited-Tekari(Godown)" || $partyname=="Trial Pack-All Party") {$partyname="VNR Seeds Pvt Ltd-Raipur";}
+							$temp=array();
+							//if($croptype=="Field Crop" || $croptype=="Vegetable Crop")
+							if($wb_mpqrcode!='' && $wb_mpqrcode!=NULL )
+							{
+								$temp["disp_id"] = $disp_id;
+								$temp["disp_date"] = $disp_dodc;
+								$temp["disp_partytype"] = $disp_partytype;
+								$temp["partyname"] = $partyname;
+								$temp["location"] = $productionlocation;
+								$temp["state"] = $disp_state;
+								$temp["disp_date"] = $disp_date;
+								$temp["croptype"] = $croptype;
+								$temp["cropname"] = $cropname;
+								$temp["varietyname"] = $popularname;
+								$temp["dpss_ups"] = $diq2[0];
+								$temp["dpss_upsunit"] = $diq2[1];
+								$temp["dpss_lotno"] = $orlot;
+								$temp["dpss_qty"] = $dpss_qty;
+								$temp["dpss_grosswt"] = $dpss_grosswt;
+								$temp["dpss_dov"] = $dpss_dov;
+								$temp["dpss_qc"] = $dpss_qc;
+								$temp["dpss_dot"] = $dpss_dot;
+								$temp["dpss_dop"] = $lotldg_dop;
+								$temp["wb_intqrcode"] = $wb_intqrcode;
+								$temp["wb_extqrcode"] = $wb_extqrcode;
+								$temp["wb_mpqrcode"] = $wb_mpqrcode;
+								$temp["dpss_barcode"] = $wb_mpbarcode;
+								$temp["nop_inwb"] = $wb_nop;
+								$temp["wb_weight"] = $wb_qty;
+								//$temp["mptype"] = $dpss_barcodetype;
+								$temp["wbtype"] = $wb_mptype;
+								$temp["ups_type"] = $upsstype;
+								
+								array_push($userSR,$temp);
+							}
+						}
+						
+					}
+					$stmt_wbqrcode->close();
+				}
+			}
+		}
+		//array_push($mainarray,$userSR);
+		$mainarray['WBarray']=$userSR;
+		
+		if(empty($mainarray))
+		{return false;}
+		else
+		{return $mainarray;}
+    }
+
+
+
+
+
+
+	public function GetBarQRCodechk($barqrcode, $type) {
+		$user24=array(); $disp_id=0; $flg=0; $msg='';
+		
+		if($type=="barcode")
+		{
+			$stmt = $this->conn_ps->prepare("SELECT mpmain_barcode FROM tbl_mpmain WHERE mpmain_barcode=?");
+			$stmt->bind_param("s", $barqrcode); 
+			$stmt->execute();
+			$stmt->store_result();
+			if ($stmt->num_rows > 0) {
+				$stmt->bind_result($mpmain_barcode); 
+				$stmt->fetch();
+				
+				$stmt_dispsub = $this->conn_ps->prepare("SELECT disp_id, dpss_barcodetype FROM tbl_dispsub_sub WHERE dpss_barcode=?");
+				$stmt_dispsub->bind_param("s", $barqrcode); 
+				$stmt_dispsub->execute();
+				$stmt_dispsub->store_result();
+				if ($stmt_dispsub->num_rows > 0) {
+					$stmt_dispsub->bind_result($disp_id, $dpss_barcodetype); 
+					$stmt_dispsub->fetch();
+					
+					$disp_date='';
+					$stmt_dispmain = $this->conn_ps->prepare("SELECT disp_dodc FROM tbl_disp WHERE disp_id=?");
+					$stmt_dispmain->bind_param("i", $disp_id); 
+					$stmt_dispmain->execute();
+					$stmt_dispmain->store_result();
+					if ($stmt_dispmain->num_rows > 0) {
+						$stmt_dispmain->bind_result($disp_dodc); 
+						$stmt_dispmain->fetch();
+						
+						if($disp_dodc!='' && $disp_dodc!='0000-00-00' && $disp_dodc!=NULL)
+						{
+							$disp_dodc1=explode("-",$disp_dodc);
+							$disp_date=$disp_dodc1[2]."-".$disp_dodc1[1]."-".$disp_dodc1[0];
+						}
+					}
+					$stmt_dispmain->close();
+					
+					
+					$user24["disp_id"] = $disp_id;
+					$user24["dispatch_date"] = $disp_date;
+					$user24["Barcode_type"] = $dpss_barcodetype;
+					$user24["flg"] = 1;
+				}
+				else
+				{
+					$user24["msg"] = "Barcode Not Dispatched";
+					$user24["flg"] = 0;
+				}
+				$stmt_dispsub->close();
+				
+				
+				
+				$stmt->close();
+				//return $user24;	
+        	} 
+			else
+			{
+				$user24["msg"] = "Barcode Not Found in Deorjhal Plant";
+				$user24["flg"] = 0;
+			} 
+		}
+		
+		else if($type=="mp_qrcode")
+		{
+			$stmt = $this->conn_ps->prepare("SELECT wb_mpbarcode FROM tbl_wbqrcode WHERE wb_mpqrcode=?");
+			$stmt->bind_param("s", $barqrcode); 
+			$stmt->execute();
+			$stmt->store_result();
+			if ($stmt->num_rows > 0) {
+				$stmt->bind_result($wb_mpbarcode); 
+				$stmt->fetch();
+				
+				$stmt_dispsub = $this->conn_ps->prepare("SELECT disp_id, dpss_barcodetype FROM tbl_dispsub_sub WHERE dpss_barcode=?");
+				$stmt_dispsub->bind_param("s", $wb_mpbarcode); 
+				$stmt_dispsub->execute();
+				$stmt_dispsub->store_result();
+				if ($stmt_dispsub->num_rows > 0) {
+					$stmt_dispsub->bind_result($disp_id, $dpss_barcodetype); 
+					$stmt_dispsub->fetch();
+					
+					
+					$disp_date='';
+					$stmt_dispmain = $this->conn_ps->prepare("SELECT disp_dodc FROM tbl_disp WHERE disp_id=?");
+					$stmt_dispmain->bind_param("i", $disp_id); 
+					$stmt_dispmain->execute();
+					$stmt_dispmain->store_result();
+					if ($stmt_dispmain->num_rows > 0) {
+						$stmt_dispmain->bind_result($disp_dodc); 
+						$stmt_dispmain->fetch();
+						
+						if($disp_dodc!='' && $disp_dodc!='0000-00-00' && $disp_dodc!=NULL)
+						{
+							$disp_dodc1=explode("-",$disp_dodc);
+							$disp_date=$disp_dodc1[2]."-".$disp_dodc1[1]."-".$disp_dodc1[0];
+						}
+					}
+					$stmt_dispmain->close();
+					
+					
+					$user24["disp_id"] = $disp_id;
+					$user24["dispatch_date"] = $disp_date;
+					$user24["Barcode_type"] = $dpss_barcodetype;
+					$user24["flg"] = 1;
+				}
+				else
+				{
+					$user24["msg"] = "Barcode Not Dispatched";
+					$user24["flg"] = 0;
+				}
+				$stmt_dispsub->close();
+				
+				$stmt->close();
+				//return $user24;	
+        	} 
+			else
+			{
+				$user24["msg"] = "MP QRcode Not Linked in Deorjhal Plant";
+				$user24["flg"] = 0;
+			} 
+		}
+		
+		else if($type=="wb_qrcode")
+		{
+			$stmt = $this->conn_ps->prepare("SELECT wb_mpbarcode, wb_actflg FROM tbl_wbqrcode WHERE wb_extqrcode=?");
+			$stmt->bind_param("s", $barqrcode); 
+			$stmt->execute();
+			$stmt->store_result();
+			if ($stmt->num_rows > 0) {
+				$stmt->bind_result($wb_mpbarcode, $wb_actflg); 
+				$stmt->fetch();
+				if($wb_actflg>0)
+				{
+					if(!empty($wb_mpbarcode))
+					{
+						$stmt_dispsub = $this->conn_ps->prepare("SELECT disp_id, dpss_barcodetype FROM tbl_dispsub_sub WHERE dpss_barcode=?");
+						$stmt_dispsub->bind_param("s", $wb_mpbarcode); 
+						$stmt_dispsub->execute();
+						$stmt_dispsub->store_result();
+						if ($stmt_dispsub->num_rows > 0) {
+							$stmt_dispsub->bind_result($disp_id, $dpss_barcodetype); 
+							$stmt_dispsub->fetch();
+							
+							
+							$disp_date='';
+							$stmt_dispmain = $this->conn_ps->prepare("SELECT disp_dodc FROM tbl_disp WHERE disp_id=?");
+							$stmt_dispmain->bind_param("i", $disp_id); 
+							$stmt_dispmain->execute();
+							$stmt_dispmain->store_result();
+							if ($stmt_dispmain->num_rows > 0) {
+								$stmt_dispmain->bind_result($disp_dodc); 
+								$stmt_dispmain->fetch();
+								
+								if($disp_dodc!='' && $disp_dodc!='0000-00-00' && $disp_dodc!=NULL)
+								{
+									$disp_dodc1=explode("-",$disp_dodc);
+									$disp_date=$disp_dodc1[2]."-".$disp_dodc1[1]."-".$disp_dodc1[0];
+								}
+							}
+							$stmt_dispmain->close();
+							
+							
+							$user24["disp_id"] = $disp_id;
+							$user24["dispatch_date"] = $disp_date;
+							$user24["Barcode_type"] = $dpss_barcodetype;
+							$user24["flg"] = 1;
+						}
+						else
+						{
+							$user24["msg"] = "Barcode Not Dispatched";
+							$user24["flg"] = 0;
+						}
+						$stmt_dispsub->close();
+					}
+					else
+					{
+						$user24["msg"] = "WB QRcode Activated but not Linked";
+						$user24["flg"] = 0;
+					}
+				}
+				else
+				{
+					$user24["msg"] = "WB QRcode not Activated";
+					$user24["flg"] = 0;
+				}
+				$stmt->close();
+				//return $user24;	
+        	} 
+			else
+			{
+				$user24["msg"] = "WB QRcode Not found in Deorjhal Plant";
+				$user24["flg"] = 0;
+			} 
+		}
+		else
+		{
+			$user24["msg"] = "Invalid request type";
+			$user24["flg"] = 0;
+		}
+		if(empty($user24))
 		{return false;}
 		else
 		{return $user24;}
     }
 
-	public function GetTranSetupInit($scode,$dispdate,$dcdate,$dcno) {
-		$plantcode = $this->getPlantcode($scode);
-		$dt=date("Y-m-d");
-		if($dispdate!='') {
-		$tdate=explode("-",$dispdate);
-		$dispdate=$tdate[2]."-".$tdate[1]."-".$tdate[0]; }
-		if($dcdate!='') {
-		$tdate=explode("-",$dcdate);
-		$dcdate=$tdate[2]."-".$tdate[1]."-".$tdate[0]; }
-		
-		$userSR=array();
-		$arrcode=0; $ycode=''; $year1=''; $years=''; $baryearcode=''; $trtype='Fresh Seed with PDN'; $stage='Raw';
-		$stmt_yer = $this->conn_ps->prepare("SELECT ycode, years, year1, baryrcode  FROM tblyears WHERE years_flg != 0 and years_status='a' ");
-		//$stmt_yer->bind_param("i", $arrival_id);
-		$result_yer=$stmt_yer->execute();
-		$stmt_yer->store_result();
-		if ($stmt_yer->num_rows > 0) {
-			$stmt_yer->bind_result($rec_ycode, $rec_years, $rec_year1, $rec_baryrcode);
-			//looping through all the records 
-			$stmt_yer->fetch();
-			$ycode=$rec_ycode; 
-			$year1=$rec_year1; 
-			$years=$rec_years; 
-			$baryearcode=$rec_baryrcode;
-			$stmt_yer->close();
-		}
-        $stmt = $this->conn_ps->prepare("SELECT MAX(arrival_code) FROM tblarrival_unld WHERE arrival_type = ? AND yearcode = ? AND plantcode=?");
-        $stmt->bind_param("sss", $trtype, $ycode, $plantcode);
-        $stmt->execute();
-        $stmt->store_result();
-		$arrivalcode=0;
-        if ($stmt->num_rows > 0) {
-            // user existed 
-			$stmt->bind_result($arrival_code);
-			$stmt->fetch();
-			$arrivalcode=$arrival_code+1;
-			$stmt->close();
-        } else {
-            // user not existed
-			$arrivalcode=1;
-            $stmt->close();
-        }
-		if($scode!="" && $dispdate!="")
-		{
-			$stpflg=2;
-			$stmt60 = $this->conn_ps->prepare("Insert into tblarrival_unld (arrival_type, arrival_code, arrsetup_date, disp_date, dc_date, dcno, sstage, yearcode, arrsetupflag, setuplogid, arr_role, plantcode) Values(?,?,?,?,?,?,?,?,?,?,?,?) ");
-			$stmt60->bind_param("sissssssisss", $trtype, $arrivalcode, $dt, $dispdate, $dcdate, $dcno, $stage, $ycode, $stpflg, $scode, $scode, $plantcode);
-			$result60 = $stmt60->execute();
-			//echo $barcode."  -  ".$scanby."  -  ".$opr_id."  -  ".$sp_id."  -  ".$schpoints."  -  ".$opr_state."  -  ".$sch_name."  -  ".$qrcode."  -  ".$dt."  -  ".$role;
-			if($result60)
-			{
-				$trid=$stmt60->insert_id;
-				$userSR["trid"] = $trid;
-				$stmt60->close();
-			}
-			else
-			{
-				$trid=0;
-				$userSR["trid"] = $trid;
-				$stmt60->close();
-			}
-		}
-		
-		if(empty($userSR))
-		{return false;}
-		else
-		{return $userSR;}
-    }
-	
-	public function GetTranSetupYrCode() {
-	
-		$user10=array(); $ycode=''; $ycode2='';
-		$stmt_2 = $this->conn_ps->prepare("SELECT ycode, yearsid FROM tblyears WHERE years_flg != 0 and years_status='a' ");
-		//$stmt_2->bind_param("s", $pdate);
-		$result2=$stmt_2->execute();
-		$stmt_2->store_result();
-		if ($stmt_2->num_rows > 0) {
-			$stmt_2->bind_result($ycode, $yearsid);
-			//looping through all the records
-			$stmt_2->fetch();
-			$stmt_2->close();
-		}
-		$yid=$yearsid-1;
-		$stmt_23 = $this->conn_ps->prepare("SELECT ycode, yearsid FROM tblyears WHERE years_flg = 0 and years_status='c' and yearsid = ? ");
-		$stmt_23->bind_param("i", $yid);
-		$result23=$stmt_23->execute();
-		$stmt_23->store_result();
-		if ($stmt_23->num_rows > 0) {
-			$stmt_23->bind_result($ycode2, $yearsid2);
-			//looping through all the records
-			$stmt_23->fetch();
-			$stmt_23->close();
-		}
-		$m=date("m");
-		if($m>=6)
-		{
-			array_push($user10, $ycode);
-			array_push($user10, $ycode2);
-		}
-		else
-		{
-			array_push($user10, $ycode2);
-			array_push($user10, $ycode);
-		}
-		if(empty($user10))
-		{return false;}
-		else
-		{return $user10;}		
-	}		
-	
-	public function GetTranSetupLotchklist() {
-		$m=date("m");$de=date("d");$y=date("Y");
-		$pdate=date('Y-m-d', mktime(0,0,0,($m-6),$de,$y)); 
-		$user10=array();
-		//return "SELECT lotnumber  FROM tbllotimp WHERE trid=0 AND lotimpdate >= '$pdate' AND lotimpflg=0 ";
-		$stmt_2 = $this->conn_ps->prepare("SELECT lotnumber  FROM tbllotimp WHERE trid=0 AND lotimpdate >= ? AND lotimpflg=0 ");
-		$stmt_2->bind_param("s", $pdate);
-		$result2=$stmt_2->execute();
-		$stmt_2->store_result();
-		if ($stmt_2->num_rows > 0) {
-			$stmt_2->bind_result($lotnumber);
-			//looping through all the records
-			while($stmt_2->fetch())
-			{
-				$ct=0;
-				/*$stmt_23 = $this->conn_ps->prepare("SELECT old FROM tblarrival_sub_unld WHERE old=? ");
-				$stmt_23->bind_param("s", $lotnumber);
-				$stmt_23->execute();
-				//$stmt_23->store_result();
-				if ($stmt_23->num_rows > 0){$ct++;}
-				$stmt_23->close();	
-				
-				$stmt_3 = $this->conn_ps->prepare("SELECT old FROM tblarrival_sub WHERE old=? ");
-				$stmt_3->bind_param("s", $lotnumber);
-				$stmt_3->execute();
-			//	$stmt_3->store_result();
-				if ($stmt_3->num_rows > 0){$ct++;}
-				$stmt_3->close();	
-				*/
-				if ($ct==0) { array_push($user10, $lotnumber);}
-				
-				
-				//array_push($user10, $lotnumber);
-			}
-			$stmt_2->close();
-		}
-		if(empty($user10))
-		{return false;}
-		else
-		{return $user10;}		
-	}		
-	
-		
-	public function GetTranSetupLotIns($scode,$trid,$lotno,$nobdc,$qtydc,$tarewt,$arrsub_id,$setuptype) {
-		$plantcode = $this->getPlantcode($scode);
-		$userSR=array(); $arrival_id=0; $trtype='Fresh Seed with PDN'; $stage='Raw'; $stage2='R';
-		$stmt = $this->conn_ps->prepare("SELECT arrival_id FROM tblarrival_unld WHERE arrival_id = ?");
-        $stmt->bind_param("i", $trid);
-        $stmt->execute();
-        $stmt->store_result();
-		$arrivalcode=0;
-		//return $stmt->num_rows;
-        if ($stmt->num_rows > 0) {
-            // user existed 
-			$stmt->bind_result($arrival_id);
-			$stmt->fetch();
-			$stmt->close();
-        
-			$lotimpid=0; $lotcrop=''; $lotspcodef=''; $lotspcodem=''; $lotploc=''; $lotstate=''; $lotpper=''; $lotorganiser=''; $lotfarmer=''; $lotplotno=''; $pdnno=''; $pdndate=''; $sstage='Raw'; $prodtype='';
-			$stmt_lotimp = $this->conn_ps->prepare("SELECT lotimpid, lotcrop, lotspcodef, lotspcodem, lotploc, lotstate, lotpper, lotorganiser, lotfarmer, lotplotno, pdnno, pdndate, prodtype  FROM tbllotimp WHERE trid=0 AND lotnumber = ? ");
-			$stmt_lotimp->bind_param("s", $lotno);
-			$result_lotimp=$stmt_lotimp->execute();
-			$stmt_lotimp->store_result();
-			//return "SELECT lotimpid, lotcrop, lotspcodef, lotspcodem, lotploc, lotstate, lotpper, lotorganiser, lotfarmer, lotplotno, pdnno, pdndate, prodtype  FROM tbllotimp WHERE trid=0 AND lotnumber = '$lotno' ";
-			if ($stmt_lotimp->num_rows > 0) {
-				$stmt_lotimp->bind_result($lotimpid, $lotcrop, $lotspcodef, $lotspcodem, $lotploc, $lotstate, $lotpper, $lotorganiser, $lotfarmer, $lotplotno, $pdnno, $pdndate, $prodtype);
-				//looping through all the records 
-				$stmt_lotimp->fetch();
-				$stmt_lotimp->close();
-			
-				$popularname=$lotcrop."-Coded";
-				$stmt_spc = $this->conn_ps->prepare("SELECT variety, crop FROM tblspcodes WHERE spcodef = ? AND spcodem = ? ");
-				$stmt_spc->bind_param("ss", $lotspcodef, $lotspcodem);
-				$result_spc=$stmt_spc->execute();
-				$stmt_spc->store_result();
-				if ($stmt_spc->num_rows > 0) {
-					$stmt_spc->bind_result($spcvariety, $spccrop);
-					//looping through all the records 
-					$stmt_spc->fetch();
-					$stmt_spc->close();
-				
-					$stmt_variety = $this->conn_ps->prepare("SELECT varietyid, popularname FROM tblvariety WHERE varietyid = ? ");
-					$stmt_variety->bind_param("i", $spcvariety);
-					$result_variety=$stmt_variety->execute();
-					$stmt_variety->store_result();
-					if ($stmt_variety->num_rows > 0) {
-						$stmt_variety->bind_result($varietyid, $popularname);
-						//looping through all the records 
-						$stmt_variety->fetch();
-						$stmt_variety->close();
-					}
-				}
-				$pcode='';
-				//$plantcode = $this->getPlantcode($scode);
-				$stmt_plant = $this->conn_ps->prepare("SELECT code  FROM tbl_parameters WHERE plantcode=? ");
-				$stmt_plant->bind_param("s", $plantcode);
-				$result_plant=$stmt_plant->execute();
-				$stmt_plant->store_result();
-				if ($stmt_plant->num_rows > 0) {
-					$stmt_plant->bind_result($rec_pcode);
-					//looping through all the records 
-					$stmt_plant->fetch();
-					$pcode=$rec_pcode; 
-					$stmt_plant->close();
-				}
-				
-				if($arrival_id==$trid)
-				{
-					$lotn=$pcode.$lotno."/00000/00".$stage2; $orlot=$pcode.$lotno."/00000/00";
-					
-					if($setuptype=="Add")
-					{
-						$stmt60 = $this->conn_ps->prepare("Insert into tblarrival_sub_unld (arrival_id, lotimpid, lotcrop, lotvariety, qty, act1, tarewt, lotno, orlot, old, pdndate, pdnno, spcodef, spcodem, organiser, farmer, ploc, lotstate, pper, plotno, sstage, prodtype, plantcode) Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
-						$stmt60->bind_param("iisssssssssssssssssssss", $arrival_id, $lotimpid, $lotcrop, $popularname, $qtydc, $nobdc, $tarewt, $lotn, $orlot, $lotno, $pdndate, $pdnno, $lotspcodef, $lotspcodem, $lotorganiser, $lotfarmer, $lotploc, $lotstate, $lotpper, $lotplotno, $stage, $prodtype, $plantcode);
-					}
-					else if($setuptype=="Edit")
-					{
-						$stmt60 = $this->conn_ps->prepare("UPDATE tblarrival_sub_unld SET qty=?, act1=? where arrsub_id=?");
-						$stmt60->bind_param("sii", $qtydc, $nobdc, $arrsub_id);
-					}
-					else
-					{
-						$stmt60 = $this->conn_ps->prepare("Insert into tblarrival_sub_unld (arrival_id, lotimpid, lotcrop, lotvariety, qty, act1, tarewt, lotno, orlot, old, pdndate, pdnno, spcodef, spcodem, organiser, farmer, ploc, lotstate, pper, plotno, sstage, prodtype, plantcode) Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
-						$stmt60->bind_param("iisssssssssssssssssssss", $arrival_id, $lotimpid, $lotcrop, $popularname, $qtydc, $nobdc, $tarewt, $lotn, $orlot, $lotno, $pdndate, $pdnno, $lotspcodef, $lotspcodem, $lotorganiser, $lotfarmer, $lotploc, $lotstate, $lotpper, $lotplotno, $stage, $prodtype, $plantcode);
-					}
-					$result60 = $stmt60->execute();
-					//echo $barcode."  -  ".$scanby."  -  ".$opr_id."  -  ".$sp_id."  -  ".$schpoints."  -  ".$opr_state."  -  ".$sch_name."  -  ".$qrcode."  -  ".$dt."  -  ".$role;
-					if($result60)
-					{
-						//$trid=$stmt60->insert_id;
-						$stmt_lotimpt = $this->conn_ps->prepare("Update tbllotimp SET lotimpflg=2 where lotnumber = ? ");
-						$stmt_lotimpt->bind_param("s", $lotno);
-						$result_lotimpt = $stmt_lotimpt->execute();
-						$stmt_lotimpt->close();
-						
-						$userSR["trid"] = $arrival_id;
-					}
-					else
-					{
-						$userSR["trid"] = $arrival_id;
-					}
-					$stmt60->close();
-				}
-			}
-		} 
-		
-		if(empty($userSR))
-		{return false;}
-		else
-		{return $userSR;}
-    }
-
-
-	
-	
-	public function GetTranSetupLotBagsList($scode,$trid) {
-		$plantcode = $this->getPlantcode($scode);
-		$userSR=array(); $arrival_id=0; $trtype='Fresh Seed with PDN'; $stage='Raw';
-		$stmt = $this->conn_ps->prepare("SELECT arrival_id FROM tblarrival_unld WHERE arrival_id = ?");
-        $stmt->bind_param("i", $trid);
-        $stmt->execute();
-        $stmt->store_result();
-		$arrivalcode=0;
-        if ($stmt->num_rows > 0) {
-            // user existed 
-			$stmt->bind_result($arrival_id);
-			$stmt->fetch();
-			$stmt->close();
-        
-			$lotcrop=''; $lotvariety=''; $lotno=''; $orlot=''; $qty=0; $act1=0; $tarewt=0; $old='';   $user10=array();
-			$stmt_lotimp = $this->conn_ps->prepare("SELECT lotcrop, lotvariety, lotno, orlot, qty, act1, old, arrsub_id, spcodef, spcodem FROM tblarrival_sub_unld WHERE arrival_id = ? ");
-			$stmt_lotimp->bind_param("i", $trid);
-			$result_lotimp=$stmt_lotimp->execute();
-			$stmt_lotimp->store_result();
-			if ($stmt_lotimp->num_rows > 0) {
-				$stmt_lotimp->bind_result($lotcrop, $lotvariety, $lotno, $orlot, $qty, $act1, $old, $arrsub_id, $spcodef, $spcodem);
-				//looping through all the records 
-				while($stmt_lotimp->fetch())
-				{
-					$nnob=0; $grwt=0; $ntwt=0; $actntqty=0;  $actgrqty=0; $actnob=0; $grsswt=0; $lasttarewt=0; $bagsarray=array();
-					$stmt_2 = $this->conn_ps->prepare("SELECT grosswt, netwt, tarewt, arrsubsub_id  FROM tblarrsub_sub_unld WHERE arrival_id = ? and arrsub_id = ? order by arrsubsub_id ASC");
-					$stmt_2->bind_param("ii", $arrival_id, $arrsub_id);
-					$result2=$stmt_2->execute();
-					$stmt_2->store_result();
-					if ($stmt_2->num_rows > 0) {
-						$stmt_2->bind_result($grosswt, $netwt, $tarewt, $arrsubsub_id);
-						//looping through all the records
-						while($stmt_2->fetch())
-						{
-							$nnob=$nnob+1;
-							$grwt=$grwt+$grosswt;
-							$ntwt=$ntwt+$netwt;
-							$grsswt=$grosswt;
-							$lasttarewt=$tarewt;
-							$temp=array('bagid'=>$arrsubsub_id, 'bag'=>$grosswt, 'tarewt'=>$tarewt);
-							array_push($bagsarray, $temp);
-							//$bagsarray=array('bagid'=> $arrsubsub_id;
-							//$bagsarray["bag"] = $grosswt;
-						}
-						$actntqty=$actntqty+$ntwt;  
-						$actgrqty=$actgrqty+$grwt; 
-						$actnob=$actnob+$nnob;
-					}
-					$stmt_2->close();
-					$slflg=0; $slocs='';
-					$stmt_arrsloc = $this->conn_ps->prepare("SELECT arrsloc_id, whid, binid, subbin  FROM tblarr_sloc_unld WHERE arr_tr_id = ? and arr_id = ? ");
-					$stmt_arrsloc->bind_param("ii", $arrival_id, $arrsub_id);
-					$result_arrsloc=$stmt_arrsloc->execute();
-					$stmt_arrsloc->store_result();
-					if ($stmt_arrsloc->num_rows > 0) {
-						$stmt_arrsloc->bind_result($arrsloc_id, $owhid, $obinid, $osubbin);
-						//looping through all the records
-						while($stmt_arrsloc->fetch())
-						{
-							
-							$stmt_wh = $this->conn_ps->prepare("SELECT perticulars,whid FROM tbl_warehouse where whid = ? and plantcode=? ");
-							$stmt_wh->bind_param("ss", $owhid, $plantcode);
-							$result_wh=$stmt_wh->execute();
-							$stmt_wh->store_result();
-							if ($stmt_wh->num_rows > 0) {
-								$stmt_wh->bind_result($whperticulars,$whid);
-								//looping through all the records 
-								$stmt_wh->fetch();
-								$stmt_wh->close();
-					
-								$stmt_bin = $this->conn_ps->prepare("SELECT binname, binid  FROM tbl_bin WHERE whid = ? and binid = ? and plantcode=? ");
-								$stmt_bin->bind_param("iss", $owhid, $obinid, $plantcode);
-								$result_bin=$stmt_bin->execute();
-								$stmt_bin->store_result();
-								if ($stmt_bin->num_rows > 0) {
-									$stmt_bin->bind_result($binname, $binid);
-									//looping through all the records
-									$stmt_bin->fetch();
-									$stmt_bin->close();
-									
-									$stmt_sbin = $this->conn_ps->prepare("SELECT sname, sid  FROM tbl_subbin WHERE whid = ? and binid = ? and sid = ? and plantcode=? order by sname ASC");
-									$stmt_sbin->bind_param("iiss", $owhid, $obinid, $osubbin, $plantcode);
-									$result2=$stmt_sbin->execute();
-									$stmt_sbin->store_result();
-									if ($stmt_sbin->num_rows > 0) {
-										$stmt_sbin->bind_result($subbinname, $subbinid);
-										//looping through all the records
-										$stmt_sbin->fetch();
-										$stmt_sbin->close();
-									}
-								}
-								
-								if($slocs!="")
-								$slocs=$slocs.",".$whperticulars."-".$binname."-".$subbinname;
-								else
-								$slocs=$whperticulars."-".$binname."-".$subbinname;
-							}
-							
-							$slflg++;
-						}
-						$stmt_arrsloc->close();
-					}
-					
-					
-					$trwt=$tarewt*$act1;
-					$qtynt=$qty-$trwt;
-					$user10["crop"] = $lotcrop;
-					$user10["variety"] = $lotvariety;
-					$user10["lotno"] = stripslashes($lotno);
-					$user10["orlot"] = $orlot;
-					$user10["dcnob"] = $act1;
-					$user10["dcgrqty"] = $qty;
-					$user10["dcntqty"] = $qtynt;
-					$user10["tarewt"] = $lasttarewt;
-					$user10["oldlot"] = $old;
-					$user10["actnob"] = $actnob;
-					$user10["actntqty"] = $actntqty;
-					$user10["actgrqty"] = $actgrqty;
-					$user10["lastbagwt"] = $grsswt;
-					$user10["slocflg"] = $slflg;
-					$user10["sloc"] = $slocs;
-					$user10["bagsarray"] = $bagsarray;
-					array_push($userSR,$user10);
-				}
-				
-				$stmt_lotimp->close();
-			}
-		} 
-		
-		if(empty($userSR))
-		{return false;}
-		else
-		{return $userSR;}
-    }
-
-
-public function GetTranSetupLotyrcodelist() {
-	
-		$userSR=array(); $blank='';
-		$stmt = $this->conn_ps->prepare("SELECT ycode FROM tblyears WHERE ycode != ? order by yearsid DESC LIMIT 0,2");
-        $stmt->bind_param("s", $blank);
-        $stmt->execute();
-        $stmt->store_result();
-		$arrivalcode=0;
-        if ($stmt->num_rows > 0) {
-            // user existed 
-			$stmt->bind_result($ycode);
-			while($stmt->fetch())
-			{
-				//$user10["lotyear"] = $ycode;
-				array_push($userSR,$ycode);
-			}		
-			$stmt->close();
-       } 
-	
-		if(empty($userSR))
-		{return false;}
-		else
-		{return $userSR;}
-    }
-
-
-
-	public function GetTranSetupLotList($scode,$trid) {
-	
-		$userSR=array(); $arrival_id=0; $trtype='Fresh Seed with PDN'; $stage='Raw';
-		$stmt = $this->conn_ps->prepare("SELECT arrival_id FROM tblarrival_unld WHERE arrival_id = ?");
-        $stmt->bind_param("i", $trid);
-        $stmt->execute();
-        $stmt->store_result();
-		$arrivalcode=0;
-        if ($stmt->num_rows > 0) {
-            // user existed 
-			$stmt->bind_result($arrival_id);
-			$stmt->fetch();
-			$stmt->close();
-        
-			$lotcrop=''; $lotvariety=''; $lotno=''; $orlot=''; $qty=0; $act1=0; $tarewt=0; $old='';   $user10=array();
-			$stmt_lotimp = $this->conn_ps->prepare("SELECT lotcrop, lotvariety, lotno, orlot, qty, act1, old, arrsub_id, spcodef, spcodem FROM tblarrival_sub_unld WHERE arrival_id = ? ");
-			$stmt_lotimp->bind_param("i", $trid);
-			$result_lotimp=$stmt_lotimp->execute();
-			$stmt_lotimp->store_result();
-			if ($stmt_lotimp->num_rows > 0) {
-				$stmt_lotimp->bind_result($lotcrop, $lotvariety, $lotno, $orlot, $qty, $act1, $old, $arrsub_id, $spcodef, $spcodem);
-				//looping through all the records 
-				while($stmt_lotimp->fetch())
-				{
-					$nnob=0; $grwt=0; $ntwt=0; $actntqty=0;  $actgrqty=0; $actnob=0; $grsswt=0; $lasttarewt=0; 
-					$stmt_2 = $this->conn_ps->prepare("SELECT grosswt, netwt, tarewt FROM tblarrsub_sub_unld WHERE arrival_id = ? and arrsub_id = ? order by arrsubsub_id ASC");
-					$stmt_2->bind_param("ii", $arrival_id, $arrsub_id);
-					$result2=$stmt_2->execute();
-					$stmt_2->store_result();
-					if ($stmt_2->num_rows > 0) {
-						$stmt_2->bind_result($grosswt, $netwt, $tarewt);
-						//looping through all the records
-						while($stmt_2->fetch())
-						{
-							$nnob=$nnob+1;
-							$grwt=$grwt+$grosswt;
-							$ntwt=$ntwt+$netwt;
-							$grsswt=$grosswt;
-							$lasttarewt=$tarewt;
-						}
-						$actntqty=$actntqty+$ntwt;  
-						$actgrqty=$actgrqty+$grwt; 
-						$actnob=$actnob+$nnob;
-					}
-					$stmt_2->close();
-					$slflg=0; $slocs='';
-					$stmt_arrsloc = $this->conn_ps->prepare("SELECT arrsloc_id, whid, binid, subbin  FROM tblarr_sloc_unld WHERE arr_tr_id = ? and arr_id = ? ");
-					$stmt_arrsloc->bind_param("ii", $arrival_id, $arrsub_id);
-					$result_arrsloc=$stmt_arrsloc->execute();
-					$stmt_arrsloc->store_result();
-					if ($stmt_arrsloc->num_rows > 0) {
-						$stmt_arrsloc->bind_result($arrsloc_id, $owhid, $obinid, $osubbin);
-						//looping through all the records
-						while($stmt_arrsloc->fetch())
-						{
-							
-							$stmt_wh = $this->conn_ps->prepare("SELECT perticulars,whid FROM tbl_warehouse where whid = ?");
-							$stmt_wh->bind_param("s", $owhid);
-							$result_wh=$stmt_wh->execute();
-							$stmt_wh->store_result();
-							if ($stmt_wh->num_rows > 0) {
-								$stmt_wh->bind_result($whperticulars,$whid);
-								//looping through all the records 
-								$stmt_wh->fetch();
-								$stmt_wh->close();
-					
-								$stmt_bin = $this->conn_ps->prepare("SELECT binname, binid  FROM tbl_bin WHERE whid = ? and binid = ? ");
-								$stmt_bin->bind_param("is", $owhid, $obinid);
-								$result_bin=$stmt_bin->execute();
-								$stmt_bin->store_result();
-								if ($stmt_bin->num_rows > 0) {
-									$stmt_bin->bind_result($binname, $binid);
-									//looping through all the records
-									$stmt_bin->fetch();
-									$stmt_bin->close();
-									
-									$stmt_sbin = $this->conn_ps->prepare("SELECT sname, sid  FROM tbl_subbin WHERE whid = ? and binid = ? and sid = ? order by sname ASC");
-									$stmt_sbin->bind_param("iis", $owhid, $obinid, $osubbin);
-									$result2=$stmt_sbin->execute();
-									$stmt_sbin->store_result();
-									if ($stmt_sbin->num_rows > 0) {
-										$stmt_sbin->bind_result($subbinname, $subbinid);
-										//looping through all the records
-										$stmt_sbin->fetch();
-										$stmt_sbin->close();
-									}
-								}
-								
-								if($slocs!="")
-								$slocs=$slocs.",".$whperticulars."-".$binname."-".$subbinname;
-								else
-								$slocs=$whperticulars."-".$binname."-".$subbinname;
-							}
-							
-							$slflg++;
-						}
-						$stmt_arrsloc->close();
-					}
-					
-					
-					$trwt=$tarewt*$act1;
-					$qtynt=$qty-$trwt;
-					
-					$user10["arrsub_id"] = $arrsub_id;
-					$user10["crop"] = $lotcrop;
-					$user10["variety"] = $lotvariety;
-					$user10["lotno"] = stripslashes($lotno);
-					$user10["spcodef"] = $spcodef;
-					$user10["spcodem"] = $spcodem;
-					$user10["orlot"] = $orlot;
-					$user10["dcnob"] = $act1;
-					$user10["dcgrqty"] = $qty;
-					$user10["dcntqty"] = $qtynt;
-					$user10["tarewt"] = $lasttarewt;
-					$user10["oldlot"] = $old;
-					$user10["actnob"] = $actnob;
-					$user10["actntqty"] = $actntqty;
-					$user10["actgrqty"] = $actgrqty;
-					$user10["lastbagwt"] = $grsswt;
-					$user10["slocflg"] = $slflg;
-					$user10["sloc"] = $slocs;
-					array_push($userSR,$user10);
-				}
-				
-				$stmt_lotimp->close();
-			}
-		} 
-		
-		if(empty($userSR))
-		{return false;}
-		else
-		{return $userSR;}
-    }
 
 
 
 
-	public function GetTranSetupFinalize($trid) {
-	
-		$flg=0;
-		$stmt_2 = $this->conn_ps->prepare("SELECT arrival_id FROM tblarrival_unld WHERE arrival_id = ?");
-		$stmt_2->bind_param("i", $trid);
-		$result2=$stmt_2->execute();
-		$stmt_2->store_result();
-		if ($stmt_2->num_rows > 0) {
-			$stmt_2->bind_result($arrival_id);
-			//looping through all the records
-			$stmt_2->fetch();
-			
-			$stmt60 = $this->conn_ps->prepare("Update tblarrival_unld SET arrsetupflag=1 where arrival_id = ? ");
-			$stmt60->bind_param("i", $arrival_id);
-			$result60 = $stmt60->execute();
-			if($result60){$flg=1;}
-			$stmt60->close();
-			
-			$stmt_2->close();
-		}
-		
-		if($flg==0)
-		{return false;}
-		else
-		{return true;}		
-	}		
-	
-	
-	
-	public function GetTranUnldInit($scode,$trid,$transname,$vehno,$lrno,$paymode,$disploc,$passinno) {
-	
-		$flg=0; $dt=date("Y-m-d");
-		$stmt_2 = $this->conn_ps->prepare("SELECT arrival_id FROM tblarrival_unld WHERE arrsetupflag=1 AND arrival_id = ?");
-		$stmt_2->bind_param("i", $trid);
-		$result2=$stmt_2->execute();
-		$stmt_2->store_result();
-		if ($stmt_2->num_rows > 0) {
-			$stmt_2->bind_result($arrival_id);
-			//looping through all the records
-			$stmt_2->fetch();
-			$tmode='Transport';
-			$stmt60 = $this->conn_ps->prepare("Update tblarrival_unld SET arrival_date=?, arrunldflag=2, unldlogid=?, tmode=?, trans_name=?, trans_lorryrepno=?, trans_vehno=?, trans_paymode=?, disploc=?, passinno=? where arrival_id = ? ");
-			$stmt60->bind_param("sssssssssi", $dt, $scode, $tmode, $transname, $lrno, $vehno, $paymode, $disploc, $passinno, $arrival_id);
-			$result60 = $stmt60->execute();
-			if($result60){$flg=1;}  
-			$stmt60->close();
-			
-			$stmt_2->close();
-		}
-		
-		if($flg==0)
-		{return false;}
-		else
-		{return true;}		
-	}		
-	
-	
-	public function GetTranUnldLotWtIns($scode,$trid,$lotno,$qtyact,$tarewt) {
-		$plantcode = $this->getPlantcode($scode);
-		$flg=0;
-		$stmt_2 = $this->conn_ps->prepare("SELECT arrival_id FROM tblarrival_unld WHERE arrsetupflag=1 AND arrival_id = ?");
-		$stmt_2->bind_param("i", $trid);
-		$result2=$stmt_2->execute();
-		$stmt_2->store_result();
-		if ($stmt_2->num_rows > 0) {
-			$stmt_2->bind_result($arrival_id);
-			//looping through all the records
-			$stmt_2->fetch();
-			
-			$stmt_lotimp = $this->conn_ps->prepare("SELECT lotno, orlot, old, arrsub_id FROM tblarrival_sub_unld WHERE arrival_id = ? AND old = ? ");
-			$stmt_lotimp->bind_param("is", $trid, $lotno);
-			$result_lotimp=$stmt_lotimp->execute();
-			$stmt_lotimp->store_result();
-			if ($stmt_lotimp->num_rows > 0) {
-				$stmt_lotimp->bind_result($nlotno, $orlot, $old, $arrsub_id);
-				//looping through all the records 
-				while($stmt_lotimp->fetch())
-				{
-					$ntwt=$qtyact-$tarewt;
-					$stmt60 = $this->conn_ps->prepare("Insert into tblarrsub_sub_unld (arrival_id, arrsub_id, lotno, grosswt, netwt, tarewt, plantcode) Values(?,?,?,?,?,?,?) ");
-					$stmt60->bind_param("iisssss", $trid, $arrsub_id, $old, $qtyact, $ntwt, $tarewt, $plantcode);
-					$result60 = $stmt60->execute();
-					if($result60){$flg=1;} 
-					$stmt60->close(); 
-				}
-			}	
-			$stmt_lotimp->close();
-				
-			$stmt_2->close();
-		}
-		
-		if($flg==0)
-		{return false;}
-		else
-		{return true;}		
-	}		
-	
-	public function GetTranUnldFinalize($trid) {
-	
-		$flg=0;
-		$stmt_2 = $this->conn_ps->prepare("SELECT arrival_id FROM tblarrival_unld WHERE arrival_id = ?");
-		$stmt_2->bind_param("i", $trid);
-		$result2=$stmt_2->execute();
-		$stmt_2->store_result();
-		if ($stmt_2->num_rows > 0) {
-			$stmt_2->bind_result($arrival_id);
-			//looping through all the records
-			$stmt_2->fetch();
-			
-			$stmt60 = $this->conn_ps->prepare("Update tblarrival_unld SET arrunldflag=1 where arrival_id = ? ");
-			$stmt60->bind_param("i", $arrival_id);
-			$result60 = $stmt60->execute();
-			if($result60){$flg=1;}
-			$stmt60->close();
-			
-			$stmt_2->close();
-		}
-		
-		if($flg==0)
-		{return false;}
-		else
-		{return true;}		
-	}		
-	
-	
-	public function GetTranFinLotSel($scode,$trid,$lotno) {
-		$plantcode = $this->getPlantcode($scode);
-		$flg=0; $userSR=array();
-		$stmt_2 = $this->conn_ps->prepare("SELECT arrival_id, dc_date, arrival_code FROM tblarrival_unld WHERE arrunldflag=1 AND arrival_id = ?");
-		$stmt_2->bind_param("i", $trid);
-		$result2=$stmt_2->execute();
-		$stmt_2->store_result();
-		if ($stmt_2->num_rows > 0) {
-			$stmt_2->bind_result($arrival_id, $dc_date, $arrival_code);
-			//looping through all the records
-			$stmt_2->fetch();
-			
-			if($dc_date!='' && $dc_date!='0000-00-00' && $dc_date!=NULL)
-			{
-				$dc_date1=explode("-",$dc_date);
-				$dc_date=$dc_date1[2]."-".$dc_date1[1]."-".$dc_date1[0];
-			}
-			$userSR["dcdate"]=$dc_date;
-			$userSR["arrival_code"] = "AF".$arrival_code;
-			
-			$stmt_lotimp = $this->conn_ps->prepare("SELECT lotcrop, lotvariety, old, arrsub_id, pdndate, pdnno, spcodef, spcodem, organiser, farmer, ploc, lotstate, pper, plotno, harvestdate, gi, got, sstatus, moisture, gemp, vchk, remarks, qc, qcstatus, leupto, got1, leduration FROM tblarrival_sub_unld WHERE arrival_id = ? AND old = ? ");
-			$stmt_lotimp->bind_param("is", $trid, $lotno);
-			$result_lotimp=$stmt_lotimp->execute();
-			$stmt_lotimp->store_result();
-			if ($stmt_lotimp->num_rows > 0) {
-				$stmt_lotimp->bind_result($lotcrop, $lotvariety, $old, $arrsub_id, $pdndate, $pdnno, $spcodef, $spcodem, $organiser, $farmer, $ploc, $lotstate, $pper, $plotno, $harvestdate, $gi, $got, $sstatus, $moisture, $gemp, $vchk, $remarks, $qc, $qcstatus, $leupto, $got1, $ledurationsel);
-				//looping through all the records 
-				while($stmt_lotimp->fetch())
-				{
-					$codvarety=$lotcrop."-Coded";
-					
-					if($pdndate!='' && $pdndate!='0000-00-00' && $pdndate!=NULL)
-					{
-						$pdndate1=explode("-",$pdndate);
-						$pdndate=$pdndate1[2]."-".$pdndate1[1]."-".$pdndate1[0];
-					}
-					$userSR["pdndate"]=$pdndate;
-					$userSR["pdnno"]=$pdnno;
-					$userSR["spcodef"]=$spcodef;
-					$userSR["spcodem"]=$spcodem;
-					$userSR["organiser"]=$organiser;
-					$userSR["farmer"]=$farmer;
-					$userSR["ploc"]=$ploc;
-					$userSR["lotstate"]=$lotstate;
-					$userSR["pper"]=$pper;
-					$userSR["plotno"]=$plotno;
-					
-					if($lotvariety!=$codvarety)
-					{
-						$stmt_variety = $this->conn_ps->prepare("SELECT leduration, opt FROM tblvariety WHERE popularname = ? AND cropid = ? ");
-						$stmt_variety->bind_param("ss", $lotvariety, $lotcrop);
-						$result_variety=$stmt_variety->execute();
-						$stmt_variety->store_result();
-						if ($stmt_variety->num_rows > 0) {
-							$stmt_variety->bind_result($leduration, $opt);
-							//looping through all the records 
-							$stmt_variety->fetch();
-							$ledur=array();
-							for($i=$leduration; $i>0; $i--)
-							{
-								array_push($ledur,$i);
-							}
-							
-							//return $ledur;
-							$userSR["leduration"]=$ledur;
-							//$userSR["leduration"]=$leduration;
-							$userSR["opt"]=$opt;
-						}	
-						else{
-							$leduration=36;
-							$ledur=array();
-							for($i=$leduration; $i>0; $i--)
-							{
-								array_push($ledur,$i);
-							}
 
-							$opt='Optional';
-							$userSR["leduration"]=$ledur;
-							$userSR["opt"]=$opt;
-						}
-						$stmt_variety->close();
-					}
-					else
-					{
-						$leduration=36;
-						$ledur=array();
-						for($i=$leduration; $i>0; $i--)
-						{
-							array_push($ledur,$i);
-						}
 
-						$opt='Optional';
-						$userSR["leduration"]=$ledur;
-						$userSR["opt"]=$opt;
-					}
-					
-					if($harvestdate!='' && $harvestdate!='0000-00-00' && $harvestdate!=NULL)
-					{
-						$harvestdate1=explode("-",$harvestdate);
-						$harvestdate=$harvestdate1[2]."-".$harvestdate1[1]."-".$harvestdate1[0];
-					}
-					if($leupto!='' && $leupto!='0000-00-00' && $leupto!=NULL)
-					{
-						$leupto1=explode("-",$leupto);
-						$leupto=$leupto1[2]."-".$leupto1[1]."-".$leupto1[0];
-					}
-					$userSR["lotno"]=$old;
-					$userSR["lotcrop"]=$lotcrop;
-					$userSR["lotvariety"]=$lotvariety;
-					$userSR["harvestdate"]=$harvestdate;
-					$userSR["geoindex"]=$gi;
-					$userSR["gottype"]=$got;
-					$userSR["seedstatus"]=$sstatus;
-					$userSR["moisture"]=$moisture;
-					$userSR["purity"]=$vchk;
-					$userSR["remark"]=$remarks;
-					$userSR["qcstatus"]=$qc;
-					$userSR["ledurationsel"]=$ledurationsel;
-					$userSR["ledate"]=$leupto;
-					$userSR["arrstatus"]=$opt;
-					$userSR["gotstatus"]=$got1;
-					$userSR["stage"]="Raw";
-					
-					$cct=0; $wh_name=''; $bin_name=''; $subbin_name=''; $slocnob=''; $slocqty='';  $wh_name1=''; $bin_name1=''; $subbin_name1=''; $slocnob1=''; $slocqty1='';
-					$stmt_sloc = $this->conn_ps->prepare("SELECT whid, binid, subbin, qty, bags, balqty, balbags FROM tblarr_sloc_unld where arr_tr_id = ? and arr_id = ? order by arrsloc_id ASC");
-					$stmt_sloc->bind_param("ii", $trid, $arrsub_id);
-					$result_sloc=$stmt_sloc->execute();
-					$stmt_sloc->store_result();
-					if ($stmt_sloc->num_rows ==0) {
-								$userSR["whname"]=$wh_name;
-								$userSR["binname"]=$bin_name;
-								$userSR["subbinname"]=$subbin_name;
-								$userSR["slocnob"]=$slocnob;
-								$userSR["slocqty"]=$slocqty;
-								$userSR["whname1"]=$wh_name1;
-								$userSR["binname1"]=$bin_name1;
-								$userSR["subbinname1"]=$subbin_name1;
-								$userSR["slocnob1"]=$slocnob1;
-								$userSR["slocqty1"]=$slocqty1;
-								$user10=array();$user11=array();$user12=array();
-								$stmt_wharr = $this->conn_ps->prepare("SELECT perticulars, whid FROM tbl_warehouse where plantcode=? order by perticulars ASC");
-								$stmt_wharr->bind_param("s", $plantcode);
-								$result_wharr=$stmt_wharr->execute();
-								$stmt_wharr->store_result();
-								if ($stmt_wharr->num_rows > 0) {
-									$stmt_wharr->bind_result($wharrperticulars, $arrwhid);
-									//looping through all the records 
-									while($stmt_wharr->fetch())
-									{
-										array_push($user10,$wharrperticulars);
-									}
-									$userSR["wharray"]=$user10;
-									$stmt_wharr->close();
-								}	
-								$userSR["binarray"]=$user11;
-								$userSR["subbinarray"]=$user12;
-								$user13=array();$user14=array();$user15=array();	
-								$userSR["wharray1"]=$user10;		
-								$userSR["binarray1"]=$user14;
-								$userSR["subbinarray1"]=$user15;
-					}
-					else{
-						$stmt_sloc->bind_result($owhid, $obinid, $osubbin, $qty, $bags, $balqty, $balbags);
-						//looping through all the records 
-						//$userSR["numrows"]=$stmt_sloc->num_rows;
-						//return $userSR;
-						while($stmt_sloc->fetch())
-						{
-							$user10=array();$user11=array();$user12=array();
-					
-							$stmt_wh = $this->conn_ps->prepare("SELECT perticulars,whid FROM tbl_warehouse where whid = ?");
-							$stmt_wh->bind_param("i", $owhid);
-							$result_wh=$stmt_wh->execute();
-							$stmt_wh->store_result();
-							if ($stmt_wh->num_rows > 0) {
-								$stmt_wh->bind_result($whperticulars,$whid);
-								//looping through all the records 
-								$stmt_wh->fetch();
-								$stmt_wh->close();
-							}
-							$stmt_bin = $this->conn_ps->prepare("SELECT binname, binid  FROM tbl_bin WHERE whid = ? and binid = ? ");
-							$stmt_bin->bind_param("ii", $owhid, $obinid);
-							$result_bin=$stmt_bin->execute();
-							$stmt_bin->store_result();
-							if ($stmt_bin->num_rows > 0) {
-								$stmt_bin->bind_result($binname, $binid);
-								//looping through all the records
-								$stmt_bin->fetch();
-								$stmt_bin->close();
-							}	
-							$stmt_sbin = $this->conn_ps->prepare("SELECT sname, sid  FROM tbl_subbin WHERE whid = ? and binid = ? and sid = ? order by sname ASC");
-							$stmt_sbin->bind_param("iii", $owhid, $obinid, $osubbin);
-							$result2=$stmt_sbin->execute();
-							$stmt_sbin->store_result();
-							if ($stmt_sbin->num_rows > 0) {
-								$stmt_sbin->bind_result($subbinname, $subbinid);
-								//looping through all the records
-								$stmt_sbin->fetch();
-								$stmt_sbin->close();
-							}
-								
-							
-							if($cct==0)
-							{
-								$wh_name=$whperticulars; 
-								$bin_name=$binname; 
-								$subbin_name=$subbinname; 
-								$slocnob=$balbags; 
-								$slocqty=$balqty;
-								$userSR["whname"]=$wh_name;
-								$userSR["binname"]=$bin_name;
-								$userSR["subbinname"]=$subbin_name;
-								$userSR["slocnob"]=$balbags;
-								$userSR["slocqty"]=$balqty;
-								$userSR["whname1"]=$wh_name1;
-								$userSR["binname1"]=$bin_name1;
-								$userSR["subbinname1"]=$subbin_name1;
-								$userSR["slocnob1"]=$slocnob1;
-								$userSR["slocqty1"]=$slocqty1;
-								
-								$stmt_wharr = $this->conn_ps->prepare("SELECT perticulars, whid FROM tbl_warehouse WHERE plantcode=? order by perticulars ASC");
-								$stmt_wharr->bind_param("s", $plantcode);
-								$result_wharr=$stmt_wharr->execute();
-								$stmt_wharr->store_result();
-								if ($stmt_wharr->num_rows > 0) {
-									$stmt_wharr->bind_result($wharrperticulars, $arrwhid);
-									//looping through all the records 
-									while($stmt_wharr->fetch())
-									{
-										array_push($user10,$wharrperticulars);
-									}
-									$userSR["wharray"]=$user10;
-									$stmt_wharr->close();
-								}	
-								$stmt_binarr = $this->conn_ps->prepare("SELECT binname, binid  FROM tbl_bin WHERE whid = ? order by binname ASC");
-								$stmt_binarr->bind_param("i", $owhid);
-								$result_binarr=$stmt_binarr->execute();
-								$stmt_binarr->store_result();
-								if ($stmt_binarr->num_rows > 0) {
-									$stmt_binarr->bind_result($arrbinname, $arrbinid);
-									//looping through all the records 
-									while($stmt_binarr->fetch())
-									{
-										array_push($user11,$arrbinname);
-									}
-									$userSR["binarray"]=$user11;
-									$stmt_binarr->close();
-								}		
-								$stmt_sbinarr = $this->conn_ps->prepare("SELECT sname, sid  FROM tbl_subbin WHERE whid = ? and binid = ? order by sname ASC");
-								$stmt_sbinarr->bind_param("ii", $owhid, $obinid);
-								$result_sbinarr=$stmt_sbinarr->execute();
-								$stmt_sbinarr->store_result();
-								if ($stmt_sbinarr->num_rows > 0) {
-									$stmt_sbinarr->bind_result($arrsubbinname, $arrsubbinid);
-									//looping through all the records 
-									while($stmt_sbinarr->fetch())
-									{
-										array_push($user12,$arrsubbinname);
-									}
-									
-									$userSR["subbinarray"]=$user12;
-									$stmt_sbinarr->close();	
-								}	
-								$user13=array();$user14=array();$user15=array();	
-								$userSR["wharray1"]=$user10;		
-								$userSR["binarray1"]=$user14;
-								$userSR["subbinarray1"]=$user15;
-							}
-							if($cct==1)
-							{
-								$whname1=$whperticulars; 
-								$binname1=$binname; 
-								$subbinname1=$subbinname; 
-								$slocnob1=$balbags; 
-								$slocqty1=$balqty;
-								$userSR["whname1"]=$whname1;
-								$userSR["binname1"]=$binname1;
-								$userSR["subbinname1"]=$subbinname1;
-								$userSR["slocnob1"]=$slocnob1;
-								$userSR["slocqty1"]=$slocqty1;
-								
-								$stmt_wharr = $this->conn_ps->prepare("SELECT perticulars, whid FROM tbl_warehouse WHERE plantcode=? order by perticulars ASC");
-								$stmt_wharr->bind_param("s", $plantcode);
-								$result_wharr=$stmt_wharr->execute();
-								$stmt_wharr->store_result();
-								if ($stmt_wharr->num_rows > 0) {
-									$stmt_wharr->bind_result($wharrperticulars, $arrwhid);
-									//looping through all the records 
-									while($stmt_wharr->fetch())
-									{
-										array_push($user10,$wharrperticulars);
-									}
-									$userSR["wharray1"]=$user10;
-									$stmt_wharr->close();
-								}	
-								$stmt_binarr = $this->conn_ps->prepare("SELECT binname, binid  FROM tbl_bin WHERE whid = ? order by binname ASC");
-								$stmt_binarr->bind_param("i", $owhid);
-								$result_binarr=$stmt_binarr->execute();
-								$stmt_binarr->store_result();
-								if ($stmt_binarr->num_rows > 0) {
-									$stmt_binarr->bind_result($arrbinname, $arrbinid);
-									//looping through all the records 
-									while($stmt_binarr->fetch())
-									{
-										array_push($user11,$arrbinname);
-									}
-									$userSR["binarray1"]=$user11;
-									$stmt_binarr->close();
-								}		
-								$stmt_sbinarr = $this->conn_ps->prepare("SELECT sname, sid  FROM tbl_subbin WHERE whid = ? and binid = ? order by sname ASC");
-								$stmt_sbinarr->bind_param("ii", $owhid, $obinid);
-								$result_sbinarr=$stmt_sbinarr->execute();
-								$stmt_sbinarr->store_result();
-								if ($stmt_sbinarr->num_rows > 0) {
-									$stmt_sbinarr->bind_result($arrsubbinname, $arrsubbinid);
-									//looping through all the records 
-									while($stmt_sbinarr->fetch())
-									{
-										array_push($user12,$arrsubbinname);
-									}
-									
-									$userSR["subbinarray1"]=$user12;
-									$stmt_sbinarr->close();	
-								}		
-							}
-							$cct++;
-						}
-						$stmt_sloc->close();
-					}
-				}
-			}	
-			$stmt_lotimp->close();
-				
-			$stmt_2->close();
-		}
-		
-		if(empty($userSR))
-		{return false;}
-		else
-		{return $userSR;}		
-	}	
-	
-	
-	
-	
-	public function GetTranFinLotSelEdit($scode,$trid,$lotno) {
-		$plantcode = $this->getPlantcode($scode);
-		$flg=0; $userSR=array();$user10=array();
-		$stmt_2 = $this->conn_ps->prepare("SELECT arrival_id, dc_date, arrival_code FROM tblarrival_unld WHERE arrunldflag=1 AND arrival_id = ?");
-		$stmt_2->bind_param("i", $trid);
-		$result2=$stmt_2->execute();
-		$stmt_2->store_result();
-		if ($stmt_2->num_rows > 0) {
-			$stmt_2->bind_result($arrival_id, $dc_date, $arrival_code);
-			//looping through all the records
-			$stmt_2->fetch();
-			
-			if($dc_date!='' && $dc_date!='0000-00-00' && $dc_date!=NULL)
-			{
-				$dc_date1=explode("-",$dc_date);
-				$dc_date=$dc_date1[2]."-".$dc_date1[1]."-".$dc_date1[0];
-			}
-			$userSR["dcdate"]=$dc_date;
-			$userSR["arrival_code"] = "AF".$arrival_code;
-			
-			$stmt_lotimp = $this->conn_ps->prepare("SELECT lotcrop, lotvariety, old, arrsub_id, pdndate, pdnno, spcodef, spcodem, organiser, farmer, ploc, lotstate, pper, plotno FROM tblarrival_sub_unld WHERE arrival_id = ? AND old = ? ");
-			$stmt_lotimp->bind_param("is", $trid, $lotno);
-			$result_lotimp=$stmt_lotimp->execute();
-			$stmt_lotimp->store_result();
-			if ($stmt_lotimp->num_rows > 0) {
-				$stmt_lotimp->bind_result($lotcrop, $lotvariety, $old, $arrsub_id, $pdndate, $pdnno, $spcodef, $spcodem, $organiser, $farmer, $ploc, $lotstate, $pper, $plotno);
-				//looping through all the records 
-				while($stmt_lotimp->fetch())
-				{
-					$codvarety=$lotcrop."-Coded";
-					
-					if($pdndate!='' && $pdndate!='0000-00-00' && $pdndate!=NULL)
-					{
-						$pdndate1=explode("-",$pdndate);
-						$pdndate=$pdndate1[2]."-".$pdndate1[1]."-".$pdndate1[0];
-					}
-					
-					$userSR["pdndate"]=$pdndate;
-					$userSR["pdnno"]=$pdnno;
-					$userSR["spcodef"]=$spcodef;
-					$userSR["spcodem"]=$spcodem;
-					$userSR["organiser"]=$organiser;
-					$userSR["farmer"]=$farmer;
-					$userSR["ploc"]=$ploc;
-					$userSR["lotstate"]=$lotstate;
-					$userSR["pper"]=$pper;
-					$userSR["plotno"]=$plotno;
-					
-					if($lotvariety!=$codvarety)
-					{
-						$stmt_variety = $this->conn_ps->prepare("SELECT leduration, opt FROM tblvariety WHERE popularname = ? AND cropid = ? ");
-						$stmt_variety->bind_param("is", $lotvariety, $lotcrop);
-						$result_variety=$stmt_variety->execute();
-						$stmt_variety->store_result();
-						if ($stmt_variety->num_rows > 0) {
-							$stmt_variety->bind_result($leduration, $opt);
-							//looping through all the records 
-							$stmt_variety->fetch();
-							$ledur=array();
-							for($i=$leduration; $i>0; $i--)
-							{
-								array_push($ledur,$i);
-							}
-							//return $ledur;
-							$userSR["leduration"]=$ledur;
-							//$userSR["leduration"]=$leduration;
-							$userSR["opt"]=$opt;
-						}	
-						else{
-							$leduration=36;
-							$ledur=array();
-							for($i=$leduration; $i>0; $i--)
-							{
-								array_push($ledur,$i);
-							}
 
-							$opt='Optional';
-							$userSR["leduration"]=$ledur;
-							$userSR["opt"]=$opt;
-						}
-						$stmt_variety->close();
-					}
-					else{
-						$leduration=36;
-						$ledur=array();
-						for($i=$leduration; $i>0; $i--)
-						{
-							array_push($ledur,$i);
-						}
 
-						$opt='Optional';
-						$userSR["leduration"]=$ledur;
-						$userSR["opt"]=$opt;
-					}
-					
-					$stmt_wh = $this->conn_ps->prepare("SELECT perticulars, whid FROM tbl_warehouse WHERE plantcode=? order by perticulars ASC");
-					$stmt_wh->bind_param("s", $plantcode);
-					$result_wh=$stmt_wh->execute();
-					$stmt_wh->store_result();
-					if ($stmt_wh->num_rows > 0) {
-						$stmt_wh->bind_result($whperticulars, $whid);
-						//looping through all the records 
-						while($stmt_wh->fetch())
-						{
-							array_push($user10,$whperticulars);
-						}
-						//array_push($userSR,$user10);
-						//return $user10;
-					}	
-					$userSR["wharray"]=$user10;
-					$stmt_wh->close();
-					/*$stmt60 = $this->conn_ps->prepare("Update tblarrival_unld SET arrtrflag=2, logid=? where arrival_id = ? ");
-					$stmt60->bind_param("si", $scode, $arrival_id);
-					$result60 = $stmt60->execute();
-					if($result60){$flg=1;}  
-					$stmt60->close();*/
-				}
-			}	
-			$stmt_lotimp->close();
-				
-			$stmt_2->close();
-		}
-		
-		if(empty($userSR))
-		{return false;}
-		else
-		{return $userSR;}		
-	}	
-	
-	
-	
-	
-	public function GetTranFinBinSel($scode,$whname) {
-		$plantcode = $this->getPlantcode($scode);
-		$user10=array();
-		$stmt_wh = $this->conn_ps->prepare("SELECT perticulars,whid FROM tbl_warehouse where perticulars = ? AND plantcode=?");
-		$stmt_wh->bind_param("ss", $whname, $plantcode);
-		$result_wh=$stmt_wh->execute();
-		$stmt_wh->store_result();
-		if ($stmt_wh->num_rows > 0) {
-			$stmt_wh->bind_result($whperticulars,$whid);
-			//looping through all the records 
-			$stmt_wh->fetch();
-
-			$stmt_2 = $this->conn_ps->prepare("SELECT binname, binid  FROM tbl_bin WHERE whid = ? order by binname ASC");
-			$stmt_2->bind_param("s", $whid);
-			$result2=$stmt_2->execute();
-			$stmt_2->store_result();
-			if ($stmt_2->num_rows > 0) {
-				$stmt_2->bind_result($binname, $binid);
-				//looping through all the records
-				while($stmt_2->fetch())
-				{
-					array_push($user10, $binname);
-				}
-				$stmt_2->close();
-			}
-			$stmt_wh->close();
-		}
-		if(empty($user10))
-		{return false;}
-		else
-		{return $user10;}		
-	}		
-	
-	public function GetTranFinSubBinSel($scode,$whname,$binname) {
-		$plantcode = $this->getPlantcode($scode);
-		$user10=array();
-		$stmt_wh = $this->conn_ps->prepare("SELECT perticulars,whid FROM tbl_warehouse where perticulars = ? AND plantcode=?");
-		$stmt_wh->bind_param("ss", $whname, $plantcode);
-		$result_wh=$stmt_wh->execute();
-		$stmt_wh->store_result();
-		if ($stmt_wh->num_rows > 0) {
-			$stmt_wh->bind_result($whperticulars,$whid);
-			//looping through all the records 
-			$stmt_wh->fetch();
-			$stmt_wh->close();
-
-			$stmt_bin = $this->conn_ps->prepare("SELECT binname, binid  FROM tbl_bin WHERE whid = ? and binname = ? ");
-			$stmt_bin->bind_param("is", $whid, $binname);
-			$result_bin=$stmt_bin->execute();
-			$stmt_bin->store_result();
-			if ($stmt_bin->num_rows > 0) {
-				$stmt_bin->bind_result($binname, $binid);
-				//looping through all the records
-				$stmt_bin->fetch();
-				$stmt_bin->close();
-				
-				$stmt_sbin = $this->conn_ps->prepare("SELECT sname, sid  FROM tbl_subbin WHERE whid = ? and binid = ? order by sname ASC");
-				$stmt_sbin->bind_param("ii", $whid, $binid);
-				$result2=$stmt_sbin->execute();
-				$stmt_sbin->store_result();
-				if ($stmt_sbin->num_rows > 0) {
-					$stmt_sbin->bind_result($subbinname, $subbinid);
-					//looping through all the records
-					while($stmt_sbin->fetch())
-					{
-						array_push($user10, $subbinname);
-					}
-					$stmt_sbin->close();
-				}
-			
-			}
-			
-		}
-		if(empty($user10))
-		{return false;}
-		else
-		{return $user10;}		
-	}	
-	
-	
-	public function GetTranDetails($scode,$trid) {
-	
-		$userSR=array(); $arrival_id=0; $trtype='Fresh Seed with PDN'; $stage='Raw'; $user10=array();
-		$stmt = $this->conn_ps->prepare("SELECT arrival_id, dc_date, dcno, disp_date, arrival_code FROM tblarrival_unld WHERE arrival_id = ?");
-        $stmt->bind_param("i", $trid);
-        $stmt->execute();
-        $stmt->store_result();
-		$arrivalcode=0;
-        if ($stmt->num_rows > 0) {
-            // user existed 
-			$stmt->bind_result($arrival_id,$dc_date,$dcno,$disp_date,$arrival_code);
-			$stmt->fetch();
-			$stmt->close();
-			if($dc_date!='' && $dc_date!='0000-00-00' && $dc_date!=NULL)
-			{
-				$dc_date1=explode("-",$dc_date);
-				$dc_date=$dc_date1[2]."-".$dc_date1[1]."-".$dc_date1[0];
-			}
-			
-			if($disp_date!='' && $disp_date!='0000-00-00' && $disp_date!=NULL)
-			{
-				$disp_date1=explode("-",$disp_date);
-				$disp_date=$disp_date1[2]."-".$disp_date1[1]."-".$disp_date1[0];
-			}
-			
-			$user10["arrival_code"]="AF".$arrival_code;
-			$user10["disp_date"]=$disp_date;
-			$user10["dcdate"]=$dc_date;
-			$user10["dcno"]=$dcno;
-			array_push($userSR,$user10);
-			
-			/*$lotcrop=''; $lotvariety=''; $lotno=''; $orlot=''; $qty=0; $act1=0; $tarewt=0; $old='';   
-			$stmt_lotimp = $this->conn_ps->prepare("SELECT lotcrop, lotvariety, lotno, orlot, qty, act1, tarewt, old, arrsub_id FROM tblarrival_sub_unld WHERE arrival_id = ? ");
-			$stmt_lotimp->bind_param("i", $trid);
-			$result_lotimp=$stmt_lotimp->execute();
-			$stmt_lotimp->store_result();
-			if ($stmt_lotimp->num_rows > 0) {
-				$stmt_lotimp->bind_result($lotcrop, $lotvariety, $lotno, $orlot, $qty, $act1, $tarewt, $old, $arrsub_id);
-				//looping through all the records 
-				while($stmt_lotimp->fetch())
-				{
-					$nnob=0; $grwt=0; $ntwt=0; $actntqty=0;  $actgrqty=0; $actnob=0;
-					$stmt_2 = $this->conn_ps->prepare("SELECT grosswt, netwt FROM tblarrsub_sub_unld WHERE arrival_id = ? and arrsub_id = ? ");
-					$stmt_2->bind_param("ii", $arrival_id, $arrsub_id);
-					$result2=$stmt_2->execute();
-					$stmt_2->store_result();
-					if ($stmt_2->num_rows > 0) {
-						$stmt_2->bind_result($grosswt, $netwt);
-						//looping through all the records
-						while($stmt_2->fetch())
-						{
-							$nnob=$nnob+1;
-							$grwt=$grwt+$grosswt;
-							$ntwt=$ntwt+$netwt;
-						}
-						$actntqty=$actntqty+$ntwt;  
-						$actgrqty=$actgrqty+$grwt; 
-						$actnob=$actnob+$nnob;
-					}
-					$stmt_2->close();
-					$trwt=$tarewt*$act1;
-					$qtynt=$qty-$trwt;
-					$user10["crop"] = $lotcrop;
-					$user10["variety"] = $lotvariety;
-					$user10["lotno"] = stripslashes($lotno);
-					$user10["orlot"] = $orlot;
-					$user10["dcnob"] = $act1;
-					$user10["dcgrqty"] = $qty;
-					$user10["dcntqty"] = $qtynt;
-					$user10["tarewt"] = $tarewt;
-					$user10["oldlot"] = $old;
-					$user10["actnob"] = $actnob;
-					$user10["actntqty"] = $actntqty;
-					$user10["actgrqty"] = $actgrqty;
-					array_push($userSR,$user10);
-				}
-				
-				$stmt_lotimp->close();
-			}*/
-		} 
-		
-		if(empty($userSR))
-		{return false;}
-		else
-		{return $userSR;}
-    }
-	
-	public function GetTranLastBagDetails($scode,$trid) {
-	
-		$user10=array(); $lotno=''; $grosswt=''; $qty=0; $nob='';  
-		$stmt_2 = $this->conn_ps->prepare("SELECT Max(arrsubsub_id) FROM tblarrsub_sub_unld WHERE arrival_id = ?");
-		$stmt_2->bind_param("i", $trid);
-		$result2=$stmt_2->execute();
-		$stmt_2->store_result();
-		if ($stmt_2->num_rows > 0) {
-			$stmt_2->bind_result($arrsubsub_id);
-			//looping through all the records
-			$stmt_2->fetch();
-			
-			$stmt_lotimp = $this->conn_ps->prepare("SELECT lotno, grosswt FROM tblarrsub_sub_unld WHERE arrsubsub_id = ? ");
-			$stmt_lotimp->bind_param("i", $arrsubsub_id);
-			$result_lotimp=$stmt_lotimp->execute();
-			$stmt_lotimp->store_result();
-			if ($stmt_lotimp->num_rows > 0) {
-				$stmt_lotimp->bind_result($lotno, $grosswt);
-				//looping through all the records 
-				$stmt_lotimp->fetch();
-				$stmt_lotimp->close();
-				
-				$stmt_arsubs = $this->conn_ps->prepare("SELECT lotno FROM tblarrsub_sub_unld WHERE arrival_id = ? and lotno = ?");
-				$stmt_arsubs->bind_param("is", $trid, $lotno);
-				$result_arsubs=$stmt_arsubs->execute();
-				$stmt_arsubs->store_result();
-				$nob=$stmt_arsubs->num_rows;
-				$stmt_arsubs->close();
-			}	
-		}
-
-		$user10["lotno"] = $lotno;
-		$user10["grosswt"] = $grosswt;
-		$user10["bagno"] = $nob;
-		
-		if(empty($user10))
-		{return false;}
-		else
-		{return $user10;}
-    }
-	
-	
-	public function GetTranFinSubBinchk($scode,$whname,$binname,$subbinname,$varietyname,$cropname,$trid) {
-		$plantcode = $this->getPlantcode($scode);
-		$sbflg=0; $estage="Raw"; $user10=array(); $existview="Empty";
-		$stmt_wh = $this->conn_ps->prepare("SELECT perticulars,whid FROM tbl_warehouse where perticulars = ? AND plantcode=?");
-		$stmt_wh->bind_param("ss", $whname, $plantcode);
-		$result_wh=$stmt_wh->execute();
-		$stmt_wh->store_result();
-		if ($stmt_wh->num_rows > 0) {
-			$stmt_wh->bind_result($whperticulars,$whid);
-			//looping through all the records 
-			$stmt_wh->fetch();
-			$stmt_wh->close();
-
-			$stmt_bin = $this->conn_ps->prepare("SELECT binname, binid  FROM tbl_bin WHERE whid = ? and binname = ? ");
-			$stmt_bin->bind_param("is", $whid, $binname);
-			$result_bin=$stmt_bin->execute();
-			$stmt_bin->store_result();
-			if ($stmt_bin->num_rows > 0) {
-				$stmt_bin->bind_result($binname, $binid);
-				//looping through all the records
-				$stmt_bin->fetch();
-				$stmt_bin->close();
-				
-				$stmt_sbin = $this->conn_ps->prepare("SELECT sname, sid  FROM tbl_subbin WHERE whid = ? and binid = ? and sname = ? order by sname ASC");
-				$stmt_sbin->bind_param("iis", $whid, $binid, $subbinname);
-				$result2=$stmt_sbin->execute();
-				$stmt_sbin->store_result();
-				if ($stmt_sbin->num_rows > 0) {
-					$stmt_sbin->bind_result($subbinname, $subbinid);
-					//looping through all the records
-					$stmt_sbin->fetch();
-					$stmt_sbin->close();
-				}
-			}
-		}
-		
-		$varietyid=0; $popularname=$varietyname;
-		$stmt_var = $this->conn_ps->prepare("SELECT popularname, varietyid  FROM tblvariety WHERE popularname=? and actstatus='Active' and vertype='PV' order by popularname ASC");
-		$stmt_var->bind_param("s", $varietyname);
-		$result2=$stmt_var->execute();
-		$stmt_var->store_result();
-		if ($stmt_var->num_rows > 0) {
-			$stmt_var->bind_result($popularname, $varietyid);
-			//looping through all the records
-			$stmt_var->fetch();
-			$stmt_var->close();
-		}
-		//return $whid." - ".$binid." - ".$subbinid." - ".$popularname." - ".$cropname." - ".$trid;
-		$stmt_arsub = $this->conn_ps->prepare("SELECT lotvariety, lotcrop  FROM tblarr_sloc_unld WHERE arr_tr_id = ? and lotvariety = ? and subbin = ?");
-		$stmt_arsub->bind_param("isi", $trid, $popularname, $subbinid);
-		$result2=$stmt_arsub->execute();
-		$stmt_arsub->store_result();
-		//return $stmt_arsub->num_rows;
-		if ($stmt_arsub->num_rows > 0) {
-			$stmt_arsub->bind_result($lotvariety, $lotcrop);
-			//looping through all the records
-			$sbflg=0; $existview="Allowed";
-			$stmt_arsub->fetch();
-		}
-		else
-		{ 
-			$stmt_arss = $this->conn_ps->prepare("SELECT lotvariety, lotcrop  FROM tblarr_sloc_unld WHERE lotvariety != ? and subbin = ? ");
-			$stmt_arss->bind_param("si", $popularname, $subbinid);
-			$result2=$stmt_arss->execute();
-			$stmt_arss->store_result();
-			//return "SELECT lotvariety, lotcrop  FROM tblarr_sloc_unld WHERE lotvariety != '$popularname' and subbin = $subbinid ";
-			if ($stmt_arss->num_rows > 0) {
-				$stmt_arss->bind_result($lotvariety, $lotcrop);
-				//looping through all the records
-				$sbflg=1; $existview="Occupied with Different Variety ".$lotcrop." - ".$lotvariety;
-				$stmt_arss->fetch();
-			}
-			else
-			{
-				$cnt=0; $cnt1=0; $cnt2=0; 
-				$stmt_ldgraw = $this->conn_ps->prepare("SELECT distinct(lotldg_variety) FROM tbl_lot_ldg WHERE lotldg_variety != ? and lotldg_subbinid = ? and plantcode=? ");
-				$stmt_ldgraw->bind_param("sis", $popularname, $subbinid, $plantcode);
-				$result2=$stmt_ldgraw->execute();
-				$stmt_ldgraw->store_result();
-				if ($stmt_ldgraw->num_rows > 0) {
-					$stmt_ldgraw->bind_result($varietyname);
-					//looping through all the records
-					while($stmt_ldgraw->fetch())
-					{
-						$stmt_ldgraw2 = $this->conn_ps->prepare("SELECT distinct(lotldg_lotno) FROM tbl_lot_ldg WHERE lotldg_variety = ? and lotldg_subbinid = ? and plantcode=? ");
-						$stmt_ldgraw2->bind_param("sis", $varietyname, $subbinid, $plantcode);
-						$result2=$stmt_ldgraw2->execute();
-						$stmt_ldgraw2->store_result();
-						if ($stmt_ldgraw2->num_rows > 0) {
-							$stmt_ldgraw2->bind_result($lotno);
-							//looping through all the records
-							while($stmt_ldgraw2->fetch())
-							{
-								$stmt_ldgraw3 = $this->conn_ps->prepare("SELECT max(lotldg_id) FROM tbl_lot_ldg WHERE lotldg_variety = ? and lotldg_subbinid = ? and lotldg_lotno = ? and plantcode=?");
-								$stmt_ldgraw3->bind_param("siss", $varietyname, $subbinid, $lotno, $plantcode);
-								$result2=$stmt_ldgraw3->execute();
-								$stmt_ldgraw3->store_result();
-								if ($stmt_ldgraw3->num_rows > 0) {
-									$stmt_ldgraw3->bind_result($lotldgid);
-									//looping through all the records
-									while($stmt_ldgraw3->fetch())
-									{ 
-										$stmt_ldgraw4 = $this->conn_ps->prepare("SELECT lotldg_id FROM tbl_lot_ldg WHERE lotldg_id = ? and lotldg_balqty > 0 and plantcode=? ");
-										$stmt_ldgraw4->bind_param("is", $lotldgid, $plantcode);
-										$result2=$stmt_ldgraw4->execute();
-										$stmt_ldgraw4->store_result();
-										if ($stmt_ldgraw4->num_rows > 0) {
-											$stmt_ldgraw4->bind_result($lotldgid);
-											//looping through all the records
-											//$stmt_ldgraw->fetch();
-											$cnt++;
-										}
-										$stmt_ldgraw4->close();
-									}
-								}
-								$stmt_ldgraw3->close();
-							}
-						}
-						$stmt_ldgraw2->close();
-					}
-				}
-				$stmt_ldgraw->close();
-				
-				$stmt_ldgraw5 = $this->conn_ps->prepare("SELECT distinct(lotldg_lotno) FROM tbl_lot_ldg WHERE lotldg_variety=? and lotldg_subbinid = ? AND lotldg_sstage!='Raw' AND plantcode=? ");
-				$stmt_ldgraw5->bind_param("sis", $varietyid, $subbinid, $plantcode);
-				$result2=$stmt_ldgraw5->execute();
-				$stmt_ldgraw5->store_result();
-				if ($stmt_ldgraw5->num_rows > 0) {
-					$stmt_ldgraw5->bind_result($lotno2);
-					//looping through all the records
-					while($stmt_ldgraw5->fetch())
-					{
-						$stmt_ldgraw6 = $this->conn_ps->prepare("SELECT max(lotldg_id) FROM tbl_lot_ldg WHERE lotldg_variety = ? and lotldg_subbinid = ? and lotldg_lotno = ? AND lotldg_sstage!='Raw' AND plantcode=? ");
-						$stmt_ldgraw6->bind_param("siss", $varietyid, $subbinid, $lotno2, $plantcode);
-						$result2=$stmt_ldgraw6->execute();
-						$stmt_ldgraw6->store_result();
-						if ($stmt_ldgraw6->num_rows > 0) {
-							$stmt_ldgraw6->bind_result($lotldgid2);
-							//looping through all the records
-							while($stmt_ldgraw6->fetch())
-							{
-								$stmt_ldgraw7 = $this->conn_ps->prepare("SELECT lotldg_id FROM tbl_lot_ldg WHERE lotldg_id = ? and lotldg_balqty > 0  AND lotldg_sstage!='Raw' AND plantcode=? ");
-								$stmt_ldgraw7->bind_param("is", $lotldgid2, $plantcode);
-								$result2=$stmt_ldgraw7->execute();
-								$stmt_ldgraw7->store_result();
-								if ($stmt_ldgraw7->num_rows > 0) {
-									$stmt_ldgraw7->bind_result($lotldgid3);
-									//looping through all the records
-									//$stmt_ldgraw7->fetch();
-									$cnt1++;
-								}
-								$stmt_ldgraw7->close();
-							}
-						}
-						$stmt_ldgraw6->close();
-					}
-				}
-				$stmt_ldgraw5->close();
-				
-				//return "SELECT distinct(lotno) FROM tbl_lot_ldg_pack WHERE lotldg_variety = $varietyid and subbinid = $subbinid ";
-				$stmt_ldgraw8 = $this->conn_ps->prepare("SELECT distinct(lotno) FROM tbl_lot_ldg_pack WHERE subbinid = ? AND plantcode=? ");
-				$stmt_ldgraw8->bind_param("is", $subbinid, $plantcode);
-				$result2=$stmt_ldgraw8->execute();
-				$stmt_ldgraw8->store_result();
-				if ($stmt_ldgraw8->num_rows > 0) {
-					$stmt_ldgraw8->bind_result($lotno3);
-					//looping through all the records
-					while($stmt_ldgraw8->fetch())
-					{
-						$stmt_ldgraw9 = $this->conn_ps->prepare("SELECT max(lotdgp_id) FROM tbl_lot_ldg_pack WHERE subbinid = ? and lotno = ? and plantcode=?");
-						$stmt_ldgraw9->bind_param("iss", $subbinid, $lotno3, $plantcode);
-						$result2=$stmt_ldgraw9->execute();
-						$stmt_ldgraw9->store_result();
-						if ($stmt_ldgraw9->num_rows > 0) {
-							$stmt_ldgraw9->bind_result($lotldgid4);
-							//looping through all the records
-							while($stmt_ldgraw9->fetch())
-							{
-								$stmt_ldgraw0 = $this->conn_ps->prepare("SELECT lotdgp_id FROM tbl_lot_ldg_pack WHERE lotdgp_id = ? and balqty > 0 and plantcode=? ");
-								$stmt_ldgraw0->bind_param("is", $lotldgid4, $plantcode);
-								$result2=$stmt_ldgraw0->execute();
-								$stmt_ldgraw0->store_result();
-								if ($stmt_ldgraw0->num_rows > 0) {
-									$stmt_ldgraw0->bind_result($lotldgid5);
-									//looping through all the records
-									//$stmt_ldgraw7->fetch();
-									$cnt2++;
-								}
-								$stmt_ldgraw0->close();
-							}
-						}
-						$stmt_ldgraw9->close();
-					}
-				}
-				$stmt_ldgraw8->close();
-				
-				if($cnt>0)
-				{$sbflg=1; $existview="Occupied with Different Variety";}
-				if($cnt1>0 || $cnt2>0 )
-				{$sbflg=2; $existview="Occupied with Different Stage";}
-			}
-			$stmt_arss->close();
-		}
-		$stmt_arsub->close();
-		$user10["sbflg"]=$sbflg;
-		$user10["existview"]=$existview;
-		
-		if(empty($user10))
-		{return false;}
-		else
-		{return $user10;}		
-	}	
-	
-	
-	public function GetTranLotSubmit($scode,$trid,$lotno,$harvestdate,$geoindex,$gottype,$seedstatus,$moisture,$purity,$remark,$qcstatus,$leduration,$ledate,$arrstatus,$gotstatus,$stage,$whname,$binname,$subbinname,$whname1,$binname1,$subbinname1,$slocnob,$slocnob1,$slocqty,$slocqty1) {
-		$plantcode = $this->getPlantcode($scode);
-		$flg=0; $userSR=array(); $arrival_id=0; $trtype='Fresh Seed with PDN'; $stage='Raw'; 
-		$stmt_2 = $this->conn_ps->prepare("SELECT arrival_id FROM tblarrival_unld WHERE arrunldflag=1 AND arrival_id = ?");
-		$stmt_2->bind_param("i", $trid);
-		$result2=$stmt_2->execute();
-		$stmt_2->store_result();
-		if ($stmt_2->num_rows > 0) {
-			$stmt_2->bind_result($arrival_id);
-			//looping through all the records
-			$stmt_2->fetch();
-			
-			$stmt_lotimp = $this->conn_ps->prepare("SELECT lotno, orlot, tarewt, old, arrsub_id, qty, act1, lotcrop, lotvariety  FROM tblarrival_sub_unld WHERE arrival_id = ? AND old = ? ");
-			$stmt_lotimp->bind_param("is", $trid, $lotno);
-			$result_lotimp=$stmt_lotimp->execute();
-			$stmt_lotimp->store_result();
-			if ($stmt_lotimp->num_rows > 0) {
-				$stmt_lotimp->bind_result($nlotno, $orlot, $tarewt, $old, $arrsub_id, $qty, $act1, $lotcrop, $lotvariety);
-				//looping through all the records 
-				while($stmt_lotimp->fetch())
-				{
-					$stmt_arrss = $this->conn_ps->prepare("SELECT SUM(netwt) FROM tblarrsub_sub_unld WHERE arrival_id = ? and arrsub_id = ? ");
-					$stmt_arrss->bind_param("ii", $arrival_id, $arrsub_id);
-					$result2=$stmt_arrss->execute();
-					$stmt_arrss->store_result();
-					if ($stmt_arrss->num_rows > 0) {
-						$stmt_arrss->bind_result($grosswt);
-						//looping through all the records
-						$stmt_arrss->fetch();
-					}
-					$stmt_arrss->close();
-					
-					$stmt_arrss2 = $this->conn_ps->prepare("SELECT arrsubsub_id FROM tblarrsub_sub_unld WHERE arrival_id = ? and arrsub_id = ? ");
-					$stmt_arrss2->bind_param("ii", $arrival_id, $arrsub_id);
-					$result22=$stmt_arrss2->execute();
-					$stmt_arrss2->store_result();
-					$totnob=$stmt_arrss2->num_rows;
-					$stmt_arrss2->fetch();
-					$stmt_arrss2->close();
-					
-					if($slocqty>0)
-					{
-						$stmt_wh = $this->conn_ps->prepare("SELECT perticulars,whid FROM tbl_warehouse where perticulars = ? AND plantcode=?");
-						$stmt_wh->bind_param("ss", $whname, $plantcode);
-						$result_wh=$stmt_wh->execute();
-						$stmt_wh->store_result();
-						if ($stmt_wh->num_rows > 0) {
-							$stmt_wh->bind_result($whperticulars,$whid);
-							//looping through all the records 
-							$stmt_wh->fetch();
-							$stmt_wh->close();
-				
-							$stmt_bin = $this->conn_ps->prepare("SELECT binname, binid  FROM tbl_bin WHERE whid = ? and binname = ? ");
-							$stmt_bin->bind_param("is", $whid, $binname);
-							$result_bin=$stmt_bin->execute();
-							$stmt_bin->store_result();
-							if ($stmt_bin->num_rows > 0) {
-								$stmt_bin->bind_result($binname, $binid);
-								//looping through all the records
-								$stmt_bin->fetch();
-								$stmt_bin->close();
-								
-								$stmt_sbin = $this->conn_ps->prepare("SELECT sname, sid  FROM tbl_subbin WHERE whid = ? and binid = ? and sname = ? order by sname ASC");
-								$stmt_sbin->bind_param("iis", $whid, $binid, $subbinname);
-								$result2=$stmt_sbin->execute();
-								$stmt_sbin->store_result();
-								if ($stmt_sbin->num_rows > 0) {
-									$stmt_sbin->bind_result($subbinname, $subbinid);
-									//looping through all the records
-									$stmt_sbin->fetch();
-									$stmt_sbin->close();
-								}
-							}
-						}
-						
-						$stmt60 = $this->conn_ps->prepare("Insert into tblarr_sloc_unld (arr_tr_id, arr_id, arr_type, lotcrop, lotvariety, whid, binid, subbin, qty, bags, balqty, balbags, plantcode) Values(?,?,?,?,?,?,?,?,?,?,?,?,?) ");
-						$stmt60->bind_param("iisssiiisisis", $arrival_id, $arrsub_id, $trtype, $lotcrop, $lotvariety, $whid, $binid, $subbinid, $slocqty, $slocnob, $slocqty, $slocnob, $plantcode);
-						$result60 = $stmt60->execute();
-						if($result60){$flg=1;//"Insert into tblarr_sloc_unld (arr_tr_id, arr_id, arr_type, lotcrop, lotvariety, whid, binid, subbin, qty, bags, balqty, balbags) Values($arrival_id, $arrsub_id, $trtype, $lotcrop, $lotvariety, $whid, $binid, $subbinid, $slocqty, $slocnob, $slocqty, $slocnob) ";
-						}  
-						$stmt60->close();
-					}
-					
-					if($slocqty1>0)
-					{
-						$stmt_wh = $this->conn_ps->prepare("SELECT perticulars,whid FROM tbl_warehouse where perticulars = ? and plantcode=?");
-						$stmt_wh->bind_param("ss", $whname1, $plantcode);
-						$result_wh=$stmt_wh->execute();
-						$stmt_wh->store_result();
-						if ($stmt_wh->num_rows > 0) {
-							$stmt_wh->bind_result($whperticulars,$whid);
-							//looping through all the records 
-							$stmt_wh->fetch();
-							$stmt_wh->close();
-				
-							$stmt_bin = $this->conn_ps->prepare("SELECT binname, binid  FROM tbl_bin WHERE whid = ? and binname = ? ");
-							$stmt_bin->bind_param("is", $whid, $binname1);
-							$result_bin=$stmt_bin->execute();
-							$stmt_bin->store_result();
-							if ($stmt_bin->num_rows > 0) {
-								$stmt_bin->bind_result($binname, $binid);
-								//looping through all the records
-								$stmt_bin->fetch();
-								$stmt_bin->close();
-								
-								$stmt_sbin = $this->conn_ps->prepare("SELECT sname, sid  FROM tbl_subbin WHERE whid = ? and binid = ? and sname = ? order by sname ASC");
-								$stmt_sbin->bind_param("iis", $whid, $binid, $subbinname1);
-								$result2=$stmt_sbin->execute();
-								$stmt_sbin->store_result();
-								if ($stmt_sbin->num_rows > 0) {
-									$stmt_sbin->bind_result($subbinname, $subbinid);
-									//looping through all the records
-									$stmt_sbin->fetch();
-									$stmt_sbin->close();
-								}
-							}
-						}
-						
-						$stmt60 = $this->conn_ps->prepare("Insert into tblarr_sloc_unld (arr_tr_id, arr_id, arr_type, lotcrop, lotvariety, whid, binid, subbin, qty, bags, balqty, balbags, plantcode) Values(?,?,?,?,?,?,?,?,?,?,?,?,?) ");
-						$stmt60->bind_param("iisssiiisisis", $arrival_id, $arrsub_id, $trtype, $lotcrop, $lotvariety, $whid, $binid, $subbinid, $slocqty1, $slocnob1, $slocqty1, $slocnob1, $plantcode);
-						$result60 = $stmt60->execute();
-						if($result60){$flg=2;//"Insert into tblarr_sloc_unld (arr_tr_id, arr_id, arr_type, lotcrop, lotvariety, whid, binid, subbin, qty, bags, balqty, balbags) Values($arrival_id, $arrsub_id, $trtype, $lotcrop, $lotvariety, $whid, $binid, $subbinid, $slocqty1, $slocnob1, $slocqty1, $slocnob1) ";
-						}  
-						$stmt60->close();
-					}
-					
-					if($harvestdate!='' && $harvestdate!='0000-00-00' && $harvestdate!=NULL)
-					{
-						$harvestdate1=explode("-",$harvestdate);
-						$harvestdate=$harvestdate1[2]."-".$harvestdate1[1]."-".$harvestdate1[0];
-					}
-					
-					if($ledate!='' && $ledate!='0000-00-00' && $ledate!=NULL)
-					{
-						$ledate1=explode("-",$ledate);
-						$ledate=$ledate1[2]."-".$ledate1[1]."-".$ledate1[0];
-					}
-					$val=1; $gemp=0; $got12=explode(" ", $gotstatus); $got1=$got12[1];
-					$diff=$qty-$grosswt; 
-					$diff1=$act1-$totnob;
-					
-					$stmtsub = $this->conn_ps->prepare("Update tblarrival_sub_unld SET moisture=?, gemp=?, vchk=?, got=?, qc=?, remarks=?, got1=?, sstatus=?, qcstatus=?, sample=?, harvestdate=?, gi=?, leduration=?, leupto=?, act=?, diff=?, qty1=?, diff1=? where arrival_id = ? and arrsub_id = ? ");
-					$stmtsub->bind_param("sisssssssisissiissii", $moisture, $gemp, $purity, $gottype, $qcstatus, $remark, $got1, $seedstatus, $qcstatus, $val, $harvestdate, $geoindex, $leduration, $ledate, $grosswt, $diff, $totnob, $diff1, $arrival_id, $arrsub_id);
-					$resultsub = $stmtsub->execute();
-					if($resultsub){$flg=3;//"Update tblarrival_sub_unld SET moisture=$moisture, gemp=$gemp, vchk=$purity, got=$gottype, qc=$qcstatus, remarks=$remark, got1=$got1, sstatus=$seedstatus, qcstatus=$qcstatus, sample=$val, harvestdate=$harvestdate, gi=$geoindex, leduration=$leduration, leupto=$ledate, act=$grosswt, diff=$diff, qty1=$totnob, diff1=$diff1 where arrival_id = $arrival_id and arrsub_id = $arrsub_id";
-					}  
-					$stmtsub->close();
-					 //sisssssssssissi
-				}
-			}	
-			$stmt_lotimp->close();
-				
-			$stmt_2->close();
-		}
-		//return $flg;
-		if($flg==0)
-		{return false;}
-		else
-		{return true;}		
-	}
-	
-	
-	public function GetTranLotEditUpdate($scode,$trid,$lotno,$harvestdate,$geoindex,$gottype,$seedstatus,$moisture,$purity,$remark,$qcstatus,$leduration,$ledate,$arrstatus,$gotstatus,$stage,$whname,$binname,$subbinname,$whname1,$binname1,$subbinname1,$slocnob,$slocnob1,$slocqty,$slocqty1) {
-		$plantcode = $this->getPlantcode($scode);
-		$flg=0; $userSR=array(); $arrival_id=0; $trtype='Fresh Seed with PDN'; $stage='Raw'; 
-		$stmt_2 = $this->conn_ps->prepare("SELECT arrival_id FROM tblarrival_unld WHERE arrunldflag=1 AND arrival_id = ?");
-		$stmt_2->bind_param("i", $trid);
-		$result2=$stmt_2->execute();
-		$stmt_2->store_result();
-		if ($stmt_2->num_rows > 0) {
-			$stmt_2->bind_result($arrival_id);
-			//looping through all the records
-			$stmt_2->fetch();
-			
-			$stmt_lotimp = $this->conn_ps->prepare("SELECT lotno, orlot, tarewt, old, arrsub_id, qty, act1 FROM tblarrival_sub_unld WHERE arrival_id = ? AND old = ? ");
-			$stmt_lotimp->bind_param("is", $trid, $lotno);
-			$result_lotimp=$stmt_lotimp->execute();
-			$stmt_lotimp->store_result();
-			if ($stmt_lotimp->num_rows > 0) {
-				$stmt_lotimp->bind_result($nlotno, $orlot, $tarewt, $old, $arrsub_id, $qty, $act1);
-				//looping through all the records 
-				while($stmt_lotimp->fetch())
-				{
-					$stmt_slocunld = $this->conn_ps->prepare("DELETE From tblarr_sloc_unld where arr_tr_id = ?  and arr_id = ?");
-					$stmt_slocunld->bind_param("ii", $arrival_id, $arrsub_id);
-					$result_slocunld = $stmt_slocunld->execute();
-					$stmt_slocunld->close();
-					
-					$stmt_arrss = $this->conn_ps->prepare("SELECT SUM(netwt) FROM tblarrsub_sub_unld WHERE arrival_id = ? and arrsub_id = ? ");
-					$stmt_arrss->bind_param("ii", $arrival_id, $arrsub_id);
-					$result2=$stmt_arrss->execute();
-					$stmt_arrss->store_result();
-					if ($stmt_arrss->num_rows > 0) {
-						$stmt_arrss->bind_result($grosswt);
-						//looping through all the records
-						$stmt_arrss->fetch();
-						
-					}
-					$stmt_arrss->close();
-					
-					$stmt_arrss2 = $this->conn_ps->prepare("SELECT arrsubsub_id FROM tblarrsub_sub_unld WHERE arrival_id = ? and arrsub_id = ? ");
-					$stmt_arrss2->bind_param("ii", $arrival_id, $arrsub_id);
-					$result22=$stmt_arrss2->execute();
-					$stmt_arrss2->store_result();
-					$totnob=$stmt_arrss2->num_rows;
-					$stmt_arrss2->fetch();
-					$stmt_arrss2->close();
-					
-					if($slocqty>0)
-					{
-						$stmt_wh = $this->conn_ps->prepare("SELECT perticulars,whid FROM tbl_warehouse where perticulars = ? and plantcode=?");
-						$stmt_wh->bind_param("ss", $whname, $plantcode);
-						$result_wh=$stmt_wh->execute();
-						$stmt_wh->store_result();
-						if ($stmt_wh->num_rows > 0) {
-							$stmt_wh->bind_result($whperticulars,$whid);
-							//looping through all the records 
-							$stmt_wh->fetch();
-							$stmt_wh->close();
-				
-							$stmt_bin = $this->conn_ps->prepare("SELECT binname, binid  FROM tbl_bin WHERE whid = ? and binname = ? ");
-							$stmt_bin->bind_param("is", $whid, $binname);
-							$result_bin=$stmt_bin->execute();
-							$stmt_bin->store_result();
-							if ($stmt_bin->num_rows > 0) {
-								$stmt_bin->bind_result($binname, $binid);
-								//looping through all the records
-								$stmt_bin->fetch();
-								$stmt_bin->close();
-								
-								$stmt_sbin = $this->conn_ps->prepare("SELECT sname, sid  FROM tbl_subbin WHERE whid = ? and binid = ? and sname = ? order by sname ASC");
-								$stmt_sbin->bind_param("iis", $whid, $binid, $subbinname);
-								$result2=$stmt_sbin->execute();
-								$stmt_sbin->store_result();
-								if ($stmt_sbin->num_rows > 0) {
-									$stmt_sbin->bind_result($subbinname, $subbinid);
-									//looping through all the records
-									$stmt_sbin->fetch();
-									$stmt_sbin->close();
-								}
-							}
-						}
-						
-						$stmt60 = $this->conn_ps->prepare("Insert into tblarr_sloc_unld (arr_tr_id, arr_id, arr_type, lotcrop, lotvariety, whid, binid, subbin, qty, bags, balqty, balbags, plantcode) Values(?,?,?,?,?,?,?,?,?,?,?,?,?) ");
-						$stmt60->bind_param("iisssiiisisis", $arrival_id, $arrsub_id, $trtype, $lotcrop, $lotvariety, $whid, $binid, $subbinid, $slocqty, $slocnob, $slocqty, $slocnob, $plantcode);
-						$result60 = $stmt60->execute();
-						if($result60){$flg=1;}  
-						$stmt60->close();
-					}
-					
-					if($slocqty1>0)
-					{
-						$stmt_wh = $this->conn_ps->prepare("SELECT perticulars,whid FROM tbl_warehouse where perticulars = ? and plantcode=?");
-						$stmt_wh->bind_param("ss", $whname1, $plantcode);
-						$result_wh=$stmt_wh->execute();
-						$stmt_wh->store_result();
-						if ($stmt_wh->num_rows > 0) {
-							$stmt_wh->bind_result($whperticulars,$whid);
-							//looping through all the records 
-							$stmt_wh->fetch();
-							$stmt_wh->close();
-				
-							$stmt_bin = $this->conn_ps->prepare("SELECT binname, binid  FROM tbl_bin WHERE whid = ? and binname = ? ");
-							$stmt_bin->bind_param("is", $whid, $binname1);
-							$result_bin=$stmt_bin->execute();
-							$stmt_bin->store_result();
-							if ($stmt_bin->num_rows > 0) {
-								$stmt_bin->bind_result($binname, $binid);
-								//looping through all the records
-								$stmt_bin->fetch();
-								$stmt_bin->close();
-								
-								$stmt_sbin = $this->conn_ps->prepare("SELECT sname, sid  FROM tbl_subbin WHERE whid = ? and binid = ? and sname = ? order by sname ASC");
-								$stmt_sbin->bind_param("iis", $whid, $binid, $subbinname1);
-								$result2=$stmt_sbin->execute();
-								$stmt_sbin->store_result();
-								if ($stmt_sbin->num_rows > 0) {
-									$stmt_sbin->bind_result($subbinname, $subbinid);
-									//looping through all the records
-									$stmt_sbin->fetch();
-									$stmt_sbin->close();
-								}
-							}
-						}
-						
-						$stmt60 = $this->conn_ps->prepare("Insert into tblarr_sloc_unld (arr_tr_id, arr_id, arr_type, lotcrop, lotvariety, whid, binid, subbin, qty, bags, balqty, balbags, plantcode) Values(?,?,?,?,?,?,?,?,?,?,?,?,?) ");
-						$stmt60->bind_param("iisssiiisisis", $arrival_id, $arrsub_id, $trtype, $lotcrop, $lotvariety, $whid, $binid, $subbinid, $slocqty1, $slocnob1, $slocqty1, $slocnob1, $plantcode);
-						$result60 = $stmt60->execute();
-						if($result60){$flg=1;}  
-						$stmt60->close();
-					}
-					
-					if($harvestdate!='' && $harvestdate!='0000-00-00' && $harvestdate!=NULL)
-					{
-						$harvestdate1=explode("-",$harvestdate);
-						$harvestdate=$harvestdate1[2]."-".$harvestdate1[1]."-".$harvestdate1[0];
-					}
-					
-					if($ledate!='' && $ledate!='0000-00-00' && $ledate!=NULL)
-					{
-						$ledate1=explode("-",$ledate);
-						$ledate=$ledate1[2]."-".$ledate1[1]."-".$ledate1[0];
-					}
-					$val=1; $gemp=0; $got12=explode(" ", $gotstatus); $got1=$got12[1];
-					$diff=$qty-$grosswt; 
-					$diff1=$act1-$totnob;
-					$stmtsub = $this->conn_ps->prepare("Update tblarrival_sub_unld SET moisture=?, gemp=?, vchk=?, got=?, qc=?, remarks=?, got1=?, sstatus=?, qcstatus=?, sample=?, harvestdate=?, gi=?, leduration=?, leupto=?, act=?, diff=?, qty1=?, diff1=? where arrival_id = ? and arrsub_id = ? ");
-					$stmtsub->bind_param("sisssssssisissiissii", $moisture, $gemp, $purity, $gottype, $qcstatus, $remark, $got1, $seedstatus, $qcstatus, $val, $harvestdate, $geoindex, $leduration, $ledate, $arrival_id, $arrsub_id, $grosswt, $diff, $totnob, $diff1);
-					$resultsub = $stmtsub->execute();
-					if($resultsub){$flg=1;}  
-					$stmtsub->close();
-					 //sisssssssssissi
-				}
-			}	
-			$stmt_lotimp->close();
-				
-			$stmt_2->close();
-		}
-		
-		if($flg==0)
-		{return false;}
-		else
-		{return true;}		
-	}
-	
-	
-	
-	public function GetTranLotBagDel($scode,$trid,$lotno,$deltype) {
-		$plantcode = $this->getPlantcode($scode);
-		$flg=0;
-		$stmt_2 = $this->conn_ps->prepare("SELECT arrival_id FROM tblarrival_unld WHERE arrunldflag!=0 AND arrival_id = ?");
-		$stmt_2->bind_param("i", $trid);
-		$result2=$stmt_2->execute();
-		$stmt_2->store_result();
-		//return "SELECT arrival_id FROM tblarrival_unld WHERE arrunldflag=1 AND arrival_id = $trid";
-		if ($stmt_2->num_rows > 0) {
-			$stmt_2->bind_result($arrival_id);
-			//looping through all the records
-			$stmt_2->fetch();
-			if($deltype=="BAGREMOVE")
-			{
-				$stmt_lotimp = $this->conn_ps->prepare("SELECT arrsub_id FROM tblarrival_sub_unld WHERE arrival_id = ? AND old = ? ");
-				$stmt_lotimp->bind_param("is", $trid, $lotno);
-				$result_lotimp=$stmt_lotimp->execute();
-				$stmt_lotimp->store_result();
-				if ($stmt_lotimp->num_rows > 0) {
-					$stmt_lotimp->bind_result($arrsub_id);
-					//looping through all the records 
-					while($stmt_lotimp->fetch())
-					{
-						$stmt_arrss = $this->conn_ps->prepare("SELECT MAX(arrsubsub_id) FROM tblarrsub_sub_unld WHERE arrival_id = ? and arrsub_id = ? order by arrsubsub_id DESC");
-						$stmt_arrss->bind_param("ii", $arrival_id, $arrsub_id);
-						$result2=$stmt_arrss->execute();
-						$stmt_arrss->store_result();
-						if ($stmt_arrss->num_rows > 0) {
-							$stmt_arrss->bind_result($arrsubsub_id);
-							//looping through all the records
-							$stmt_arrss->fetch();
-						}
-						$stmt_arrss->close();
-						$stmt_slocunld = $this->conn_ps->prepare("DELETE From tblarrsub_sub_unld where arrsubsub_id = ?");
-						$stmt_slocunld->bind_param("i", $arrsubsub_id);
-						$result_slocunld = $stmt_slocunld->execute();
-						if($result_slocunld){$flg=1;}  
-						$stmt_slocunld->close();
-						
-					}
-				}
-			}	
-			
-			if($deltype=="LOTREMOVE")
-			{
-				$stmt_lotimp = $this->conn_ps->prepare("SELECT arrsub_id FROM tblarrival_sub_unld WHERE arrival_id = ? AND old = ? ");
-				$stmt_lotimp->bind_param("is", $trid, $lotno);
-				$result_lotimp=$stmt_lotimp->execute();
-				$stmt_lotimp->store_result();
-				if ($stmt_lotimp->num_rows > 0) {
-					$stmt_lotimp->bind_result($arrsub_id);
-					//looping through all the records 
-					while($stmt_lotimp->fetch())
-					{
-						$stmt_slocunld = $this->conn_ps->prepare("DELETE From tblarrsub_sub_unld where arrsub_id = ?");
-						$stmt_slocunld->bind_param("i", $arrsub_id);
-						$result_slocunld = $stmt_slocunld->execute();
-						if($result_slocunld){$flg=1;}  
-						$stmt_slocunld->close();
-						
-					}
-				}
-				$stmt_subunld = $this->conn_ps->prepare("DELETE From tblarrival_sub_unld where arrival_id = ? AND old = ? ");
-				$stmt_subunld->bind_param("is", $trid, $lotno);
-				$result_subunld = $stmt_subunld->execute();
-				if($result_subunld){$flg=1;}  
-				$stmt_subunld->close();
-				
-							
-				$stmt_lotimptbl = $this->conn_ps->prepare("Update tbllotimp SET lotimpflg=0 where lotnumber = ? ");
-				$stmt_lotimptbl->bind_param("s", $lotno);
-				$result_lotimptbl = $stmt_lotimptbl->execute();
-				$stmt_lotimptbl->close();
-			}
-			$stmt_2->close();
-		}
-		
-		if($flg==0)
-		{return false;}
-		else
-		{return true;}		
-	}
-	
-	
-	
-	
-	
-	public function GetTranBagEdtDel($scode,$trid,$bagid,$bagwt,$tarewt,$deltype) {
-		$flg=0;
-		$stmt_2 = $this->conn_ps->prepare("SELECT arrival_id FROM tblarrival_unld WHERE arrunldflag!=0 AND arrival_id = ?");
-		$stmt_2->bind_param("i", $trid);
-		$result2=$stmt_2->execute();
-		$stmt_2->store_result();
-		//return "SELECT arrival_id FROM tblarrival_unld WHERE arrunldflag=1 AND arrival_id = $trid";
-		if ($stmt_2->num_rows > 0) {
-			$stmt_2->bind_result($arrival_id);
-			//looping through all the records
-			$stmt_2->fetch();
-			if($deltype=="BAGREMOVE")
-			{
-				$stmt_slocunld = $this->conn_ps->prepare("DELETE From tblarrsub_sub_unld where arrsubsub_id = ?");
-				$stmt_slocunld->bind_param("i", $bagid);
-				$result_slocunld = $stmt_slocunld->execute();
-				if($result_slocunld){$flg=1;}  
-				$stmt_slocunld->close();
-			}	
-			
-			if($deltype=="BAGEDIT")
-			{
-				$netwt=$bagwt-$tarewt;
-				$stmt_slocunld = $this->conn_ps->prepare("UPDATE tblarrsub_sub_unld SET grosswt=?, netwt=?, tarewt=? where arrsubsub_id = ?");
-				$stmt_slocunld->bind_param("sssi", $bagwt, $netwt, $tarewt, $bagid);
-				$result_slocunld = $stmt_slocunld->execute();
-				if($result_slocunld){$flg=1;}  
-				$stmt_slocunld->close();
-			}
-			$stmt_2->close();
-		}
-		
-		if($flg==0)
-		{return false;}
-		else
-		{return true;}		
-	}
-	
-	
-	public function GetTranFinalSubmit($scodeorg, $trid, $trnremarks) {
-	//return false;
-		$plantcode = $this->getPlantcode($scode);
-		$flg=0; $arrival_id=0; $trtype='Fresh Seed with PDN'; $stage='Raw'; $dt=date("Y-m-d");
-		
-		$sql_m2=$this->conn_ps->prepare("UPDATE tblarrival_unld SET remarks = ?, arrival_date= ? where arrival_id = ?");
-		$sql_m2->bind_param("ssi", $trnremarks, $dt, $trid);
-		$result_sql_m2 = $sql_m2->execute();
-		$sql_m2->close();
-		
-		$stmt_2 = $this->conn_ps->prepare("SELECT arrival_id, yearcode, arrival_type, arrival_code, arrival_date, dcno, dc_date, disp_date, tmode, trans_name, trans_lorryrepno, trans_vehno, trans_paymode, remarks, arr_role, arrtrflag FROM tblarrival_unld WHERE arrunldflag=1 AND arrival_id = ?");
-		$stmt_2->bind_param("i", $trid);
-		$result2=$stmt_2->execute();
-		$stmt_2->store_result();
-		if ($stmt_2->num_rows == 0) {
-		$flg=1;
-		//return "SELECT arrival_id, yearcode, arrival_type, arrival_code, arrival_date, dcno, dc_date, disp_date, tmode, trans_name, trans_lorryrepno, trans_vehno, trans_paymode, remarks, arr_role, arrtrflag FROM tblarrival_unld WHERE arrunldflag=1 AND arrival_id = $trid";
-		}
-		else
-		{
-			$stmt_2->bind_result($arrival_id, $yearcode, $arrival_type, $arrival_code, $arrival_date, $dcno, $dc_date, $disp_date, $tmode, $trans_name, $trans_lorryrepno, $trans_vehno, $trans_paymode, $remarks, $arr_role, $arrtrflag);
-			//looping through all the records
-			$stmt_2->fetch();
-			$stmt_2->close();
-			$arrtrflag=1;
-			
-			$sqlcode=$this->conn_ps->prepare("SELECT MAX(arrival_code) FROM tblarrival where yearcode='".$yearcode."' and arrival_type='Fresh Seed with PDN' and plantcode='".$plantcode."' ORDER BY arrival_code DESC");
-								//$sql_code1->bind_param("s", $lotno);
-			$result_sqlcode=$sqlcode->execute();
-			$sqlcode->store_result();
-			if($sqlcode->num_rows > 0) 
-			{
-				$sqlcode->bind_result($arrival_coden);
-				$t_sqlcode=$arrival_coden;
-				$scode=$t_sqlcode+1;
-			}
-			else
-			{
-				$scode=1;
-			}
-			$sqlcode->close();
-			
-			$sqlcode1=$this->conn_ps->prepare("SELECT MAX(arr_code) FROM tblarrival where yearcode='".$yearcode."' and arrival_type='Fresh Seed with PDN' and plantcode='".$plantcode."' ORDER BY arr_code DESC");
-								//$sql_code1->bind_param("s", $lotno);
-			$result_sqlcode1=$sqlcode1->execute();
-			$sqlcode1->store_result();
-			if($sqlcode1->num_rows > 0) 
-			{
-				$sqlcode1->bind_result($arr_coden);
-				$t_sqlcode1=$arr_coden;
-				$scode1=$t_sqlcode1+1;
-			}
-			else
-			{
-				$scode1=1;
-			}
-			$sqlcode1->close();
-			
-			
-			$stmt_arrimain = $this->conn_ps->prepare("insert into tblarrival (yearcode, arrival_type, arrival_code, arr_code, arrival_date, dcno, dc_date, disp_date, tmode, trans_name, trans_lorryrepno, trans_vehno, trans_paymode, remarks, arr_role, arrtrflag, plantcode)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
-			$stmt_arrimain->bind_param("ssiisssssssssssis", $yearcode, $arrival_type, $scode, $scode1, $arrival_date, $dcno, $dc_date, $disp_date, $tmode, $trans_name, $trans_lorryrepno, $trans_vehno, $trans_paymode, $trnremarks, $arr_role, $arrtrflag, $plantcode);
-			$result_arrimain = $stmt_arrimain->execute();
-			if($result_arrimain)
-			{
-				$artrid=$stmt_arrimain->insert_id;
-				
-				$stmt_arsub = $this->conn_ps->prepare("SELECT arrsub_id, organiser, pdnno, pdndate, spcodef, spcodem, lotcrop, lotvariety, ploc, pper, farmer, plotno, gi, harvestdate, got, qty, act, diff, qty1, act1, diff1, moisture, vchk, qc, remarks, sstage, sstatus, lotno, old, got1, sample, qcsample,orlot,gssample,prodtype, lotstate, leduration, leupto FROM tblarrival_sub_unld WHERE arrival_id = ? ");
-				$stmt_arsub->bind_param("i", $trid);
-				$result_arsub=$stmt_arsub->execute();
-				$stmt_arsub->store_result();
-				if ($stmt_arsub->num_rows == 0) {
-				$flg=2;
-				}
-				else{
-					$stmt_arsub->bind_result($arrsub_id, $organiser, $pdnno, $pdndate, $spcodef, $spcodem, $lotcrop, $lotvariety, $ploc, $pper, $farmer, $plotno, $gi, $harvestdate, $got, $qty, $act, $diff, $qty1, $act1, $diff1, $moisture, $vchk, $qc, $remarks, $sstage, $sstatus, $lotno, $old, $got1, $sample, $qcsample, $orlot, $gssample, $prodtype, $lotstate, $leduration, $leupto); 
-					//looping through all the records 
-					while($stmt_arsub->fetch())
-					{
-				
-						$crop=$lotcrop;
-						$variety=$lotvariety;
-						
-						$vrnew=$crop."-"."Coded";
-																
-						
-						$sql_crop=mysql_query("select * from tblcrop where cropname='$crop'") or die(mysql_error());
-						$row_crop=mysql_fetch_array($sql_crop);
-						$classid=$row_crop['cropid'];
-				
-						if($variety!="" && $variety!=$vrnew)
-						{
-							$sql_veriety=mysql_query("select * from tblvariety where popularname='".$variety."' and actstatus='Active' and vertype='PV'") or die(mysql_error());
-							$row_variety=mysql_fetch_array($sql_veriety);
-							$itemid=$row_variety['varietyid'];				
-						}
-						else
-						{
-							$itemid=$row_arrsub['lotvariety'];
-						}
-					
-						$sqlcode2=$this->conn_ps->prepare("SELECT MAX(ncode) FROM tblarrival_sub ORDER BY ncode DESC");
-								//$sql_code1->bind_param("s", $lotno);
-						$result_sqlcode1=$sqlcode2->execute();
-						$sqlcode2->store_result();
-						if($sqlcode2->num_rows > 0) 
-						{
-							$sqlcode2->bind_result($arr_coden);
-							$t_sqlcode2=$arr_coden;
-							$ncode=$t_sqlcode2+1;
-						}
-						else
-						{
-							$ncode=1;
-						}
-						$sqlcode2->close();
-						
-						$stmt_arrsub = $this->conn_ps->prepare("insert into tblarrival_sub (arrival_id, organiser, pdnno, pdndate, spcodef, spcodem, lotcrop, lotvariety, ploc, pper, farmer, plotno, gi, harvestdate, got, qty, act, diff, qty1, act1, diff1, moisture, vchk, qc, remarks, sstage, sstatus, lotno, old, got1, sample, qcsample, orlot, gssample, prodtype, lotstate, leduration, leupto, ncode, plantcode) Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
-						$stmt_arrsub->bind_param("isssssssssssisssssiiissssssssssssissisis", $artrid, $organiser, $pdnno, $pdndate, $spcodef, $spcodem, $lotcrop, $lotvariety, $ploc, $pper, $farmer, $plotno, $gi, $harvestdate, $got, $qty, $act, $diff, $qty1, $act1, $diff1, $moisture, $vchk, $qc, $remarks, $sstage, $sstatus, $lotno, $old, $got1, $sample, $qcsample, $orlot, $gssample, $prodtype, $lotstate, $leduration, $leupto, $ncode, $plantcode);
-						$result_arrsub = $stmt_arrsub->execute();
-						if($result_arrsub)
-						{
-							$arsubtrid=$stmt_arrsub->insert_id;
-							
-							//return "SELECT arr_type, arr_tr_id, arr_id, whid, binid, subbin, rowid, qty, bags, balqty, balbags, lotcrop, lotvariety FROM tblarr_sloc_unld WHERE arrival_id = $trid AND arr_id = $arrsub_id ";
-							$stmt_arsubsub = $this->conn_ps->prepare("SELECT arr_type, arr_tr_id, arr_id, whid, binid, subbin, rowid, qty, bags, balqty, balbags, lotcrop, lotvariety FROM tblarr_sloc_unld WHERE arr_tr_id = ? AND arr_id = ? ");
-							$stmt_arsubsub->bind_param("ii", $trid, $arrsub_id);
-							$result_arsubsub=$stmt_arsubsub->execute();
-							$stmt_arsubsub->store_result();
-							if ($stmt_arsubsub->num_rows == 0) {
-							$flg=3;
-							//return "SELECT arr_type, arr_tr_id, arr_id, whid, binid, subbin, rowid, qty, bags, balqty, balbags, lotcrop, lotvariety FROM tblarr_sloc_unld WHERE arr_tr_id = $trid AND arr_id = $arrsub_id ";
-							
-							}
-							else {
-								$stmt_arsubsub->bind_result($arr_type, $arr_tr_id, $arr_id, $whid, $binid, $subbin, $rowid, $qty, $bags, $balqty, $balbags, $lotcrop, $lotvariety); 
-								//looping through all the records 
-								while($stmt_arsubsub->fetch())
-								{
-							
-									$stmt_arrsubsub = $this->conn_ps->prepare("insert into tblarr_sloc (arr_type, arr_tr_id, arr_id, whid, binid, subbin, rowid, qty, bags, balqty, balbags, lotcrop, lotvariety, plantcode)  Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
-									$stmt_arrsubsub->bind_param("siiiiiisisisss", $arr_type, $artrid, $arsubtrid, $whid, $binid, $subbin, $rowid, $qty, $bags, $balqty, $balbags, $lotcrop, $lotvariety, $plantcode);
-									$result_arrsubsub = $stmt_arrsubsub->execute();
-									if($result_arrsubsub)
-									{  
-										
-																				
-										$zero=0; $zero1=0.000; $gemp=0; if($gssample==NULL || $gssample=='')$gssample=0;
-										
-										$stmt_lotldg = $this->conn_ps->prepare("insert into tbl_lot_ldg (yearcode, lotldg_lotno, lotldg_trtype, lotldg_trid, lotldg_trdate, lotldg_crop, lotldg_variety, lotldg_whid, lotldg_binid, lotldg_subbinid, lotldg_opbags, lotldg_opqty, lotldg_trbags, lotldg_trqty, lotldg_balbags, lotldg_balqty, lotldg_sstage, lotldg_moisture, lotldg_gemp, lotldg_vchk, lotldg_qc, lotldg_got1, lotldg_sstatus, orlot, lotldg_gs, lotldg_got, leduration, leupto, plantcode) Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
-										$stmt_lotldg->bind_param("sssisssiiiisisisssisssssisiss", $yearcode, $lotno, $trtype, $artrid, $arrival_date, $classid, $itemid, $whid, $binid, $subbin, $zero, $zero1, $bags, $qty, $balbags, $balqty, $stage, $moisture, $gemp, $vchk, $qc, $got, $sstatus, $orlot, $gssample, $got1, $leduration, $leupto, $plantcode);
-										$result_lotldg = $stmt_lotldg->execute();
-						
-										if($result_lotldg){$flg=0;}  
-										$stmt_lotldg->close();
-										
-										$stmt_arrsubsub->close();
-									}
-									
-								}
-								$stmt_arsubsub->close();
-							}
-							
-							
-								$sqlisstbl=$this->conn_ps->prepare("select le_lotno from tbl_lemain where le_lotno = ? "); 
-								$sqlisstbl->bind_param("s", $lotno);
-								$result_sqlisstbl=$sqlisstbl->execute();
-								$sqlisstbl->store_result();
-								if ($sqlisstbl->num_rows > 0) 
-								{
-									$sqlsubsub1=$this->conn_ps->prepare("UPDATE tbl_lemain SET le_duration = ?, le_upto = ? where le_lotno = ? and le_stage = ?");
-									$sqlsubsub1->bind_param("ssss", $leduration, $leupto, $lotno, $stage);
-									$result_sqlsubsub1 = $sqlsubsub1->execute();
-									$sqlsubsub1->close();
-								}
-								else
-								{
-									$sqlsubsub1=$this->conn_ps->prepare("insert into tbl_lemain (le_duration, le_upto, le_lotno, le_stage) values(?,?,?,?)");
-									$sqlsubsub1->bind_param("ssss", $leduration, $leupto, $lotno, $stage);
-									$result_sqlsubsub1 = $sqlsubsub1->execute();
-									$sqlsubsub1->close();
-								}
-								$sqlisstbl->close();
-								
-								
-								$Arrival='Arrival';
-								$sqlsubsub13=$this->conn_ps->prepare("insert into tbl_learchive (lea_lotno, lea_stage, lea_duration, lea_upto, lea_date, lea_module, lea_logid) values(?,?,?,?,?,?,?)");
-								$sqlsubsub13->bind_param("sssssss", $lotno, $stage, $leduration, $leupto, $arrival_date, $Arrival, $arr_role);
-								$result_sqlsubsub13 = $sqlsubsub13->execute();
-								$sqlsubsub13->close();
-								
-								$sql_itm=$this->conn_ps->prepare("UPDATE tbl_subbin SET status = ? where sid = ?");
-								$sql_itm->bind_param("ss", $ststus, $subbin);
-								$result_sql_itm = $sql_itm->execute();
-								$sql_itm->close();
-								
-								$sql_code1=$this->conn_ps->prepare("SELECT MAX(sampleno) FROM tbl_qctest where yearid='".$yearcode."' and plantcode='".$plantcode."' ORDER BY tid DESC");
-								//$sql_code1->bind_param("s", $lotno);
-								$result_sql_code1=$sql_code1->execute();
-								$sql_code1->store_result();
-								if ($sql_code1->num_rows == 0) 
-								{
-									$sql_code1->bind_result($qsampleno);
-									$t_code1=$qsampleno;
-									$ncode1=$t_code1+1;
-								}
-								else
-								{
-									$ncode1=1;
-								}
-								$sql_code1->close();
-									
-								$state="P/M/G";	 $one=1;
-								if($qc=="UT")
-								{
-									$sql_sub_sub1244=$this->conn_ps->prepare("insert into tbl_qctest(pp, moist, lotno, srdate, crop, variety, sampleno, trstage, qc, state, gs, oldlot, yearid,logid, plantcode) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-									$sql_sub_sub1244->bind_param("sssssssssssssss", $vchk, $moisture, $lotno, $arrival_date, $classid, $itemid, $ncode1, $stage, $qc, $state,$one ,$orlot, $yearcode, $arr_role, $plantcode);
-									$result_sql_sub_sub1244 = $sql_sub_sub1244->execute();
-									$sql_sub_sub1244->close();
-								}
-								if($got1=="UT")
-								{
-									$sql_sub_sub1245=$this->conn_ps->prepare("insert into tbl_gottest(gottest_got, gottest_lotno, gottest_srdate, gottest_crop, gottest_variety, gottest_sampleno, gottest_trstage, gottest_oldlot, yearid, logid, plantcode) values(?,?,?,?,?,?,?,?,?,?,?)");
-									$sql_sub_sub1245->bind_param("sssssssssss", $got1, $lotno, $arrival_date, $classid, $itemid, $ncode1, $stage, $orlot, $yearcode, $arr_role, $plantcode);
-									$result_sql_sub_sub1245 = $sql_sub_sub1245->execute();
-									$sql_sub_sub1245->close();
-								}
-								//exit;
-							
-								$sql_itm=$this->conn_ps->prepare("UPDATE tbllotimp SET lotimpflg = ?, trid = ? where lotnumber = ?");
-								$sql_itm->bind_param("sss", $one, $artrid, $old);
-								$result_sql_itm = $sql_itm->execute();
-								$sql_itm->close();
-							
-							
-							
-							
-							
-							
-							
-						}  
-						$stmt_arrsub->close();
-						
-					}
-					$stmt_arsub->close();
-				}
-			
-			}  
-			$stmt_arrimain->close();
-			$one=1;
-			$sql_m=$this->conn_ps->prepare("UPDATE tblarrival_unld SET arrtrflag = ?, unldarr_trid = ?, logid = ? where arrival_id = ?");
-			$sql_m->bind_param("sssi", $one, $artrid, $scodeorg, $trid);
-			$result_sql_m = $sql_m->execute();
-			$sql_m->close();
-				
-		}
-		//return $flg;
-		if($flg==0)
-		{return true;}
-		else
-		{return false;}		
-	}
-
-// New Code ------------------------------------------------	
-	
-	public function GetTranStsUpdate($scode, $trid, $unldtype) {
-		$plantcode = $this->getPlantcode($scode);
-		$flg=0;
-		if($unldtype=="")$unldtype="online";
-		$stmt_2 = $this->conn_ps->prepare("SELECT arrival_id FROM tblarrival_unld WHERE arrival_id = ?");
-		$stmt_2->bind_param("i", $trid);
-		$result2=$stmt_2->execute();
-		$stmt_2->store_result();
-		if ($stmt_2->num_rows > 0) {
-			$stmt_2->bind_result($arrival_id);
-			//looping through all the records
-			$stmt_2->fetch();
-			
-			$stmt60 = $this->conn_ps->prepare("Update tblarrival_unld SET arrtrnunldtype=? where arrival_id = ? ");
-			$stmt60->bind_param("si", $unldtype, $arrival_id);
-			$result60 = $stmt60->execute();
-			if($result60){$flg=1;}
-			$stmt60->close();
-			
-			$stmt_2->close();
-		}
-		
-		if($flg==0)
-		{return false;}
-		else
-		{return true;}		
-	}	
-	
-
-	
-	public function UpdateUnloadingJsonData($trid, $jdata) {
-	//return $jdata;
-		$plantcode = $this->getPlantcode($scode);
-		$flg=0; $unldtype="online"; $lots=array();
-		$stmt_2 = $this->conn_ps->prepare("SELECT arrival_id FROM tblarrival_unld WHERE arrival_id = ?");
-		$stmt_2->bind_param("i", $trid);
-		$result2=$stmt_2->execute();
-		$stmt_2->store_result();
-		if ($stmt_2->num_rows > 0) {
-			$stmt_2->bind_result($arrival_id);
-			//looping through all the records
-			$stmt_2->fetch();
-			
-			$stmt0 = $this->conn_ps->prepare("DELETE From tblarrsub_sub_unld where arrival_id = ? ");
-			$stmt0->bind_param("i", $arrival_id);
-			$result0 = $stmt0->execute();
-			$stmt0->close();
-			
-			$xcx=count($jdata['unloadingData']);
-			for($i=0; $i<$xcx; $i++)
-			{
-				if($jdata['unloadingData'][$i]<>"")
-				{
-					$exoldlot=$jdata['unloadingData'][$i]['lotno'];
-					$grosswt=$jdata['unloadingData'][$i]['actqty'];
-					$trwt=$jdata['unloadingData'][$i]['tarewt'];
-					$netqty=$grosswt-$trwt;
-					array_push($lots,$exoldlot);
-					
-					$stmt_arsub = $this->conn_ps->prepare("SELECT arrsub_id, old FROM tblarrival_sub_unld WHERE arrival_id = ? and old = ?");
-					$stmt_arsub->bind_param("is", $trid, $exoldlot);
-					$result_arsub=$stmt_arsub->execute();
-					$stmt_arsub->store_result();
-					if ($stmt_arsub->num_rows == 0) 
-					{
-						$trtype='Fresh Seed with PDN'; $stage='Raw'; $stage2='R'; 
-						$lotimpid=0; $lotcrop=''; $lotspcodef=''; $lotspcodem=''; $lotploc=''; $lotstate=''; $lotpper=''; $lotorganiser=''; $lotfarmer=''; $lotplotno=''; $pdnno=''; $pdndate=''; $sstage='Raw'; $prodtype='';
-						$stmt_lotimp = $this->conn_ps->prepare("SELECT lotimpid, lotcrop, lotspcodef, lotspcodem, lotploc, lotstate, lotpper, lotorganiser, lotfarmer, lotplotno, pdnno, pdndate, prodtype  FROM tbllotimp WHERE trid=0 AND lotnumber = ? ");
-						$stmt_lotimp->bind_param("s", $exoldlot);
-						$result_lotimp=$stmt_lotimp->execute();
-						$stmt_lotimp->store_result();
-						//return "SELECT lotimpid, lotcrop, lotspcodef, lotspcodem, lotploc, lotstate, lotpper, lotorganiser, lotfarmer, lotplotno, pdnno, pdndate, prodtype  FROM tbllotimp WHERE trid=0 AND lotnumber = '$lotno' ";
-						if ($stmt_lotimp->num_rows > 0) {
-							$stmt_lotimp->bind_result($lotimpid, $lotcrop, $lotspcodef, $lotspcodem, $lotploc, $lotstate, $lotpper, $lotorganiser, $lotfarmer, $lotplotno, $pdnno, $pdndate, $prodtype);
-							//looping through all the records 
-							$stmt_lotimp->fetch();
-							$stmt_lotimp->close();
-						
-							$popularname=$lotcrop."-Coded";
-							$stmt_spc = $this->conn_ps->prepare("SELECT variety, crop FROM tblspcodes WHERE spcodef = ? AND spcodem = ? ");
-							$stmt_spc->bind_param("ss", $lotspcodef, $lotspcodem);
-							$result_spc=$stmt_spc->execute();
-							$stmt_spc->store_result();
-							if ($stmt_spc->num_rows > 0) {
-								$stmt_spc->bind_result($spcvariety, $spccrop);
-								//looping through all the records 
-								$stmt_spc->fetch();
-								$stmt_spc->close();
-							
-								$stmt_variety = $this->conn_ps->prepare("SELECT varietyid, popularname FROM tblvariety WHERE varietyid = ? ");
-								$stmt_variety->bind_param("i", $spcvariety);
-								$result_variety=$stmt_variety->execute();
-								$stmt_variety->store_result();
-								if ($stmt_variety->num_rows > 0) {
-									$stmt_variety->bind_result($varietyid, $popularname);
-									//looping through all the records 
-									$stmt_variety->fetch();
-									$stmt_variety->close();
-								}
-							}
-							$pcode=''; 
-							$stmt_plant = $this->conn_ps->prepare("SELECT code  FROM tbl_parameters WHERE plantcode=?");
-							$stmt_plant->bind_param("s", $plantcode);
-							$result_plant=$stmt_plant->execute();
-							$stmt_plant->store_result();
-							if ($stmt_plant->num_rows > 0) {
-								$stmt_plant->bind_result($rec_pcode);
-								//looping through all the records 
-								$stmt_plant->fetch();
-								$pcode=$rec_pcode; 
-								$stmt_plant->close();
-							}
-							$lotno=$pcode.$exoldlot."/00000/00R";
-							$orlot=$pcode.$exoldlot."/00000/00";
-							$qtydc=0; $nobdc=0; $tarewt=0;
-							$stmt_arrsub = $this->conn_ps->prepare("Insert into tblarrival_sub_unld (arrival_id, lotimpid, lotcrop, lotvariety, qty, act1, tarewt, lotno, orlot, old, pdndate, pdnno, spcodef, spcodem, organiser, farmer, ploc, lotstate, pper, plotno, sstage, prodtype, plantcode) Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
-							$stmt_arrsub->bind_param("iisssssssssssssssssssss", $arrival_id, $lotimpid, $lotcrop, $popularname, $qtydc, $nobdc, $tarewt, $lotno, $orlot, $exoldlot, $pdndate, $pdnno, $lotspcodef, $lotspcodem, $lotorganiser, $lotfarmer, $lotploc, $lotstate, $lotpper, $lotplotno, $stage, $prodtype, $plantcode);
-						
-							//$stmt_arrsub = $this->conn_ps->prepare("insert into tblarrival_sub_unld (arrival_id, old, lotno, orlot)  Values(?,?,?,?) ");
-							//$stmt_arrsub->bind_param("iissss", $trid, $exoldlot, $lotno, $orlot, $netqty, $trwt);
-							$result_arrsub = $stmt_arrsub->execute();
-							$arrsub_id=$stmt_arrsub->insert_id;
-							$stmt_arrsub->close();
-							
-							$stmt_arrsubsub = $this->conn_ps->prepare("insert into tblarrsub_sub_unld (arrival_id, arrsub_id, lotno, grosswt, netwt, tarewt, plantcode)  Values(?,?,?,?,?,?,?) ");
-							$stmt_arrsubsub->bind_param("iisssss", $trid, $arrsub_id, $exoldlot, $grosswt, $netqty, $trwt, $plantcode);
-							$result_arrsubsub = $stmt_arrsubsub->execute();
-							$stmt_arrsubsub->close();
-						}
-						else
-						{
-							$stmt_arrsub = $this->conn_ps->prepare("insert into tblarrival_sub_unld (arrival_id, old, lotno, orlot, plantcode)  Values(?,?,?,?,?) ");
-							$stmt_arrsub->bind_param("issss", $trid, $exoldlot, $lotno, $orlot, $plantcode);
-							$result_arrsub = $stmt_arrsub->execute();
-							$arrsub_id=$stmt_arrsub->insert_id;
-							$stmt_arrsub->close();
-							
-							$stmt_arrsubsub = $this->conn_ps->prepare("insert into tblarrsub_sub_unld (arrival_id, arrsub_id, lotno, grosswt, netwt, tarewt, plantcode)  Values(?,?,?,?,?,?,?) ");
-							$stmt_arrsubsub->bind_param("iisssss", $trid, $arrsub_id, $exoldlot, $grosswt, $netqty, $trwt, $plantcode);
-							$result_arrsubsub = $stmt_arrsubsub->execute();
-							$stmt_arrsubsub->close();
-						}
-					}
-					else
-					{
-						$stmt_arsub->bind_result($arrsub_id, $old);
-						//looping through all the records
-						$stmt_arsub->fetch();
-						
-						$stmt_arrsubsub = $this->conn_ps->prepare("insert into tblarrsub_sub_unld (arrival_id, arrsub_id, lotno, grosswt, netwt, tarewt, plantcode)  Values(?,?,?,?,?,?,?) ");
-						$stmt_arrsubsub->bind_param("iisssss", $trid, $arrsub_id, $exoldlot, $grosswt, $netqty, $trwt, $plantcode);
-						$result_arrsubsub = $stmt_arrsubsub->execute();
-						$stmt_arrsubsub->close();
-					}
-				}
-			}
-		}
-		else
-		{
-			$flg=1;
-		}
-		$stmt_2->close();
-		if($flg==0)
-		{
-			/*$newlots='';
-			$lotns=array_unique($lots);
-			
-			foreach($lotns as $lotnnn)
-			{
-				if($lotnnn<>"")
-				{
-					$lotno1="'$lotnnn'";
-					if($newlots!="") {$newlots=$newlots.",".$lotno1;}
-					else  {$newlots=$lotno1;}
-				}
-			}
-			if(!empty($newlots))
-			{
-				$stmt_lotimp = $this->conn_ps->prepare("SELECT arrsub_id FROM tblarrival_sub_unld WHERE arrival_id = ? AND old NOT IN (?) ");
-				$stmt_lotimp->bind_param("is", $trid, $newlots);
-				$result_lotimp=$stmt_lotimp->execute();
-				$stmt_lotimp->store_result();
-				if ($stmt_lotimp->num_rows > 0) {
-					$stmt_lotimp->bind_result($arrsub_id);
-					//looping through all the records 
-					while($stmt_lotimp->fetch())
-					{
-						$stmt_slocunld = $this->conn_ps->prepare("DELETE From tblarrsub_sub_unld where arrsub_id = ?");
-						$stmt_slocunld->bind_param("i", $arrsub_id);
-						$result_slocunld = $stmt_slocunld->execute();
-						if($result_slocunld){$flg=1;}  
-						$stmt_slocunld->close();
-						
-					}
-				}
-				$stmt_subunld = $this->conn_ps->prepare("DELETE From tblarrival_sub_unld where arrival_id = ? AND old NOT IN (?) ");
-				$stmt_subunld->bind_param("is", $trid, $newlots);
-				$result_subunld = $stmt_subunld->execute();
-				if($result_subunld){$flg=1;}  
-				$stmt_subunld->close();
-				
-							
-				$stmt_lotimptbl = $this->conn_ps->prepare("Update tbllotimp SET lotimpflg=0 where lotnumber IN (?) ");
-				$stmt_lotimptbl->bind_param("s", $newlots);
-				$result_lotimptbl = $stmt_lotimptbl->execute();
-				$stmt_lotimptbl->close();
-			}*/
-			$stmt60 = $this->conn_ps->prepare("Update tblarrival_unld SET arrtrnunldtype=? where arrival_id = ? ");
-			$stmt60->bind_param("si", $unldtype, $arrival_id);
-			$result60 = $stmt60->execute();
-			//if($result60){$flg=1;}
-			$stmt60->close();
-			return true;
-		}
-		else
-		{return false;}		
-	}
-	
-	public function GetYearCodeList($scode) {
-		$plantcode = $this->getPlantcode($scode);
-        $stmt = $this->conn_ps->prepare("SELECT years, ycode, baryrcode FROM tblyears WHERE ycode!='' ORDER BY yearsid DESC LIMIT 3");
-        //$stmt->bind_param("ss", $email, $password);
-        $stmt->execute();
-        $stmt->store_result();
-		$userSR = array(); $user24=array();
-		$years=''; $ycode=''; $baryrcode=''; 
-        if ($stmt->num_rows > 0) {
-            // user existed 
-			$stmt->bind_result($years, $ycode, $baryrcode);
-			while($stmt->fetch())
-			{
-				if($ycode==NULL){$ycode='';} 
-				//$userSR["ycode"] = $ycode;
-				array_push($userSR,$ycode);
-			}
-			$stmt->close();
-           // return $resusers;
-        } else {
-            // user not existed
-			$userSR = array();
-            $stmt->close();
-           // return false;
-        }
-		
-		if(empty($userSR))
-		{return false;}
-		else
-		{return $userSR;}
-    }
 	
 	
 }// Main Class close

@@ -29,7 +29,7 @@ session_start();
 	$sdate = $_REQUEST['sdate'];
  	$txtstage = $_REQUEST['txtstage'];
 	
-	$t=split("-", $sdate);
+	$t=explode("-", $sdate);
 	$sdate=$t[2]."-".$t[1]."-".$t[0];
 	
 	if($trstage!="ALL")

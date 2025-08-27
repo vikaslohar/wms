@@ -37,7 +37,7 @@
 	$eurl = $_REQUEST['eurl'];	 
 	}
 	$newLink = substr($_SERVER['QUERY_STRING'],0);  
-	$zz=split("eurl=",$newLink);
+	$zz=explode("eurl=",$newLink);
 	$eurl=$zz[1];
 	
 	if(isset($_POST['frm_action'])=='submit')
@@ -64,7 +64,7 @@
 	$tyear=substr($tdate,6,4);
 	$tdate=$tyear."-".$tmonth."-".$tday;
 	
-	$hdate13=split("-",$leupto);
+	$hdate13=explode("-",$leupto);
 	$ledate=$hdate13[2]."-".$hdate13[1]."-".$hdate13[0];
 		
 	$xamp=str_split($samp);

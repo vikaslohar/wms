@@ -293,7 +293,7 @@ $total=mysqli_num_rows($sql_qry);
 
 
 <td width="222" align="right" valign="middle" class="tblheading">Help File</td>
-<td width="472" align="left" valign="middle" class="tbltext"><?php if($row_qry['help_file'] !=""){ $path= $row_qry['help_file']; $imagename=split("/",$path);  echo $imagename[2]; }?><br/>&nbsp;<input name="upload" class="tbltext" type="file" size="40"  /> &nbsp;</td>
+<td width="472" align="left" valign="middle" class="tbltext"><?php if($row_qry['help_file'] !=""){ $path= $row_qry['help_file']; $imagename=explode("/",$path);  echo $imagename[2]; }?><br/>&nbsp;<input name="upload" class="tbltext" type="file" size="40"  /> &nbsp;</td>
 </tr>
 
 <tr class="tblsubtitle" height="25">

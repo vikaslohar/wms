@@ -35,8 +35,8 @@
 		if($variety=="")$variety="ALL";
 		if($txtupsdc=="")$txtupsdc="ALL";
 		
-	$sd=split("-",$sdate);
-	$ed=split("-",$edate);
+	$sd=explode("-",$sdate);
+	$ed=explode("-",$edate);
 	$sdt=$sd[2]."-".sprintf("%02d",$sd[1])."-".sprintf("%02d",$sd[0]);
 	$edt=$ed[2]."-".sprintf("%02d",$ed[1])."-".sprintf("%02d",$ed[0]);
 	

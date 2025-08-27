@@ -323,7 +323,7 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 									$flg=0;
 									if($vcreqsel=="yes")
 									{
-										$trdate6=split("-", $curdate);
+										$trdate6=explode("-", $curdate);
 										$tryear=$trdate6[0];
 										$trmonth=$trdate6[1];
 										$trday=$trdate6[2];

@@ -45,7 +45,7 @@
 	}
 	
 	$dat=date("Y-m-d");	
-	$sd=split("-",$dat);
+	$sd=explode("-",$dat);
 	$stdate=$sd[2]."-".sprintf("%02d",$sd[1])."-".sprintf("%02d",$sd[0]);
 	
 	$dh="Crop_Variety_wise_Stock_Report_As_on_".$stdate;

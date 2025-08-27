@@ -50,7 +50,7 @@
 		$explotno=trim($_POST['explotno']);
 		
 		
-		$hdate13=split("-",$leupto);
+		$hdate13=explode("-",$leupto);
 		$ledate=$hdate13[2]."-".$hdate13[1]."-".$hdate13[0];
 		
 		$sql1=mysqli_query($link,"select * from tbl_blendm where blendm_id=$pid")or die(mysqli_error($link));
@@ -486,7 +486,7 @@ while($row_is=mysqli_fetch_array($sql_is))
 		{ 
 			$qc=$row_issuetbl['lotldg_qc']; 
 			$germ=$row_issuetbl['lotldg_gemp']; 
-			$got1=split(" ",$row_issuetbl['lotldg_got1']);
+			$got1=explode(" ",$row_issuetbl['lotldg_got1']);
 			$got2=$row_issuetbl['lotldg_got']; 
 			$got=$got1[0]." ".$got2;
 			
