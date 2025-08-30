@@ -374,6 +374,8 @@ $total_results = $total_results2[0];
               <td width="19" align="center" valign="middle" class="smalltblheading">#</td>
 			  <td width="88" align="center" valign="middle" class="smalltblheading">Transaction ID</td>
 			  <td width="70" align="center" valign="middle" class="smalltblheading">Date</td>
+			  <td width="115" align="center" valign="middle" class="smalltblheading">Party Name</td>
+			  <td width="95" align="center" valign="middle" class="smalltblheading">Location</td>
               <td width="95" align="center" valign="middle" class="smalltblheading">Crop</td>
               <td width="115" align="center" valign="middle" class="smalltblheading">Variety</td>
 			  <td width="102" align="center" valign="middle" class="smalltblheading">Lot No.</td>
@@ -396,7 +398,16 @@ while($row_arr_home=mysqli_fetch_array($sql_arr_home))
 	$arrival_id=$row_arr_home['dbulk_id'];
 	$tid=$arrival_id;
 	
-$crop=""; $variety=""; $lotno=""; $nnob=""; $nqty=""; 
+$crop=""; $variety=""; $lotno=""; $nnob=""; $nqty=""; $party=''; $location='';
+
+$sql_whouse=mysqli_query($link,"select business_name, location_id from tbl_partymaser where p_id='".$row_arr_home['dbulk_party']."' order by p_id") or die(mysqli_error($link));
+$row_whouse=mysqli_fetch_array($sql_whouse);
+$party=$row_whouse['business_name'];
+	
+$sql_binn=mysqli_query($link,"select productionlocation, state from tblproductionlocation where productionlocationid='".$row_arr_home['dbulk_location']."' ") or die(mysqli_error($link));
+$row_binn=mysqli_fetch_array($sql_binn);
+$location=$row_binn['productionlocation'].", ".$row_binn['state'];
+	
 	
 $sql_arr_home2=mysqli_query($link,"select distinct dbulks_variety from tbl_dbulk_sub where dbulk_id='$tid' and dbulks_flg=1 order by dbulks_id asc") or die(mysqli_error($link));
 $tot_arr_home2=mysqli_num_rows($sql_arr_home2);
@@ -471,6 +482,8 @@ if($srno%2!=0)
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $srno;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo "BD".$row_arr_home['dbulk_code']."/".$row_arr_home['dbulk_yearcode']."/".$row_arr_home['dbulk_logid'];?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $trdate;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $party;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $location;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $crop;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $variety;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $lotno;?></td>
@@ -488,6 +501,8 @@ else
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $srno;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo "BD".$row_arr_home['dbulk_code']."/".$row_arr_home['dbulk_yearcode']."/".$row_arr_home['dbulk_logid'];?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $trdate;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $party;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $location;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $crop;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $variety;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $lotno;?></td>

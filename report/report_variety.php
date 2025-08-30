@@ -164,6 +164,7 @@ $total_results = $total_results2[0];
 				  <td width="65" align="center" class="tblheading" valign="middle">Auto GOT at Arrival </td>
 		<td width="97" align="center" class="tblheading" valign="middle">WB Applicable</td>
 				   <td width="297" align="center" class="tblheading" valign="middle">UPS</td>
+				   <td width="297" align="center" class="tblheading" valign="middle">MP Type</td>
 		<td width="50" align="center" class="tblheading" valign="middle">Status</td> 
                    
                 </tr>
@@ -247,6 +248,7 @@ $total_results = $total_results2[0];
 	<td valign="middle" align="center" class="tbltext"><?php echo $row['opt'];?></td>
 	<td valign="middle" align="left" class="tbltext"><div align="justify" class="tbltext" style="padding:0px 5px 0px 5px; color:#00000"><?php echo $row['wbtype'];?></div></td>
 	<td valign="middle" align="left" class="tbltext"><div align="justify" class="tbltext" style="padding:0px 5px 0px 5px; color:#00000"><?php echo $roles;?></div></td>
+	<td valign="middle" align="left" class="tbltext"><div align="justify" class="tbltext" style="padding:0px 5px 0px 5px; color:#00000"><?php echo $row['mtype'];?></div></td>
 	<td valign="middle" align="center" class="tbltext"><?php echo $row['actstatus'];?></td>
 </tr>
                 <?php
@@ -264,6 +266,7 @@ $total_results = $total_results2[0];
 	<td valign="middle" align="center" class="tbltext"><?php echo $row['opt'];?></td>
 	<td valign="middle" align="left" class="tbltext"><div align="justify" class="tbltext" style="padding:0px 5px 0px 5px; color:#00000"><?php echo $row['wbtype'];?></div></td>
 	<td valign="middle" align="left" class="tbltext"><div align="justify" class="tbltext" style="padding:0px 5px 0px 5px; color:#00000"><?php echo $roles;?></div></td>
+	<td valign="middle" align="left" class="tbltext"><div align="justify" class="tbltext" style="padding:0px 5px 0px 5px; color:#00000"><?php echo $row['mtype'];?></div></td>
 	<td valign="middle" align="center" class="tbltext"><?php echo $row['actstatus'];?></td>
 </tr>
 <?php	

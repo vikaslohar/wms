@@ -344,6 +344,8 @@ $pagination = "";
               <td width="19" align="center" valign="middle" class="smalltblheading">#</td>
 			  <td width="88" align="center" valign="middle" class="smalltblheading">Transaction ID</td>
 			  <td width="70" align="center" valign="middle" class="smalltblheading">Date</td>
+			  <td width="115" align="center" valign="middle" class="smalltblheading">Party Name</td>
+			  <td width="95" align="center" valign="middle" class="smalltblheading">Location</td>
               <td width="95" align="center" valign="middle" class="smalltblheading">Crop</td>
               <td width="115" align="center" valign="middle" class="smalltblheading">Variety</td>
 			  <td width="102" align="center" valign="middle" class="smalltblheading">Lot No.</td>
@@ -366,8 +368,22 @@ while($row_arr_home=mysqli_fetch_array($sql_arr_home))
 	$arrival_id=$row_arr_home['dtdf_id'];
 	$tid=$arrival_id;
 	
-$crop=""; $variety=""; $lotno=""; $nnob=""; $nqty=""; 
-	
+$crop=""; $variety=""; $lotno=""; $nnob=""; $nqty=""; $party=''; $location='';
+
+if(is_numeric($row_arr_home['dtdf_party']))
+{
+	$sql_whouse=mysqli_query($link,"select business_name, location_id from tbl_partymaser where p_id='".$row_arr_home['dtdf_party']."' order by p_id") or die(mysqli_error($link));
+	$row_whouse=mysqli_fetch_array($sql_whouse);
+	$party=$row_whouse['business_name'];
+		
+	$sql_binn=mysqli_query($link,"select productionlocation, state from tblproductionlocation where productionlocationid='".$row_whouse['location_id']."' ") or die(mysqli_error($link));
+	$row_binn=mysqli_fetch_array($sql_binn);
+	$location=$row_binn['productionlocation'].", ".$row_binn['state'];
+}
+else
+{
+$party=$row_arr_home['dtdf_party'];
+}	
 $sql_arr_home2=mysqli_query($link,"select distinct dtdfs_variety from tbl_dtdf_sub where plantcode='".$plantcode."' and dtdf_id='$tid' order by dtdfs_id asc") or die(mysqli_error($link));
 $tot_arr_home2=mysqli_num_rows($sql_arr_home2);
 while($row_arr_home2=mysqli_fetch_array($sql_arr_home2))
@@ -414,6 +430,8 @@ if($srno%2!=0)
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $srno;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo "BD".$row_arr_home['dtdf_code']."/".$row_arr_home['dtdf_yearcode']."/".$row_arr_home['dtdf_logid'];?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $trdate;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $party;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $location;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $crop;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $variety;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $lotno;?></td>
@@ -431,6 +449,8 @@ else
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $srno;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo "BD".$row_arr_home['dtdf_code']."/".$row_arr_home['dtdf_yearcode']."/".$row_arr_home['dtdf_logid'];?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $trdate;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $party;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $location;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $crop;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $variety;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $lotno;?></td>
@@ -593,6 +613,8 @@ $pagination2 = "";
               <td width="19" align="center" valign="middle" class="smalltblheading">#</td>
 			  <td width="88" align="center" valign="middle" class="smalltblheading">Transaction ID</td>
 			  <td width="70" align="center" valign="middle" class="smalltblheading">Date</td>
+			  <td width="115" align="center" valign="middle" class="smalltblheading">Party Name</td>
+			  <td width="95" align="center" valign="middle" class="smalltblheading">Location</td>
               <td width="95" align="center" valign="middle" class="smalltblheading">Crop</td>
               <td width="115" align="center" valign="middle" class="smalltblheading">Variety</td>
 			  <td width="102" align="center" valign="middle" class="smalltblheading">Lot No.</td>
@@ -615,7 +637,22 @@ while($row_arr_home=mysqli_fetch_array($sql_arr_home))
 	$arrival_id=$row_arr_home['dtdf_id'];
 	$tid=$arrival_id;
 	
-$crop=""; $variety=""; $lotno=""; $nnob=""; $nqty=""; 
+$crop=""; $variety=""; $lotno=""; $nnob=""; $nqty=""; $party=''; $location='';
+
+if(is_numeric($row_arr_home['dtdf_party']))
+{
+	$sql_whouse=mysqli_query($link,"select business_name, location_id from tbl_partymaser where p_id='".$row_arr_home['dtdf_party']."' order by p_id") or die(mysqli_error($link));
+	$row_whouse=mysqli_fetch_array($sql_whouse);
+	$party=$row_whouse['business_name'];
+		
+	$sql_binn=mysqli_query($link,"select productionlocation, state from tblproductionlocation where productionlocationid='".$row_whouse['location_id']."' ") or die(mysqli_error($link));
+	$row_binn=mysqli_fetch_array($sql_binn);
+	$location=$row_binn['productionlocation'].", ".$row_binn['state'];
+}
+else
+{
+$party=$row_arr_home['dtdf_party'];
+}		
 	
 $sql_arr_home2=mysqli_query($link,"select distinct dtdfs_variety from tbl_dtdf_sub where plantcode='".$plantcode."' and dtdf_id='$tid' and dtdfs_flg=1 order by dtdfs_id asc") or die(mysqli_error($link));
 $tot_arr_home2=mysqli_num_rows($sql_arr_home2);
@@ -663,6 +700,8 @@ if($srno2%2!=0)
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $srno;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo "BD".$row_arr_home['dtdf_code']."/".$row_arr_home['dtdf_yearcode']."/".$row_arr_home['dtdf_logid'];?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $trdate;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $party;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $location;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $crop;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $variety;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $lotno;?></td>
@@ -680,6 +719,8 @@ else
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $srno;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo "BD".$row_arr_home['dtdf_code']."/".$row_arr_home['dtdf_yearcode']."/".$row_arr_home['dtdf_logid'];?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $trdate;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $party;?></td>
+	<td align="center" valign="middle" class="smalltbltext"><?php echo $location;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $crop;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $variety;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $lotno;?></td>

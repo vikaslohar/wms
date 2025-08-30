@@ -2,25 +2,25 @@
 	 session_start();
 	if(!isset($_SESSION['sessionadmin']))
 	{
-	echo '<script language="JavaScript" type="text/JavaScript">';
-	echo "window.location='../login.php' ";
-	echo '</script>';
+		echo '<script language="JavaScript" type="text/JavaScript">';
+		echo "window.location='../login.php' ";
+		echo '</script>';
 	}
 	else
 	{
-	$year1=$_SESSION['ayear1'];
-	$year2=$_SESSION['ayear2'];
-	$username= $_SESSION['username'];
-	$yearid_id=$_SESSION['yearid_id'];
-	$role=$_SESSION['role'];
-    $loginid=$_SESSION['loginid'];
-    $logid=$_SESSION['logid'];
-	$lgnid=$_SESSION['logid'];
-	$plantcode=$_SESSION['plantcode'];
-	$plantcode1=$_SESSION['plantcode1'];
-	$plantcode2=$_SESSION['plantcode2'];
-	$plantcode3=$_SESSION['plantcode3'];
-	$plantcode4=$_SESSION['plantcode4'];
+		$year1=$_SESSION['ayear1'];
+		$year2=$_SESSION['ayear2'];
+		$username= $_SESSION['username'];
+		$yearid_id=$_SESSION['yearid_id'];
+		$role=$_SESSION['role'];
+		$loginid=$_SESSION['loginid'];
+		$logid=$_SESSION['logid'];
+		$lgnid=$_SESSION['logid'];
+		$plantcode=$_SESSION['plantcode'];
+		$plantcode1=$_SESSION['plantcode1'];
+		$plantcode2=$_SESSION['plantcode2'];
+		$plantcode3=$_SESSION['plantcode3'];
+		$plantcode4=$_SESSION['plantcode4'];
 	}
 	
 	require_once("../include/config.php");
@@ -35,6 +35,10 @@ if(isset($_REQUEST['pid']))
 	{
 	//exit;
 	   	$p_id=trim($_POST['maintrid']);
+		$remarks=trim($_POST['remarks']);
+		
+		$sql_main="update tbl_rswrem set  remarks='$remarks' where rswrem_id='".$z1."'";
+		$asdfg=mysqli_query($link,$sql_main) or die(mysqli_error($link));
 		echo "<script>window.location='trn_rem_qty_preview.php?pid=$p_id'</script>";	
 			
 	}
@@ -917,6 +921,12 @@ $quer4=mysqli_query($link,"SELECT varietyid, popularname FROM tblvariety where a
 </table><input type="hidden" name="maintrid" value="<?php echo $tid;?>" /><input type="hidden" name="subtrid" value="<?php echo $subtid;?>" />
 </div>
 </div>
+<table align="center" border="1" width="850" cellspacing="0" cellpadding="0" bordercolor="#e48324" style="border-collapse:collapse" > 
+<tr class="Dark" height="30">
+<td align="right"  valign="middle" class="tblheading">Remarks&nbsp;</td>
+<td align="left"  valign="middle" class="tbltext" >&nbsp;<input type="text" name="remarks" id="remarks" size="100px" value="<?php $row_tbl['remarks'] ?>" /></td>
+</tr>
+</table>
 <table align="center" width="850" cellpadding="5" cellspacing="5" border="0" >
 <tr >
 <td valign="top" align="right"><a href="home_remqty.php" tabindex="20"><img src="../images/cancel.gif" border="0"style="display:inline;cursor:Pointer;" onclick="return confirm('Do You wish to Cancel this Transaction?');" /></a>&nbsp;&nbsp;<input name="Submit" type="image" src="../images/preview.gif" alt="Submit Value"  border="0" style="display:inline;cursor:Pointer;" tabindex="" onClick="return mySubmit();">&nbsp;&nbsp;</td>

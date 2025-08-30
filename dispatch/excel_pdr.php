@@ -2,25 +2,25 @@
 	session_start();
 	if(!isset($_SESSION['sessionadmin']))
 	{
-	echo '<script language="JavaScript" type="text/JavaScript">';
-	echo "window.location='../login.php' ";
-	echo '</script>';
+		echo '<script language="JavaScript" type="text/JavaScript">';
+		echo "window.location='../login.php' ";
+		echo '</script>';
 	}
 	else
 	{
-	$year1=$_SESSION['ayear1'];
-	$year2=$_SESSION['ayear2'];
-	$username= $_SESSION['username'];
-	$yearid_id=$_SESSION['yearid_id'];
-	$role=$_SESSION['role'];
-    $loginid=$_SESSION['loginid'];
-    $logid=$_SESSION['logid'];
-	$lgnid=$_SESSION['logid'];
-	$plantcode=$_SESSION['plantcode'];
-	$plantcode1=$_SESSION['plantcode1'];
-	$plantcode2=$_SESSION['plantcode2'];
-	$plantcode3=$_SESSION['plantcode3'];
-	$plantcode4=$_SESSION['plantcode4'];
+		$year1=$_SESSION['ayear1'];
+		$year2=$_SESSION['ayear2'];
+		$username= $_SESSION['username'];
+		$yearid_id=$_SESSION['yearid_id'];
+		$role=$_SESSION['role'];
+		$loginid=$_SESSION['loginid'];
+		$logid=$_SESSION['logid'];
+		$lgnid=$_SESSION['logid'];
+		$plantcode=$_SESSION['plantcode'];
+		$plantcode1=$_SESSION['plantcode1'];
+		$plantcode2=$_SESSION['plantcode2'];
+		$plantcode3=$_SESSION['plantcode3'];
+		$plantcode4=$_SESSION['plantcode4'];
 	}	
 	require_once("../include/config.php");
 	require_once("../include/connection.php");
@@ -242,7 +242,7 @@ $croparr="";
 	header("Content-Type: application/vnd.ms-excel");
 
 	$cnt=0;
-	$datahead3= array("#","Dispatch Date","Party Name","Location","State","Dispatch Type","Crop","Variety","PV Variety","Lot No.","UPS","Qty","DC No.");
+	$datahead3= array("#","Dispatch Date","Party Name","Location","State","Dispatch Type","Crop","Variety","PV Variety","Lot No.","UPS","Qty","DC No.","Order Nos.");
 	
 	
 $d=1; 
@@ -386,7 +386,7 @@ if($crval<>"")
 	if($verval<>"")
 	{
 		
-		$vtyp=""; $cirec=0; $pvvername='';
+		$vtyp=""; $cirec=0; $pvvername=''; $ordernos='';
 		$sql_var=mysqli_query($link,"select * from tblvariety where varietyid='".$verval."' and actstatus='Active'") or die(mysqli_error($link));
 		$vtot=mysqli_num_rows($sql_var);
 		if($vtot>0)
@@ -442,8 +442,36 @@ if($crval<>"")
 			{
 				while($rowdispm=mysqli_fetch_array($sql_istbl))
 				{
-					$trdate=''; $state=''; $disptype=''; $dcno='';
+					$trdate=''; $state=''; $disptype=''; $dcno='';  
 					
+					$ordernos='';
+					$quer_dsub=mysqli_query($link,"select disps_ordno from tbl_disp_sub where disp_id='".$rowdispm['disp_id']."' and disps_crop='".$crop1."' and disps_variety='".$verty."'  "); 
+					while($row_dsub = mysqli_fetch_array($quer_dsub))
+					{
+						$ono=$row_dsub['disps_ordno'].",";
+						$ono2=explode(",",$ono);
+						$ono2=array_unique($ono2);
+						foreach($ono2 as $onos)
+						{
+							if($onos<>"")
+							{
+								$a=0;
+								$qr_orm=mysqli_query($link,"select orderm_id from tbl_orderm where orderm_porderno='$onos' "); 
+								while($row_orm = mysqli_fetch_array($qr_orm))
+								{
+									$qr_ors=mysqli_query($link,"select orderm_id from tbl_order_sub where orderm_id='".$row_orm['orderm_id']."' and order_sub_crop='".$crval."' and order_sub_variety='".$verval."' "); 
+									while($row_ors = mysqli_fetch_array($qr_ors))
+									{
+										$a++;
+									}
+								}
+								if($a>0) 
+								{
+									if($ordernos!="") {$ordernos=$ordernos.",".$onos;} else {$ordernos=$onos;}
+								}
+							}
+						}
+					}
 					$sqlis1="select distinct dpss_lotno from tbl_dispsub_sub where plantcode='".$plantcode."' and disp_id='".$rowdispm['disp_id']."' and dpss_crop='".$crval."' and dpss_variety='".$verval."' ";
 					if($txtlotno!="")
 					$sqlis1.=" and SUBSTRING(`dpss_lotno`,1,7)='".$txtlotno."' ";
@@ -516,7 +544,7 @@ if($crval<>"")
 						if($disptype=="Export Buyer")$disptype="Export (Buyer)";
 $bname=$noticia['business_name'];
 $location=$noticia240['productionlocation'];		
-$data1[$d]=array($d,$trdate,$bname,$location,$state,$disptype,$crop1,$verty,$pvvername,$lotno,$ups,$nqty,$dcno);
+$data1[$d]=array($d,$trdate,$bname,$location,$state,$disptype,$crop1,$verty,$pvvername,$lotno,$ups,$nqty,$dcno,$ordernos);
 $d++;$cnt++;
 }
 }
@@ -552,7 +580,34 @@ $d++;$cnt++;
 				{
 					$trdate=''; $state=''; $disptype=''; $dcno='';
 					
-					
+					$ordernos='';
+					$quer_dsub=mysqli_query($link,"select dbulks_ordno from tbl_dbulk_sub where dbulk_id='".$rowdispm['dbulk_id']."' and dbulks_crop='".$crop1."' and dbulks_variety='".$verty."' "); 
+					while($row_dsub = mysqli_fetch_array($quer_dsub))
+					{
+						$ono=$row_dsub['dbulks_ordno'].",";
+						$ono2=explode(",",$ono);
+						$ono2=array_unique($ono2);
+						foreach($ono2 as $onos)
+						{
+							if($onos<>"")
+							{
+								$a=0;
+								$qr_orm=mysqli_query($link,"select orderm_id from tbl_orderm where orderm_porderno='$onos' "); 
+								while($row_orm = mysqli_fetch_array($qr_orm))
+								{
+									$qr_ors=mysqli_query($link,"select orderm_id from tbl_order_sub where orderm_id='".$row_orm['orderm_id']."' and order_sub_crop='".$crval."' and order_sub_variety='".$verval."' "); 
+									while($row_ors = mysqli_fetch_array($qr_ors))
+									{
+										$a++;
+									}
+								}
+								if($a>0) 
+								{
+									if($ordernos!="") {$ordernos=$ordernos.",".$onos;} else {$ordernos=$onos;}
+								}
+							}
+						}
+					}
 					
 						$sqlis12="select distinct dbss_lotno from tbl_dbulksub_sub where plantcode='".$plantcode."' and dbulk_id='".$rowdispm2['dbulk_id']."' and dbulks_id='".$row_is11['dbulks_id']."'";
 						if($txtlotno!="")
@@ -611,7 +666,7 @@ $d++;$cnt++;
 
 $bname=$noticia['business_name'];
 $location=$noticia240['productionlocation'];		
-$data1[$d]=array($d,$trdate,$bname,$location,$state,$disptype,$crop1,$verty,$pvvername,$lotno,$ups,$nqty,$dcno);
+$data1[$d]=array($d,$trdate,$bname,$location,$state,$disptype,$crop1,$verty,$pvvername,$lotno,$ups,$nqty,$dcno,$ordernos);
 $d++;$cnt++;
 }
 }
@@ -697,7 +752,7 @@ $d++;$cnt++;
 							if($disptype=="")$disptype="Pack Seed Release";
 $bname=$noticia['business_name'];
 $location=$noticia240['productionlocation'];		
-$data1[$d]=array($d,$trdate,$bname,$location,$state,$disptype,$crop1,$verty,$pvvername,$lotno,$ups,$nqty,$dcno);
+$data1[$d]=array($d,$trdate,$bname,$location,$state,$disptype,$crop1,$verty,$pvvername,$lotno,$ups,$nqty,$dcno,$ordernos);
 $d++;$cnt++;
 }
 }
@@ -769,7 +824,7 @@ $d++;$cnt++;
 						$state=$noticia['state'];
 $bname=$noticia['business_name'];
 $location=$noticia240['productionlocation'];		
-$data1[$d]=array($d,$trdate,$bname,$location,$state,$disptype,$crop1,$verty,$pvvername,$lotno,$ups,$nqty,$dcno);
+$data1[$d]=array($d,$trdate,$bname,$location,$state,$disptype,$crop1,$verty,$pvvername,$lotno,$ups,$nqty,$dcno,$ordernos);
 $d++;$cnt++;
 }
 }
@@ -852,7 +907,7 @@ $d++;$cnt++;
 
 $bname=$noticia['business_name'];
 $location=$noticia240['productionlocation'];		
-$data1[$d]=array($d,$trdate,$bname,$location,$state,$disptype,$crop1,$verty,$pvvername,$lotno,$ups,$nqty,$dcno);
+$data1[$d]=array($d,$trdate,$bname,$location,$state,$disptype,$crop1,$verty,$pvvername,$lotno,$ups,$nqty,$dcno,$ordernos);
 $d++;$cnt++;
 }
 }
@@ -889,7 +944,34 @@ $d++;$cnt++;
 				{
 					$trdate=''; $state=''; $disptype=''; $dcno='';
 					
-					
+					$ordernos='';
+					$quer_dsub=mysqli_query($link,"select dtdfs_ordno from tbl_dtdf_sub where dtdf_id='".$rowdispm['dtdf_id']."' and dtdfs_crop='".$crop1."' and dtdfs_variety='".$verty."' "); 
+					while($row_dsub = mysqli_fetch_array($quer_dsub))
+					{
+						$ono=$row_dsub['dtdfs_ordno'].",";
+						$ono2=explode(",",$ono);
+						$ono2=array_unique($ono2);
+						foreach($ono2 as $onos)
+						{
+							if($onos<>"")
+							{	
+								$a=0;
+								$qr_orm=mysqli_query($link,"select orderm_id from tbl_orderm where orderm_porderno='$onos' "); 
+								while($row_orm = mysqli_fetch_array($qr_orm))
+								{
+									$qr_ors=mysqli_query($link,"select orderm_id from tbl_order_sub where orderm_id='".$row_orm['orderm_id']."' and order_sub_crop='".$crval."' and order_sub_variety='".$verval."' "); 
+									while($row_ors = mysqli_fetch_array($qr_ors))
+									{
+										$a++;
+									}
+								}
+								if($a>0) 
+								{
+									if($ordernos!="") {$ordernos=$ordernos.",".$onos;} else {$ordernos=$onos;}
+								}
+							}
+						}
+					}
 					
 						$sqlis12="select distinct dbss_lotno from tbl_dtdfsub_sub where plantcode='".$plantcode."' and dtdf_id='".$rowdispm2['dtdf_id']."' and dtdfs_id='".$row_is11['dtdfs_id']."'";
 						if($txtlotno!="")
@@ -963,7 +1045,7 @@ $d++;$cnt++;
 							$disptype="TDF - Individual";
 //$bname=$noticia['business_name'];
 //$location=$noticia240['productionlocation'];		
-$data1[$d]=array($d,$trdate,$bname,$location,$state,$disptype,$crop1,$verty,$pvvername,$lotno,$ups,$nqty,$dcno);
+$data1[$d]=array($d,$trdate,$bname,$location,$state,$disptype,$crop1,$verty,$pvvername,$lotno,$ups,$nqty,$dcno,$ordernos);
 $d++;$cnt++;
 }
 }
@@ -1047,7 +1129,7 @@ $d++;$cnt++;
 						
 $bname=$rowdispm['party_name'];
 $location=$rowdispm['city'];		
-$data1[$d]=array($d,$trdate,$bname,$location,$state,$disptype,$crop1,$verty,$pvvername,$lotno,$ups,$nqty,$dcno);
+$data1[$d]=array($d,$trdate,$bname,$location,$state,$disptype,$crop1,$verty,$pvvername,$lotno,$ups,$nqty,$dcno,$ordernos);
 $d++;$cnt++;
 }
 }
@@ -1059,7 +1141,7 @@ $d++;$cnt++;
 }
 if($cnt==0)
 {
-$data1[$d]=array("","","","","","NO Record Found","","","","","","");
+$data1[$d]=array("","","","","","NO Record Found","","","","","","","");
 }
 
 echo implode($datahead) ;
