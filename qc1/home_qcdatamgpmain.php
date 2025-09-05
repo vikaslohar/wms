@@ -155,7 +155,7 @@ $quer3=mysqli_query($link,"SELECT cropid, cropname FROM tblcrop  order by cropna
 $quer4=mysqli_query($link,"SELECT varietyid, popularname FROM tblvariety order by popularname Asc"); 
 ?>
 	<td align="right"  valign="middle" class="tblheading" >SRS No.&nbsp;</td>
-    <td align="left"  valign="middle" class="tbltext" id="vitem" colspan="3">&nbsp;<input type="text" class="smalltbltext" size="7"  name="lsearch" id="lsearch" value="" style="background-color:#FFFFFF; border-color:#378b8b"  /></td>
+    <td align="left"  valign="middle" class="tbltext" id="vitem" colspan="3">&nbsp;<input type="text" class="smalltbltext" size="15"  name="lsearch" id="lsearch" value="" style="background-color:#FFFFFF; border-color:#378b8b"  /></td>
                 </tr>
               </table>
 <table width="550" cellpadding="5" cellspacing="5" border="0" align="center" >

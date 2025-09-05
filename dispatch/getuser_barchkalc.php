@@ -16,11 +16,11 @@
 		$loginid=$_SESSION['loginid'];
 		$logid=$_SESSION['logid'];
 		$lgnid=$_SESSION['logid'];
-	$plantcode=$_SESSION['plantcode'];
-	$plantcode1=$_SESSION['plantcode1'];
-	$plantcode2=$_SESSION['plantcode2'];
-	$plantcode3=$_SESSION['plantcode3'];
-	$plantcode4=$_SESSION['plantcode4'];
+		$plantcode=$_SESSION['plantcode'];
+		$plantcode1=$_SESSION['plantcode1'];
+		$plantcode2=$_SESSION['plantcode2'];
+		$plantcode3=$_SESSION['plantcode3'];
+		$plantcode4=$_SESSION['plantcode4'];
 	}
 	
 	require_once("../include/config.php");
@@ -76,7 +76,7 @@ if(isset($_GET['m']))
 	$eupstpy=explode(",",$eupstpy);
 	
 	$flg=0;
-	$sqlbarcode1=mysqli_query($link,"Select * from tbl_mpmain where plantcode='".$plantcode."' and mpmain_barcode='".$b."'") or die(mysqli_error($link));
+	$sqlbarcode1=mysqli_query($link,"Select mpmain_trtype, mpmain_wtmp, mpmain_variety, mpmain_upssize, mpmain_mptnop, mpmain_lotnop from tbl_mpmain where plantcode='".$plantcode."' and mpmain_barcode='".$b."' and mpmain_dflg!=1") or die(mysqli_error($link));
 	$totbarcode1=mysqli_num_rows($sqlbarcode1);
 	$rowbarcode1=mysqli_fetch_array($sqlbarcode1);
 		if($totbarcode1==0)$flg=1;
@@ -147,7 +147,7 @@ if(isset($_GET['m']))
 	}*/	
 	
 	//echo "Select mpmain_barcode from tbl_mpmain where mpmain_barcode='".$b."' and mpmain_altrid!=0 and mpmain_altrid!='$dalcid'";
-	$sqlbarcode5=mysqli_query($link,"Select mpmain_barcode from tbl_mpmain where plantcode='".$plantcode."' and mpmain_barcode='".$b."' and mpmain_altrid!=0 and mpmain_altrid!='$dalcid'") or die(mysqli_error($link));
+	$sqlbarcode5=mysqli_query($link,"Select mpmain_barcode from tbl_mpmain where plantcode='".$plantcode."' and mpmain_barcode='".$b."' and mpmain_altrid!=0  and mpmain_dflg!=1 and mpmain_altrid!='$dalcid'") or die(mysqli_error($link));
 	$totbarcode5=mysqli_num_rows($sqlbarcode5);
 	if($totbarcode5>0){if($flg==0)$flg=11;}
 	//echo $flg;
@@ -157,7 +157,7 @@ if(isset($_GET['m']))
 	$sql_mon=mysqli_query($link,"select * from tbl_order_sub where orderm_id='".$arrivalid."' order by order_sub_crop")or die("Error:".mysqli_error($link));*/
  
 	$dt=date("Y-m-d");
-	$sql_barcode1=mysqli_query($link,"Select * from tbl_mpmain where plantcode='".$plantcode."' and mpmain_barcode='".$b."' and mpmain_dflg=0 and mpmain_upflg=0 and mpmain_rvflg=0") or die(mysqli_error($link));
+	$sql_barcode1=mysqli_query($link,"Select mpmain_lotno from tbl_mpmain where plantcode='".$plantcode."' and mpmain_barcode='".$b."' and mpmain_dflg=0 and mpmain_upflg=0 and mpmain_rvflg=0") or die(mysqli_error($link));
 	$tot_barcode1=mysqli_num_rows($sql_barcode1);
 	$row_barcode1=mysqli_fetch_array($sql_barcode1);
 	if($tot_barcode1>0)
@@ -174,17 +174,17 @@ if(isset($_GET['m']))
 		$lotno=$row_barcode1['mpmain_lotno'];
 		$ui1=$rowbarcode1['mpmain_upssize'];
 		
-		$sqlbarcode51=mysqli_query($link,"Select * from tbl_dallocsub_sub where plantcode='".$plantcode."' and dallocss_lotno='".$lotno."' and dalloc_id='$dalcid'") or die(mysqli_error($link));
+		$sqlbarcode51=mysqli_query($link,"Select dalloc_id from tbl_dallocsub_sub where plantcode='".$plantcode."' and dallocss_lotno='".$lotno."' and dalloc_id='$dalcid'") or die(mysqli_error($link));
 		$totbarcode51=mysqli_num_rows($sqlbarcode51);
 		if($totbarcode51==0){if($flg==0)$flg=11;}
 		//echo $flg;
-		$sqlbarcode5=mysqli_query($link,"Select mpmain_barcode from tbl_mpmain where plantcode='".$plantcode."' and mpmain_barcode='".$b."' and mpmain_altrid!=0 and mpmain_altrid!='$dalcid'") or die(mysqli_error($link));
+		$sqlbarcode5=mysqli_query($link,"Select mpmain_barcode from tbl_mpmain where plantcode='".$plantcode."' and mpmain_barcode='".$b."' and mpmain_altrid!=0 and mpmain_dflg!=1 and mpmain_altrid!='$dalcid'") or die(mysqli_error($link));
 		$totbarcode5=mysqli_num_rows($sqlbarcode5);
 		if($totbarcode5>0)
 		{
 			$sql_lot33=mysqli_query($link,"Select Max(lotdgp_id) from tbl_lot_ldg_pack where plantcode='".$plantcode."' and lotno='$lotno' and packtype='$ui1' order by lotdgp_id DESC") or die(mysqli_error($link));
 			$row_lot33=mysqli_fetch_array($sql_lot33);
-			$sql_lot3=mysqli_query($link,"Select * from tbl_lot_ldg_pack where plantcode='".$plantcode."' and lotno='$lotno' and packtype='$ui1' and lotdgp_id='".$row_lot33[0]."'  order by lotdgp_id DESC") or die(mysqli_error($link));
+			$sql_lot3=mysqli_query($link,"Select lotldg_alflg, lotldg_altrids from tbl_lot_ldg_pack where plantcode='".$plantcode."' and lotno='$lotno' and packtype='$ui1' and lotdgp_id='".$row_lot33[0]."'  order by lotdgp_id DESC") or die(mysqli_error($link));
 			$tot_lot3=mysqli_num_rows($sql_lot3);
 			if($tot_lot3>0)
 			{
@@ -206,7 +206,7 @@ if(isset($_GET['m']))
 			$tot_lot2=mysqli_num_rows($sql_lot2);
 			$row_lot2=mysqli_fetch_array($sql_lot2);
 			
-			$sql_lot=mysqli_query($link,"Select * from tbl_lot_ldg_pack where plantcode='".$plantcode."' and lotdgp_id='".$row_lot2[0]."' and lotldg_rvflg=0 and lotldg_dispflg!=1 and lotldg_spremflg=0") or die(mysqli_error($link));
+			$sql_lot=mysqli_query($link,"Select lotldg_valupto, leupto, lotldg_resverstatus, lotldg_got1, lotldg_got, lotldg_qc, lotldg_srflg from tbl_lot_ldg_pack where plantcode='".$plantcode."' and lotdgp_id='".$row_lot2[0]."' and lotldg_rvflg=0 and lotldg_dispflg!=1 and lotldg_spremflg=0") or die(mysqli_error($link));
 			$tot_lot=mysqli_num_rows($sql_lot);
 			$row_lot=mysqli_fetch_array($sql_lot);
 			
@@ -218,7 +218,7 @@ if(isset($_GET['m']))
 			$row_spc=mysqli_fetch_array($sql_spc);
 			if($xx=mysqli_num_rows($sql_spc)>0)
 			{
-				$diff = abs(strtotime($row_lot['le_upto']) - strtotime($dt));
+				$diff = abs(strtotime($row_lot['leupto']) - strtotime($dt));
 				$days = floor($diff / (60*60*24));
 				if($days<=30){if($flg==0)$flg=8;}
 			}
@@ -269,7 +269,7 @@ if(isset($_GET['m']))
 				$upps=$ui1[0];
 				//$lotno=$row_barcode1['mpmain_lotno'];
 				//echo "Select * from tbl_dallocsub_sub where dallocss_lotno='".$lotno."' and dalloc_id='$dalcid' and dallocss_ups='".$ui1[$i]."'";
-				$sqlbarcode51=mysqli_query($link,"Select * from tbl_dallocsub_sub where plantcode='".$plantcode."' and dallocss_lotno='".$lotno."' and dalloc_id='$dalcid' and dallocss_ups='".$upps."'") or die(mysqli_error($link));
+				$sqlbarcode51=mysqli_query($link,"Select dalloc_id from tbl_dallocsub_sub where plantcode='".$plantcode."' and dallocss_lotno='".$lotno."' and dalloc_id='$dalcid' and dallocss_ups='".$upps."'") or die(mysqli_error($link));
 				$totbarcode51=mysqli_num_rows($sqlbarcode51);
 				if($totbarcode51==0){if($flg==0)$flg=11;}
 				//echo $flg;
@@ -277,7 +277,7 @@ if(isset($_GET['m']))
 				$tot_lot2=mysqli_num_rows($sql_lot2);
 				$row_lot2=mysqli_fetch_array($sql_lot2);
 				
-				$sql_lot=mysqli_query($link,"Select * from tbl_lot_ldg_pack where plantcode='".$plantcode."' and lotdgp_id='".$row_lot2[0]."' and lotldg_rvflg=0 and lotldg_dispflg!=1 and lotldg_spremflg=0") or die(mysqli_error($link));
+				$sql_lot=mysqli_query($link,"Select lotldg_valupto, leupto, lotldg_resverstatus, lotldg_got1, lotldg_got, lotldg_qc, lotldg_srflg from tbl_lot_ldg_pack where plantcode='".$plantcode."' and lotdgp_id='".$row_lot2[0]."' and lotldg_rvflg=0 and lotldg_dispflg!=1 and lotldg_spremflg=0") or die(mysqli_error($link));
 				$tot_lot=mysqli_num_rows($sql_lot);
 				$row_lot=mysqli_fetch_array($sql_lot);
 				
@@ -289,7 +289,7 @@ if(isset($_GET['m']))
 				$row_spc=mysqli_fetch_array($sql_spc);
 				if($xx=mysqli_num_rows($sql_spc)>0)
 				{
-					$diff = abs(strtotime($row_lot['le_upto']) - strtotime($dt));
+					$diff = abs(strtotime($row_lot['leupto']) - strtotime($dt));
 					$days = floor($diff / (60*60*24));
 					if($days<=30){if($flg==0)$flg=8;}
 				}
@@ -339,7 +339,7 @@ if(isset($_GET['m']))
 				$row_dept4=mysqli_fetch_array($quer4);
 				$vt=$row_dept4['popularname'];
 				
-				$sqlbarcode5=mysqli_query($link,"Select * from tbl_disp_sub where plantcode='".$plantcode."' and disps_variety='".$vt."' and disp_id='".$tid."' and disps_upstype='$eupstpy'") or die(mysqli_error($link));
+				$sqlbarcode5=mysqli_query($link,"Select disps_bqty from tbl_disp_sub where plantcode='".$plantcode."' and disps_variety='".$vt."' and disp_id='".$tid."' and disps_upstype='$eupstpy'") or die(mysqli_error($link));
 				$totbarcode5=mysqli_num_rows($sqlbarcode5);
 				if($totbarcode5>0)
 				{
@@ -396,14 +396,14 @@ if(isset($_GET['m']))
 			//$qts=$ptp2*$mplotnop;
 			//$qstt=$qstt+$ltqt;
 			
-			$sqlbarcode51=mysqli_query($link,"Select * from tbl_dallocsub_sub where plantcode='".$plantcode."' and dallocss_lotno='".$lotno."' and dalloc_id='$dalcid' and dallocss_ups='$upssiz'") or die(mysqli_error($link));
+			$sqlbarcode51=mysqli_query($link,"Select dallocss_qty from tbl_dallocsub_sub where plantcode='".$plantcode."' and dallocss_lotno='".$lotno."' and dalloc_id='$dalcid' and dallocss_ups='$upssiz'") or die(mysqli_error($link));
 			$totbarcode51=mysqli_num_rows($sqlbarcode51);
 			while($row_d=mysqli_fetch_array($sqlbarcode51))
 			{
 				$qstt=$qstt+$row_d['dallocss_qty'];
 			}
 			$dsid=0;// echo "Select * from tbl_dispsub_sub where dpss_lotno='".$lotno."' and disp_id='".$tid."' and dpss_ups='$upssiz'";
-			$sqlbarcode5=mysqli_query($link,"Select * from tbl_dispsub_sub where plantcode='".$plantcode."' and dpss_lotno='".$lotno."' and disp_id='".$tid."' and dpss_ups='$upssiz'") or die(mysqli_error($link));
+			$sqlbarcode5=mysqli_query($link,"Select dpss_qty, disps_id from tbl_dispsub_sub where plantcode='".$plantcode."' and dpss_lotno='".$lotno."' and disp_id='".$tid."' and dpss_ups='$upssiz'") or die(mysqli_error($link));
 			$totbarcode5=mysqli_num_rows($sqlbarcode5);
 			if($totbarcode5>0)
 			{
@@ -413,7 +413,7 @@ if(isset($_GET['m']))
 					$dsid=$row_d2['disps_id'];
 				}
 			}
-			$sqlbarcode55=mysqli_query($link,"Select * from tbl_disp_sub where plantcode='".$plantcode."' and disps_id='".$dsid."' and disp_id='".$tid."' and disps_ups='$upssiz' and disps_upstype='$eupstpy' and disps_bqty=0") or die(mysqli_error($link));
+			$sqlbarcode55=mysqli_query($link,"Select disps_id from tbl_disp_sub where plantcode='".$plantcode."' and disps_id='".$dsid."' and disp_id='".$tid."' and disps_ups='$upssiz' and disps_upstype='$eupstpy' and disps_bqty=0") or die(mysqli_error($link));
 			$totbarcode55=mysqli_num_rows($sqlbarcode55);
 			if($totbarcode55>0)
 			{

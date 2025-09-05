@@ -245,7 +245,7 @@ while($row_issue=mysqli_fetch_array($sql_issue))
 	
 	$qtys=0; $nomps=0; $nops=0; $qtyl=0; $nompl=0; $nopl=0; $nopnl=0; $nopns=0; $qtynl=0; $qtyns=0; $qtym=0; $nompm=0; $nopm=0; $tot_mps=0; $tot_mpl=0; $tot_mpm=0;
 	$totextpouches=0; $totextqtys=0;
-	$sql_mps=mysqli_query($link,"Select * from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKSMC' and mpmain_lotno='".$lotno."' and mpmain_dflg=0 and mpmain_alflg=0 and mpmain_upflg=0") or die(mysqli_error($link));
+	$sql_mps=mysqli_query($link,"Select mpmain_crop, mpmain_variety, mpmain_lotno, mpmain_upssize, mpmain_mptnop, mpmain_alflg, mpmain_lotnop from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKSMC' and mpmain_lotno='".$lotno."' and mpmain_dflg=0 and mpmain_alflg=0 and mpmain_upflg=0") or die(mysqli_error($link));
 	$tot_mps=mysqli_num_rows($sql_mps);
 	if($tot_mps > 0)
 	{
@@ -282,7 +282,7 @@ while($row_issue=mysqli_fetch_array($sql_issue))
 		}
 	}
 	
-	$sql_mpl=mysqli_query($link,"Select * from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKLMC' and mpmain_variety='".$row_issuetbl['lotldg_variety']."' and mpmain_dflg=0 and mpmain_alflg=0 and mpmain_upflg=0") or die(mysqli_error($link));
+	$sql_mpl=mysqli_query($link,"Select mpmain_crop, mpmain_variety, mpmain_lotno, mpmain_upssize, mpmain_mptnop, mpmain_alflg, mpmain_lotnop from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKLMC' and mpmain_variety='".$row_issuetbl['lotldg_variety']."' and mpmain_dflg=0 and mpmain_alflg=0 and mpmain_upflg=0") or die(mysqli_error($link));
 	$tot_mpl=mysqli_num_rows($sql_mpl);
 	if($tot_mpl > 0)
 	{
@@ -319,7 +319,7 @@ while($row_issue=mysqli_fetch_array($sql_issue))
 		}
 	}
 	
-	$sql_mpm=mysqli_query($link,"Select * from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKMMC' and mpmain_dflg=0 and mpmain_alflg=0 and mpmain_upflg=0") or die(mysqli_error($link));
+	$sql_mpm=mysqli_query($link,"Select mpmain_crop, mpmain_variety, mpmain_lotno, mpmain_upssize, mpmain_mptnop, mpmain_alflg, mpmain_lotnop from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKMMC' and mpmain_dflg=0 and mpmain_alflg=0 and mpmain_upflg=0") or die(mysqli_error($link));
 	$tot_mpm=mysqli_num_rows($sql_mpm);
 	if($tot_mpm > 0)
 	{
@@ -356,7 +356,7 @@ while($row_issue=mysqli_fetch_array($sql_issue))
 			
 		}
 	}
-	$sql_mpns=mysqli_query($link,"Select * from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKNMC' and mpmain_lotno='".$lotno."' and mpmain_dflg=0 and mpmain_alflg=0 and mpmain_upflg=0") or die(mysqli_error($link));
+	$sql_mpns=mysqli_query($link,"Select mpmain_crop, mpmain_variety, mpmain_lotno, mpmain_upssize, mpmain_mptnop, mpmain_alflg, mpmain_lotnop from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKNMC' and mpmain_lotno='".$lotno."' and mpmain_dflg=0 and mpmain_alflg=0 and mpmain_upflg=0") or die(mysqli_error($link));
 	$tot_mpns=mysqli_num_rows($sql_mpns);
 	if($tot_mpns > 0)
 	{
@@ -393,7 +393,7 @@ while($row_issue=mysqli_fetch_array($sql_issue))
 		}
 	}
 	
-	$sql_mpnl=mysqli_query($link,"Select * from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKNLC' and mpmain_variety='".$row_issuetbl['lotldg_variety']."' and mpmain_dflg=0 and mpmain_alflg=0 and mpmain_upflg=0") or die(mysqli_error($link));
+	$sql_mpnl=mysqli_query($link,"Select mpmain_crop, mpmain_variety, mpmain_lotno, mpmain_upssize, mpmain_mptnop, mpmain_alflg, mpmain_lotnop from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKNLC' and mpmain_variety='".$row_issuetbl['lotldg_variety']."' and mpmain_dflg=0 and mpmain_alflg=0 and mpmain_upflg=0") or die(mysqli_error($link));
 	$tot_mpnl=mysqli_num_rows($sql_mpnl);
 	if($tot_mpnl > 0)
 	{
@@ -511,7 +511,7 @@ if($fgl==0)
     <!--<td width="24" align="center" valign="middle" class="smalltblheading"><?php echo $srno2;?></td>-->
     <td align="center"  valign="middle" class="smalltbltext" ><?php echo $sloc;?><!--<input name="sloc<?php echo $srno2?>" type="text" size="10" class="smalltbltext"  maxlength="12" style="background-color:#CCCCCC" value=""/>--><input type="hidden" name="extslwhg<?php echo $srno2?>" value="<?php echo $row_issuetbl['whid'];?>" /><input type="hidden" name="extslbing<?php echo $srno2?>" value="<?php echo $row_issuetbl['binid'];?>" /><input type="hidden" name="extslsubbg<?php echo $srno2?>" value="<?php echo $row_issuetbl['subbinid'];?>" /></td>
     <td width="97"  align="center" valign="middle" class="smallsmalltbltext"><?php echo $tnob;?><input name="txtextnob<?php echo $srno2?>" id="txtextnob<?php echo $srno2?>" type="hidden" size="4" class="smalltbltext" tabindex="" maxlength="5"  onkeypress="return isNumberKey(event)" value="<?php echo $tnob;?>" style="background-color:#CCCCCC"  readonly="true" /><input type="hidden" name="extbnob<?php echo $srno2?>" id="extbnob<?php echo $srno2?>" value="<?php echo $bnob;?>" /></td>
-    <td width="114" align="center"  valign="middle" class="smalltbltext"><?php echo $tqty;?><input name="txtextqty<?php echo $srno2?>" id="txtextqty<?php echo $srno2?>" type="hidden" size="8" class="smalltbltext"  maxlength="9" style="background-color:#CCCCCC" value="<?php echo $tqty;?>"/></td>
+    <td width="114" align="center"  valign="middle" class="smalltbltext"><?php echo $tqt;?><input name="txtextqty<?php echo $srno2?>" id="txtextqty<?php echo $srno2?>" type="hidden" size="8" class="smalltbltext"  maxlength="9" style="background-color:#CCCCCC" value="<?php echo $tqt;?>"/></td>
  <td  align="center"  valign="middle" class="smalltbltext" ><input name="recnobp<?php echo $srno2?>" id="recnobp<?php echo $srno2?>" type="text" size="7" class="smalltbltext" tabindex=""   maxlength="7" onkeypress="return isNumberKey1(event)" onchange="qtychk1(this.value,<?php echo $srno2?>,'add');" value=""  />&nbsp;<font color="#FF0000" >* </font>&nbsp;</td>
   <td  align="center"  valign="middle" class="smalltbltext" ><input name="recnolbp<?php echo $srno2?>" id="recnolbp<?php echo $srno2?>" type="text" size="7" class="smalltbltext" tabindex="" maxlength="7" readonly="true" style="background-color:#CCCCCC" value=""  />&nbsp;<font color="#FF0000" >* </font>&nbsp;</td>
   <td  align="center"  valign="middle" class="smalltbltext"><input name="recqtyp<?php echo $srno2?>" id="recqtyp<?php echo $srno2?>" type="text" size="8" class="smalltbltext" tabindex="" maxlength="10" onchange="Bagschk1(this.value,<?php echo $srno2?>,'add');"  onkeypress="return isNumberKey(event)"  value="" />&nbsp;<font color="#FF0000" >* </font>&nbsp;</td>
@@ -576,20 +576,12 @@ while($ro4=mysqli_fetch_array($sq4))
 $whd1_query=mysqli_query($link,"select whid, perticulars from tbldbwarehouse where plantcode='".$plantcode."' and whid='".$ro4['dallocss4_wh']."' order by perticulars") or die(mysqli_error($link));
 $noticia_whd1 = mysqli_fetch_array($whd1_query);
 ?>
-<td width="243" align="center"  valign="middle" class="smalltbltext"><?php echo $noticia_whd1['perticulars'];?><input type="hidden" name="txtwhg<?php echo $sln;?>" id="txtwhg<?php echo $sln;?>" value="<?php echo $noticia_whd1['whid'];?>"  /><!--<select class="smalltbltext" id="txtwhg<?php echo $sln;?>" name="txtwhg<?php echo $sln;?>" style="width:70px;" onchange="wh(this.value,<?php echo $sln;?>);"  >
-<option value="" selected>WH</option>
-	<?php while($noticia_whd1 = mysqli_fetch_array($whd1_query)) { ?>
-		<option value="<?php echo $noticia_whd1['whid'];?>" />   
-		<?php echo $noticia_whd1['perticulars'];?>
-		<?php } ?>
-	</select>&nbsp;<font color="#FF0000" >* </font>&nbsp;--></td>
+<td width="243" align="center"  valign="middle" class="smalltbltext"><?php echo $noticia_whd1['perticulars'];?><input type="hidden" name="txtwhg<?php echo $sln;?>" id="txtwhg<?php echo $sln;?>" value="<?php echo $noticia_whd1['whid'];?>"  /></td>
 <?php
 $bind1_query=mysqli_query($link,"select binid, binname from tbldbbin where plantcode='".$plantcode."' and whid='".$ro4['dallocss4_wh']."' and binid='".$ro4['dallocss4_bin']."' order by binname") or die(mysqli_error($link));
 $noticia_bing1 = mysqli_fetch_array($bind1_query);
 ?>
-<td width="270" align="center"  valign="middle" class="smalltbltext" id="bingn<?php echo $sln;?>"><?php echo $noticia_bing1['binname'];?><input type="hidden" name="txtbing<?php echo $sln;?>" id="txtbing<?php echo $sln;?>" value="<?php echo $noticia_bing1['binid'];?>"  /><!--<select class="smalltbltext" name="txtbing<?php echo $sln;?>" id="txtbing<?php echo $sln;?>" style="width:60px;" onchange="bin(this.value,<?php echo $sln;?>);" >
-<option value="" selected>Bin</option>
-</select>&nbsp;<font color="#FF0000" >* </font>&nbsp;--></td>
+<td width="270" align="center"  valign="middle" class="smalltbltext" id="bingn<?php echo $sln;?>"><?php echo $noticia_bing1['binname'];?><input type="hidden" name="txtbing<?php echo $sln;?>" id="txtbing<?php echo $sln;?>" value="<?php echo $noticia_bing1['binid'];?>"  /></td>
 <td width="190" align="center" valign="middle" class="tbltext"><input type="text" class="tbltext" name="bnnomps_<?php echo $sln;?>" id="bnnomps_<?php echo $sln;?>" value="<?php echo $ro4['dallocss4_nomp'];?>" size="9" readonly="true" style="background-color:#CCCCCC" /><input type="hidden" name="nbinnomps_<?php echo $sln;?>" id="nbinnomps_<?php echo $sln;?>" value="<?php echo $ro4['dallocss4_nomp'];?>" /></td>
 <td width="195" align="center" valign="middle" class="tbltext"><input type="text" class="tbltext" name="bnqtys_<?php echo $sln;?>" id="bnqtys_<?php echo $sln;?>" value="<?php echo $ro4['dallocss4_qty'];?>" size="9" readonly="true" style="background-color:#CCCCCC" /><input type="hidden" name="nbinqtys_<?php echo $sln;?>" id="nbinqtys_<?php echo $sln;?>" value="<?php echo $ro4['dallocss4_qty'];?>" /></td>
 </tr>

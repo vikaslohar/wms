@@ -16,11 +16,11 @@
 		$loginid=$_SESSION['loginid'];
 		$logid=$_SESSION['logid'];
 		$lgnid=$_SESSION['logid'];
-	$plantcode=$_SESSION['plantcode'];
-	$plantcode1=$_SESSION['plantcode1'];
-	$plantcode2=$_SESSION['plantcode2'];
-	$plantcode3=$_SESSION['plantcode3'];
-	$plantcode4=$_SESSION['plantcode4'];
+		$plantcode=$_SESSION['plantcode'];
+		$plantcode1=$_SESSION['plantcode1'];
+		$plantcode2=$_SESSION['plantcode2'];
+		$plantcode3=$_SESSION['plantcode3'];
+		$plantcode4=$_SESSION['plantcode4'];
 	}
  	
 	require_once("../include/config.php");
@@ -109,7 +109,7 @@ if(isset($_REQUEST['subsubtrid'])) { $subsubtrid=$_REQUEST['subsubtrid']; }
 $sql_para=mysqli_query($link,"SELECT * FROM tbl_parameters where plantcode='$plantcode' "); 
 $row_para=mysqli_fetch_array($sql_para);
 $frmplantcode=$row_para['code'];
-echo "SELECT * FROM tbl_partymaser  where classification='Stock Transfer-Plant' and p_id='".$toplant."' order by classification";
+//echo "SELECT * FROM tbl_partymaser  where classification='Stock Transfer-Plant' and p_id='".$toplant."' order by classification";
 $quer=mysqli_query($link,"SELECT * FROM tbl_partymaser  where classification='Stock Transfer-Plant' and p_id='".$toplant."' order by classification");
 $row_quer = mysqli_fetch_array($quer);
 $toplantcode=$row_quer['stcode'];

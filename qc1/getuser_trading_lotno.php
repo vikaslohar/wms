@@ -72,12 +72,12 @@ opener.document.frmaddDepartment.gotrsl.value=document.from.foccode2.value;
 //alert(document.from.foccode1.value);
 window.opener.document.frmaddDepartment.txt14.disabled=false;
 opener.document.frmaddDepartment.txt16.disabled=false;
-if(document.from.foccode1.value!="OK" && document.from.foccode1.value!="NUT")
+if(document.from.foccode1.value!="OK" && document.from.foccode1.value!="NUT" && document.from.foccode1.value!="BL")
 {
 //window.opener.document.frmaddDepartment.txt14.checked=true;
 window.opener.document.frmaddDepartment.txt14.disabled=true;
 }
-if(document.from.foccode2.value!="OK" && document.from.foccode2.value!="NUT")
+if(document.from.foccode2.value!="OK" && document.from.foccode2.value!="NUT" && document.from.foccode2.value!="BL")
 {
 //opener.document.frmaddDepartment.txt16.checked=true;
 opener.document.frmaddDepartment.txt16.disabled=true;
@@ -296,7 +296,7 @@ if($tot_arrival > 0)
 	}
 }
 //echo $arrlots;
-$sql_tbl_sub=mysqli_query($link,"select distinct(orlot), lotldg_qc, lotldg_got from tbl_lot_ldg where lotldg_crop='".$crop."' and lotldg_variety='".$variety."' and lotldg_balqty > 0 and (lotldg_qc='OK' or lotldg_qc='NUT') $sss")or die(mysqli_error($link));
+$sql_tbl_sub=mysqli_query($link,"select distinct(orlot), lotldg_qc, lotldg_got from tbl_lot_ldg where lotldg_crop='".$crop."' and lotldg_variety='".$variety."' and lotldg_balqty > 0 and (lotldg_qc='OK' or lotldg_qc='NUT' or lotldg_qc='BL') $sss")or die(mysqli_error($link));
  $ct1=mysqli_num_rows($sql_tbl_sub);
 ?>		
 		<table align="center" border="1" width="400" cellspacing="0" cellpadding="0" bordercolor="#d21704" style="border-collapse:collapse" > 

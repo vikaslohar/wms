@@ -2,47 +2,41 @@
 	session_start();
 	if(!isset($_SESSION['sessionadmin']))
 	{
-	echo '<script language="JavaScript" type="text/JavaScript">';
-	echo "window.location='../login.php' ";
-	echo '</script>';
+		echo '<script language="JavaScript" type="text/JavaScript">';
+		echo "window.location='../login.php' ";
+		echo '</script>';
 	}
 	else
 	{
-	$year1=$_SESSION['ayear1'];
-	$year2=$_SESSION['ayear2'];
-	$username= $_SESSION['username'];
-	$yearid_id=$_SESSION['yearid_id'];
-	$role=$_SESSION['role'];
-    $loginid=$_SESSION['loginid'];
-    $logid=$_SESSION['logid'];
-	$lgnid=$_SESSION['logid'];
-	$plantcode=$_SESSION['plantcode'];
-	$plantcode1=$_SESSION['plantcode1'];
-	$plantcode2=$_SESSION['plantcode2'];
-	$plantcode3=$_SESSION['plantcode3'];
-	$plantcode4=$_SESSION['plantcode4'];
+		$year1=$_SESSION['ayear1'];
+		$year2=$_SESSION['ayear2'];
+		$username= $_SESSION['username'];
+		$yearid_id=$_SESSION['yearid_id'];
+		$role=$_SESSION['role'];
+		$loginid=$_SESSION['loginid'];
+		$logid=$_SESSION['logid'];
+		$lgnid=$_SESSION['logid'];
+		$plantcode=$_SESSION['plantcode'];
+		$plantcode1=$_SESSION['plantcode1'];
+		$plantcode2=$_SESSION['plantcode2'];
+		$plantcode3=$_SESSION['plantcode3'];
+		$plantcode4=$_SESSION['plantcode4'];
 	}
 	require_once("../include/config.php");
 	require_once("../include/connection.php");
 	
-	
-	
 	if(isset($_POST['frm_action'])=='submit')
 	{
-		//exit;
 		$txtupsdc=trim($_POST['txtupsdc']);
 		$cid=trim($_POST['txtcrop']);
 		$itemid=trim($_POST['txtvariety']);
 		$txtqcsts=trim($_POST['txtqcsts']);
-		$slchk=trim($_POST['slchk']);
+		$slchk=trim($_POST['valchkreq']);
+		
 		
 		echo "<script>window.location='report_pswstock1.php?slchk=$slchk&txtcrop=$cid&txtvariety=$itemid&txtupsdc=$txtupsdc&txtqcsts=$txtqcsts'</script>";
 	}
-	
-
 ?>
-
-
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -109,7 +103,7 @@ function mySubmit()
 		alert("Please Variety");
 		return false;
 	}
-return true;	 
+	return true;	 
 }
 function test1(fet11)
 {
@@ -120,7 +114,7 @@ function test1(fet11)
 }	
 function modetchk(classval)
 {	//alert("hi");
-			showUser(classval,'vitem','item','','','','','');
+	showUser(classval,'vitem','item','','','','','');
 }
 function upschk(verval)
 {
@@ -222,7 +216,12 @@ $quer4=mysqli_query($link,"SELECT varietyid, popularname FROM tblvariety  order 
 </select>&nbsp;</td>
                 
 </tr> 
-              </table>
+<tr class="Light" height="30">
+<td align="right"  valign="middle" class="tblheading" >Type&nbsp;</td>
+<td align="left"  valign="middle" class="tbltext" colspan="3">&nbsp;<input type="radio" name="valchkreq" class="tbltext" value="ALL" checked="checked" />&nbsp;ALL&nbsp;<input type="radio" name="valchkreq" class="tbltext" value="yes"  />&nbsp;Ready to Dispatch Stock&nbsp;&nbsp;<input type="radio" name="valchkreq" class="tbltext" value="no"  />&nbsp;Under Re-printing<input type="hidden" name="vcreqsel" value="no" /></td>
+</tr>
+				 
+</table>
                 <table width="750" align="center" cellpadding="5" cellspacing="5" border="0" >
                   <tr >
                     <td valign="top" align="center"><input name="Submit" type="image" src="../images/submit_1.gif" alt="Submit Value"  border="0" style="display:inline;cursor:pointer;" onClick="return mySubmit();" />

@@ -16,11 +16,11 @@
 		$loginid=$_SESSION['loginid'];
 		$logid=$_SESSION['logid'];
 		$lgnid=$_SESSION['logid'];
-	$plantcode=$_SESSION['plantcode'];
-	$plantcode1=$_SESSION['plantcode1'];
-	$plantcode2=$_SESSION['plantcode2'];
-	$plantcode3=$_SESSION['plantcode3'];
-	$plantcode4=$_SESSION['plantcode4'];
+		$plantcode=$_SESSION['plantcode'];
+		$plantcode1=$_SESSION['plantcode1'];
+		$plantcode2=$_SESSION['plantcode2'];
+		$plantcode3=$_SESSION['plantcode3'];
+		$plantcode4=$_SESSION['plantcode4'];
 	}
 	  
 	require_once("../include/config.php");
@@ -132,7 +132,7 @@ if($stageval!="Pack")
 {
 
 $totqty=0; $totnob=0; $tqty=0; $tnob=0; $srno2=0;
-$sql_issue=mysqli_query($link,"select distinct lotldg_whid, lotldg_subbinid, lotldg_binid from tbl_lot_ldg where plantcode='".$plantcode."' and lotldg_lotno='".$ltn."' and lotldg_balqty > 0") or die(mysqli_error($link));
+$sql_issue=mysqli_query($link,"select distinct lotldg_whid, lotldg_subbinid, lotldg_binid from tbl_lot_ldg where plantcode='".$plantcode."' and lotldg_lotno='".$ltn."'") or die(mysqli_error($link));
 
 while($row_issue=mysqli_fetch_array($sql_issue))
 { 
@@ -326,7 +326,7 @@ $sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where plantcode
 	
 	$qtys=0; $nomps=0; $nops=0; $qtyl=0; $nompl=0; $nopl=0; $nopnl=0; $nopns=0; $qtynl=0; $qtyns=0; $qtym=0; $nompm=0; $nopm=0; $tot_mps=0; $tot_mpl=0; $tot_mpm=0; $talqt=0; $talnmp=0;
 	$totextpouches=0; $totextqtys=0;
-	$sql_mps=mysqli_query($link,"Select * from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKSMC' and mpmain_lotno='".$lotno."' and mpmain_dflg!=1 and mpmain_upflg=0") or die(mysqli_error($link));
+	$sql_mps=mysqli_query($link,"Select mpmain_crop, mpmain_variety, mpmain_lotno, mpmain_upssize, mpmain_mptnop, mpmain_alflg, mpmain_lotnop from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKSMC' and mpmain_lotno='".$lotno."' and mpmain_dflg!=1 and mpmain_upflg=0") or die(mysqli_error($link));
 	$tot_mps=mysqli_num_rows($sql_mps);
 	if($tot_mps > 0)
 	{
@@ -368,7 +368,7 @@ $sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where plantcode
 		}
 	}
 	
-	$sql_mpl=mysqli_query($link,"Select * from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKLMC' and mpmain_variety='".$row_issuetbl['lotldg_variety']."' and mpmain_dflg!=1 and mpmain_upflg=0") or die(mysqli_error($link));
+	$sql_mpl=mysqli_query($link,"Select mpmain_crop, mpmain_variety, mpmain_lotno, mpmain_upssize, mpmain_mptnop, mpmain_alflg, mpmain_lotnop from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKLMC' and mpmain_variety='".$row_issuetbl['lotldg_variety']."' and mpmain_dflg!=1 and mpmain_upflg=0") or die(mysqli_error($link));
 	$tot_mpl=mysqli_num_rows($sql_mpl);
 	if($tot_mpl > 0)
 	{
@@ -410,7 +410,7 @@ $sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where plantcode
 		}
 	}
 	
-	$sql_mpm=mysqli_query($link,"Select * from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKMMC' and mpmain_dflg!=1 and mpmain_upflg=0") or die(mysqli_error($link));
+	$sql_mpm=mysqli_query($link,"Select mpmain_crop, mpmain_variety, mpmain_lotno, mpmain_upssize, mpmain_mptnop, mpmain_alflg, mpmain_lotnop from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKMMC' and mpmain_dflg!=1 and mpmain_upflg=0") or die(mysqli_error($link));
 	$tot_mpm=mysqli_num_rows($sql_mpm);
 	if($tot_mpm > 0)
 	{
@@ -452,7 +452,7 @@ $sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where plantcode
 			
 		}
 	}
-	$sql_mpns=mysqli_query($link,"Select * from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKNMC' and mpmain_lotno='".$lotno."' and mpmain_dflg!=1 and mpmain_upflg=0") or die(mysqli_error($link));
+	$sql_mpns=mysqli_query($link,"Select mpmain_crop, mpmain_variety, mpmain_lotno, mpmain_upssize, mpmain_mptnop, mpmain_alflg, mpmain_lotnop from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKNMC' and mpmain_lotno='".$lotno."' and mpmain_dflg!=1 and mpmain_upflg=0") or die(mysqli_error($link));
 	$tot_mpns=mysqli_num_rows($sql_mpns);
 	if($tot_mpns > 0)
 	{
@@ -494,7 +494,7 @@ $sql_issuetbl=mysqli_query($link,"select * from tbl_lot_ldg_pack where plantcode
 		}
 	}
 	
-	$sql_mpnl=mysqli_query($link,"Select * from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKNLC' and mpmain_variety='".$row_issuetbl['lotldg_variety']."' and mpmain_dflg!=1 and mpmain_upflg=0") or die(mysqli_error($link));
+	$sql_mpnl=mysqli_query($link,"Select mpmain_crop, mpmain_variety, mpmain_lotno, mpmain_upssize, mpmain_mptnop, mpmain_alflg, mpmain_lotnop from tbl_mpmain where plantcode='".$plantcode."' and mpmain_trtype='PACKNLC' and mpmain_variety='".$row_issuetbl['lotldg_variety']."' and mpmain_dflg!=1 and mpmain_upflg=0") or die(mysqli_error($link));
 	$tot_mpnl=mysqli_num_rows($sql_mpnl);
 	if($tot_mpnl > 0)
 	{

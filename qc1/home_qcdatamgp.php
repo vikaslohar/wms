@@ -658,7 +658,7 @@ $oneWeekBefore = "2025-03-01";//$currentDate->format('Y-m-d');
 // Output the result
 //echo "One week before today: " . $oneWeekBefore;
 
-if($filterdate!="" && $srsno!="")
+/*if($filterdate!="" && $srsno!="")
 {
 	$filterdate2=explode("-",$filterdate);
 	$extdos=$filterdate2[2]."-".$filterdate2[1]."-".$filterdate2[0];
@@ -670,7 +670,8 @@ else if($filterdate!="" && $srsno=="")
 	$extdos=$filterdate2[2]."-".$filterdate2[1]."-".$filterdate2[0];
 	$sqlmgdata=mysqli_query($link,"select * from tbl_qcgdata where qcg_germpflg!=1 and qcg_germpdatadt>='$oneWeekBefore' and qcg_retestflg=0 order by qcg_docsrefno, qcg_germpdatadt, qcg_sampleno ASC ") or die(mysqli_error($link));
 }
-else if($filterdate=="" && $srsno!="")
+else */
+if($srsno!="")
 {
 	$sqlmgdata=mysqli_query($link,"select * from tbl_qcgdata where qcg_germpflg!=1 and qcg_germpdatadt>='$oneWeekBefore'  and  qcg_docsrefno ='$srsno' and qcg_retestflg=0 order by qcg_docsrefno, qcg_germpdatadt, qcg_sampleno ASC ") or die(mysqli_error($link));
 }
@@ -712,7 +713,7 @@ while($row_arr_home24=mysqli_fetch_array($sql_arr_home))
 	$qcg_sgtnormalavg=0; $qcg_sgtabnormalavg=0; $qcg_sgthardfugavg=0; $qcg_sgtdeadavg=0; $qcg_vignormalavg=0; $qcg_vigabnormalavg=0; $qcg_vigdeadavg=0; $qcg_testtype=''; $qcg_docsrefno=''; $qcg_setupdt=''; $dos=''; $qcg_germpdatadt='';
 	if($row_arr_home['state']!="G")
 	{
-		$sql_mdata=mysqli_query($link,"select * from tbl_qcmdata where qcm_sampno='".$sampno."' ") or die(mysqli_error($link));
+		$sql_mdata=mysqli_query($link,"select qcm_moistflg from tbl_qcmdata where qcm_sampno='".$sampno."' ") or die(mysqli_error($link));
 		while($row_mdata=mysqli_fetch_array($sql_mdata))
 		{
 			if($row_mdata['qcm_moistflg']==1)
@@ -723,7 +724,7 @@ while($row_arr_home24=mysqli_fetch_array($sql_arr_home))
 				{$moistflg=3;}
 		}
 		
-		$sql_pdata=mysqli_query($link,"select * from tbl_qcpdata where qcp_sampleno='".$sampno."' ") or die(mysqli_error($link));
+		$sql_pdata=mysqli_query($link,"select qcp_ppdataflg, qcp_ppresult from tbl_qcpdata where qcp_sampleno='".$sampno."' ") or die(mysqli_error($link));
 		while($row_pdata=mysqli_fetch_array($sql_pdata))
 		{
 			if($row_pdata['qcp_ppdataflg']==1)
@@ -734,7 +735,7 @@ while($row_arr_home24=mysqli_fetch_array($sql_arr_home))
 				{$ppflg=3;}
 		}
 		
-		$sql_gdata=mysqli_query($link,"select * from tbl_qcgdata where qcg_sampleno='".$sampno."' and qcg_retestflg=0 ") or die(mysqli_error($link));
+		$sql_gdata=mysqli_query($link,"select qcg_germpflg, qcg_sgtnormalavg, qcg_sgtabnormalavg, qcg_sgthardfugavg, qcg_sgtdeadavg, qcg_vignormalavg, qcg_vigabnormalavg, qcg_vigdeadavg, qcg_testtype, qcg_docsrefno, qcg_setupdt, qcg_germpdatadt from tbl_qcgdata where qcg_sampleno='".$sampno."' and qcg_retestflg=0 ") or die(mysqli_error($link));
 		while($row_gdata=mysqli_fetch_array($sql_gdata))
 		{
 			if($row_gdata['qcg_germpflg']==1)
@@ -760,7 +761,7 @@ while($row_arr_home24=mysqli_fetch_array($sql_arr_home))
 	}
 	else
 	{
-		$sql_gdata=mysqli_query($link,"select * from tbl_qcgdata where qcg_sampleno='".$sampno."' and qcg_retestflg=0 ") or die(mysqli_error($link));
+		$sql_gdata=mysqli_query($link,"select qcg_germpflg, qcg_sgtnormalavg, qcg_sgtabnormalavg, qcg_sgthardfugavg, qcg_sgtdeadavg, qcg_vignormalavg, qcg_vigabnormalavg, qcg_vigdeadavg, qcg_testtype, qcg_docsrefno, qcg_setupdt, qcg_germpdatadt from tbl_qcgdata where qcg_sampleno='".$sampno."' and qcg_retestflg=0 ") or die(mysqli_error($link));
 		while($row_gdata=mysqli_fetch_array($sql_gdata))
 		{
 			if($row_gdata['qcg_germpflg']==1)
@@ -892,7 +893,7 @@ while($row_arr_home24=mysqli_fetch_array($sql_arr_home))
 				while($row_qc=mysqli_fetch_array($sql_qc))
 				{
 				
-					$sql_month=mysqli_query($link,"select * from tbl_lot_ldg where lotldg_id='".$row_qc[0]."' and lotldg_balqty > 0")or die(mysqli_error($link));
+					$sql_month=mysqli_query($link,"select lotldg_balbags, lotldg_balqty from tbl_lot_ldg where lotldg_id='".$row_qc[0]."' and lotldg_balqty > 0")or die(mysqli_error($link));
 					$zz=mysqli_num_rows($sql_month);
 					while ($row_month=mysqli_fetch_array($sql_month))
 					{
@@ -939,7 +940,7 @@ while($row_arr_home24=mysqli_fetch_array($sql_arr_home))
 				while($row_qc=mysqli_fetch_array($sql_qc))
 				{
 				
-					$sql_month=mysqli_query($link,"select * from tbl_lot_ldg_pack where lotdgp_id='".$row_qc[0]."' and balqty > 0")or die(mysqli_error($link));
+					$sql_month=mysqli_query($link,"select balqty from tbl_lot_ldg_pack where lotdgp_id='".$row_qc[0]."' and balqty > 0")or die(mysqli_error($link));
 					$zz=mysqli_num_rows($sql_month);
 					while ($row_month=mysqli_fetch_array($sql_month))
 					{

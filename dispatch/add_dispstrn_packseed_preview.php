@@ -16,11 +16,11 @@
 		$loginid=$_SESSION['loginid'];
 		$logid=$_SESSION['logid'];
 		$lgnid=$_SESSION['logid'];
-	$plantcode=$_SESSION['plantcode'];
-	$plantcode1=$_SESSION['plantcode1'];
-	$plantcode2=$_SESSION['plantcode2'];
-	$plantcode3=$_SESSION['plantcode3'];
-	$plantcode4=$_SESSION['plantcode4'];
+		$plantcode=$_SESSION['plantcode'];
+		$plantcode1=$_SESSION['plantcode1'];
+		$plantcode2=$_SESSION['plantcode2'];
+		$plantcode3=$_SESSION['plantcode3'];
+		$plantcode4=$_SESSION['plantcode4'];
 	}
 	
 	require_once("../include/config.php");
@@ -500,7 +500,7 @@ else
 <?php 
 $srno=1;
 //echo "Select * from tbl_stoutspack where stoutmp_id='$pid' and stoutsp_subflg=1 order by stoutsp_id asc";
-$sql_sub=mysqli_query($link,"Select * from tbl_stoutspack where plantcode='".$plantcode."' and   stoutmp_id='$pid' and stoutsp_subflg=1 order by stoutsp_id asc") or die(mysqli_error($link));
+$sql_sub=mysqli_query($link,"Select * from tbl_stoutspack where plantcode='".$plantcode."' and stoutmp_id='$pid' and stoutsp_subflg=1 order by stoutsp_id asc") or die(mysqli_error($link));
 if($tot_sub=mysqli_num_rows($sql_sub) > 0)
 {
 while($row_sub=mysqli_fetch_array($sql_sub))

@@ -28,15 +28,15 @@
 	require_once("../include/connection.php");
 	
 		
-		$crop = $_REQUEST['txtcrop'];
-		$variety = $_REQUEST['txtvariety'];
-		$slchk = $_REQUEST['slchk'];
-		$txtupsdc = $_REQUEST['txtupsdc'];
-		$txtqcsts = $_REQUEST['txtqcsts'];
-		
-		if(isset($_POST['frm_action'])=='submit')
-		{
-		}
+	$crop = $_REQUEST['txtcrop'];
+	$variety = $_REQUEST['txtvariety'];
+	$slchk = $_REQUEST['slchk'];
+	$txtupsdc = $_REQUEST['txtupsdc'];
+	$txtqcsts = $_REQUEST['txtqcsts'];
+	
+	if(isset($_POST['frm_action'])=='submit')
+	{
+	}
 	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -138,6 +138,18 @@ alert("While Launching New Window...\nYour browser maybe blocking up Popup windo
 	{	
 		$qry.=" and packtype='$txtupsdc' ";
 	}
+	
+	if($slchk!="ALL")
+	{	
+		if($slchk=="yes")
+		{
+		$qry.=" and lotldg_rvflg=0 ";
+		}
+		if($slchk=="no")
+		{
+		$qry.=" and lotldg_rvflg=1 ";
+		}
+	}
 	$qry.=" group by lotldg_crop, lotldg_variety";
 
 	$sql_arr_home1=mysqli_query($link,$qry) or die(mysqli_error($link));
@@ -179,11 +191,39 @@ while($row_arr_home1=mysqli_fetch_array($sql_arr_home1))
 {
 if($txtupsdc!="ALL")
 {
-$sql_rr=mysqli_query($link,"select distinct lotldg_variety from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and packtype='".$txtupsdc."' and lotldg_variety='".$row_arr_home1['lotldg_variety']."' order by lotdgp_id desc") or die(mysqli_error($link));
+	if($slchk!="ALL")
+	{	
+		if($slchk=="yes")
+		{
+			$sql_rr=mysqli_query($link,"select distinct lotldg_variety from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and packtype='".$txtupsdc."' and lotldg_variety='".$row_arr_home1['lotldg_variety']."' and lotldg_rvflg=0 order by lotdgp_id desc") or die(mysqli_error($link));
+		}
+		if($slchk=="no")
+		{
+			$sql_rr=mysqli_query($link,"select distinct lotldg_variety from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and packtype='".$txtupsdc."' and lotldg_variety='".$row_arr_home1['lotldg_variety']."' and lotldg_rvflg=1 order by lotdgp_id desc") or die(mysqli_error($link));
+		}
+	}
+	else
+	{
+		$sql_rr=mysqli_query($link,"select distinct lotldg_variety from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and packtype='".$txtupsdc."' and lotldg_variety='".$row_arr_home1['lotldg_variety']."' order by lotdgp_id desc") or die(mysqli_error($link));
+	}
 }
 else
 {
-$sql_rr=mysqli_query($link,"select distinct lotldg_variety from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_arr_home1['lotldg_variety']."' order by lotdgp_id desc") or die(mysqli_error($link));
+	if($slchk!="ALL")
+	{	
+		if($slchk=="yes")
+		{
+			$sql_rr=mysqli_query($link,"select distinct lotldg_variety from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_arr_home1['lotldg_variety']."' and lotldg_rvflg=0 order by lotdgp_id desc") or die(mysqli_error($link));
+		}
+		if($slchk=="no")
+		{
+			$sql_rr=mysqli_query($link,"select distinct lotldg_variety from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_arr_home1['lotldg_variety']."' and lotldg_rvflg=1 order by lotdgp_id desc") or die(mysqli_error($link));
+		}
+	}
+	else
+	{
+		$sql_rr=mysqli_query($link,"select distinct lotldg_variety from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_arr_home1['lotldg_variety']."' order by lotdgp_id desc") or die(mysqli_error($link));
+	}
 }
 $tot_rr=mysqli_num_rows($sql_rr);
 while($row_rr=mysqli_fetch_array($sql_rr))
@@ -208,17 +248,58 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 		$ccnt=0;
 if($txtupsdc!="ALL")
 {
-$sql_rr24=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$txtupsdc."' order by packtype asc") or die(mysqli_error($link));
+	if($slchk!="ALL")
+	{	
+		if($slchk=="yes")
+		{
+			$sql_rr24=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$txtupsdc."' and lotldg_rvflg=0 order by packtype asc") or die(mysqli_error($link));
+		}
+		if($slchk=="no")
+		{
+			$sql_rr24=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$txtupsdc."' and lotldg_rvflg=1 order by packtype asc") or die(mysqli_error($link));
+		}
+	}
+	else
+	{
+		$sql_rr24=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$txtupsdc."' order by packtype asc") or die(mysqli_error($link));
+	}
 }
 else
 {
-$sql_rr24=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' order by packtype asc") or die(mysqli_error($link));
+	if($slchk!="ALL")
+	{	
+		if($slchk=="yes")
+		{
+			$sql_rr24=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and lotldg_rvflg=0 order by packtype asc") or die(mysqli_error($link));
+		}
+		if($slchk=="no")
+		{
+			$sql_rr24=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and lotldg_rvflg=1 order by packtype asc") or die(mysqli_error($link));
+		}
+	}
+	else
+	{
+		$sql_rr24=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' order by packtype asc") or die(mysqli_error($link));
+	}
 }
 $tot_rr24=mysqli_num_rows($sql_rr24);
 while($row_rr24=mysqli_fetch_array($sql_rr24))
 {
-		
-$sql_arhome=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where plantcode='$plantcode' and  lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr24['packtype']."' group by lotno order by lotdgp_id asc") or die(mysqli_error($link));
+	if($slchk!="ALL")
+	{	
+		if($slchk=="yes")
+		{
+			$sql_arhome=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where plantcode='$plantcode' and  lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr24['packtype']."' and lotldg_rvflg=0 group by lotno order by lotdgp_id asc") or die(mysqli_error($link));
+		}
+		if($slchk=="no")
+		{
+			$sql_arhome=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where plantcode='$plantcode' and  lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr24['packtype']."' and lotldg_rvflg=1 group by lotno order by lotdgp_id asc") or die(mysqli_error($link));
+		}
+	}
+	else
+	{		
+		$sql_arhome=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where plantcode='$plantcode' and  lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr24['packtype']."' group by lotno order by lotdgp_id asc") or die(mysqli_error($link));
+	}
 	while($row_arhome=mysqli_fetch_array($sql_arhome))
 {  
 	$sql_is=mysqli_query($link,"select distinct subbinid, whid, binid from tbl_lot_ldg_pack where plantcode='$plantcode' and lotno='".$row_arhome['lotno']."' and packtype='".$row_rr24['packtype']."' group by subbinid order by lotdgp_id asc") or die(mysqli_error($link));
@@ -273,16 +354,59 @@ if($ccnt > 0)
 $srno=0; $totalbags=0; $totalqty=0;
 if($txtupsdc!="ALL")
 {
-$sql_rr2=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$txtupsdc."' order by packtype asc") or die(mysqli_error($link));
+	if($slchk!="ALL")
+	{	
+		if($slchk=="yes")
+		{
+			$sql_rr2=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$txtupsdc."' and lotldg_rvflg=0 order by packtype asc") or die(mysqli_error($link));
+		}
+		if($slchk=="no")
+		{
+			$sql_rr2=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$txtupsdc."' and lotldg_rvflg=1 order by packtype asc") or die(mysqli_error($link));
+		}
+	}
+	else
+	{
+		$sql_rr2=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$txtupsdc."' order by packtype asc") or die(mysqli_error($link));
+	}
 }
 else
 {
-$sql_rr2=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' order by packtype asc") or die(mysqli_error($link));
+	if($slchk!="ALL")
+	{	
+		if($slchk=="yes")
+		{
+			$sql_rr2=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and lotldg_rvflg=0 order by packtype asc") or die(mysqli_error($link));
+		}
+		if($slchk=="no")
+		{
+			$sql_rr2=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and lotldg_rvflg=1 order by packtype asc") or die(mysqli_error($link));
+		}
+	}
+	else
+	{
+		$sql_rr2=mysqli_query($link,"select distinct packtype from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' order by packtype asc") or die(mysqli_error($link));
+	}
 }
 $tot_rr2=mysqli_num_rows($sql_rr2);
 while($row_rr2=mysqli_fetch_array($sql_rr2))
 {
-	$sql_arr_home=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr2['packtype']."' group by lotno order by lotdgp_id desc") or die(mysqli_error($link));
+
+	if($slchk!="ALL")
+	{	
+		if($slchk=="yes")
+		{
+			$sql_arr_home=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr2['packtype']."' and lotldg_rvflg=0 group by lotno order by lotdgp_id desc") or die(mysqli_error($link));
+		}
+		if($slchk=="no")
+		{
+			$sql_arr_home=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr2['packtype']."' and lotldg_rvflg=1 group by lotno order by lotdgp_id desc") or die(mysqli_error($link));
+		}
+	}
+	else
+	{
+		$sql_arr_home=mysqli_query($link,"select distinct lotno from tbl_lot_ldg_pack where plantcode='$plantcode' and lotldg_crop='".$row_arr_home1['lotldg_crop']."' and lotldg_variety='".$row_rr['lotldg_variety']."' and packtype='".$row_rr2['packtype']."' group by lotno order by lotdgp_id desc") or die(mysqli_error($link));
+	}
 	while($row_arr_home=mysqli_fetch_array($sql_arr_home))
 {  $srno++;
 $wareh=""; $binn=""; $subbinn=""; $slups=0; $slqty=0; $cnt=0; $oqcsts=""; $odot=""; $txtdov=""; $validity=""; $wtmp='';
@@ -443,6 +567,17 @@ if($txtqcsts!="Both")
 	if($txtqcsts=="DoT" && $oqcsts=="DoSF")$cnt=0;
 	if($txtqcsts=="DoSF" && ($oqcsts=="DOT" || $oqcsts=="DoT"))$cnt=0;
 	if($txtqcsts=="DoSF" && $oqcsts=="RV")$cnt=0;
+}
+
+if($slchk=="no")
+{	
+	$sql_rps=mysqli_query($link,"Select packaging_tflg from tbl_rpspackaging where plantcode='$plantcode' and packaging_lotno='".$row_arr_home['lotno']."' and packaging_tflg!=1 ") or die(mysqli_error($link));
+	if($tot_rps=mysqli_num_rows($sql_rps)>0) {$cnt=0; }
+}
+if($slchk!="no")
+{	
+	$sql_rps=mysqli_query($link,"Select packaging_tflg from tbl_rpspackaging where plantcode='$plantcode' and packaging_lotno='".$row_arr_home['lotno']."' and packaging_tflg=1 ") or die(mysqli_error($link));
+	if($tot_rps=mysqli_num_rows($sql_rps)>0) {$cnt=0; }
 }
 //echo $cnt;
 if($cnt>0)

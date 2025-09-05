@@ -77,7 +77,7 @@
 	if(isset($_POST['frm_action'])=='submit')
 	{
 		/*echo "<script>window.opener.location.href = window.opener.location.href;
-						   self.close();</script>";	*/
+		  self.close();</script>";	*/
 	}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

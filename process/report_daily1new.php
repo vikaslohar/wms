@@ -2,25 +2,25 @@
 	session_start();
 	if(!isset($_SESSION['sessionadmin']))
 	{
-	echo '<script language="JavaScript" type="text/JavaScript">';
-	echo "window.location='../login.php' ";
-	echo '</script>';
+		echo '<script language="JavaScript" type="text/JavaScript">';
+		echo "window.location='../login.php' ";
+		echo '</script>';
 	}
 	else
 	{
-	$year1=$_SESSION['ayear1'];
-	$year2=$_SESSION['ayear2'];
-	$username= $_SESSION['username'];
-	$yearid_id=$_SESSION['yearid_id'];
-	$role=$_SESSION['role'];
-    $loginid=$_SESSION['loginid'];
-    $logid=$_SESSION['logid'];
-	$lgnid=$_SESSION['logid'];
-	$plantcode=$_SESSION['plantcode'];
-	$plantcode1=$_SESSION['plantcode1'];
-	$plantcode2=$_SESSION['plantcode2'];
-	$plantcode3=$_SESSION['plantcode3'];
-	$plantcode4=$_SESSION['plantcode4'];
+		$year1=$_SESSION['ayear1'];
+		$year2=$_SESSION['ayear2'];
+		$username= $_SESSION['username'];
+		$yearid_id=$_SESSION['yearid_id'];
+		$role=$_SESSION['role'];
+		$loginid=$_SESSION['loginid'];
+		$logid=$_SESSION['logid'];
+		$lgnid=$_SESSION['logid'];
+		$plantcode=$_SESSION['plantcode'];
+		$plantcode1=$_SESSION['plantcode1'];
+		$plantcode2=$_SESSION['plantcode2'];
+		$plantcode3=$_SESSION['plantcode3'];
+		$plantcode4=$_SESSION['plantcode4'];
 	}
 	
 	require_once("../include/config.php");
@@ -215,6 +215,7 @@ alert("While Launching New Window...\nYour browser maybe blocking up Popup windo
 			<td width="70" align="center" valign="middle" class="smalltblheading" rowspan="2">Crop</td>
 			<td width="70" align="center" valign="middle" class="smalltblheading" rowspan="2">Variety</td>
 			<td width="115"  align="center" valign="middle" class="smalltblheading" rowspan="2">Lot No.</td>
+			<td rowspan="2"  align="center" valign="middle" class="smalltblheading">E/P</td>
 			<td colspan="2"  align="center" valign="middle" class="smalltblheading">Raw Seed</td>
 			 <td align="center" valign="middle" class="smalltblheading" colspan="2">Condition Seed</td>
 			 <td  align="center" valign="middle" class="smalltblheading" colspan="2">Remnant (RM)</td>
@@ -341,6 +342,7 @@ while($row_issuetbl=mysqli_fetch_array($sql_issuetbl))
 { 
 
 $lotno=$row_issuetbl['proslipsub_lotno'];
+$enp=$row_issuetbl['proslipsub_processtype'];
 
 $aq=explode(".",$row_issuetbl['proslipsub_pnob']);
 if($aq[1]==000){$onob1=$aq[0];}else{$onob1=$row_issuetbl['proslipsub_pnob'];}
@@ -406,6 +408,7 @@ if($srno%2!=0)
 			<td align="center" valign="middle" class="smalltbltext"><?php echo $crop;?></td>
     		<td align="center" valign="middle" class="smalltbltext"><?php echo $variety;?></td>
 		   	<td align="center" valign="middle" class="smalltbltext"><?php echo $lotno;?></td>
+			<td align="center" valign="middle" class="smalltbltext"><?php echo $enp?></td>
           	<td align="center" valign="middle" class="smalltbltext"><?php echo $onob1?></td>
          	<td align="center" valign="middle" class="smalltbltext"><?php echo $oqty1?></td>
          	<td align="center" valign="middle" class="smalltbltext"><?php echo $cnob1?></td>
@@ -434,6 +437,7 @@ else
 			<td align="center" valign="middle" class="smalltbltext"><?php echo $crop;?></td>
     		<td align="center" valign="middle" class="smalltbltext"><?php echo $variety;?></td>
 		   	<td align="center" valign="middle" class="smalltbltext"><?php echo $lotno;?></td>
+			<td align="center" valign="middle" class="smalltbltext"><?php echo $enp?></td>
           	<td align="center" valign="middle" class="smalltbltext"><?php echo $onob1?></td>
          	<td align="center" valign="middle" class="smalltbltext"><?php echo $oqty1?></td>
          	<td align="center" valign="middle" class="smalltbltext"><?php echo $cnob1?></td>
@@ -507,6 +511,7 @@ while($row_issuetbl=mysqli_fetch_array($sql_issuetbl))
 { 
 
 $lotno=$row_issuetbl['pnpslipsub_lotno'];
+$enp=$row_issuetbl['pnpslipsub_packtype'];
 
 $aq=explode(".",$row_issuetbl['pnpslipsub_pnob']);
 if($aq[1]==000){$onob1=$aq[0];}else{$onob1=$row_issuetbl['pnpslipsub_pnob'];}
@@ -573,6 +578,7 @@ if($srno%2!=0)
 			<td align="center" valign="middle" class="smalltbltext"><?php echo $crop;?></td>
     		<td align="center" valign="middle" class="smalltbltext"><?php echo $variety;?></td>
 		   	<td align="center" valign="middle" class="smalltbltext"><?php echo $lotno;?></td>
+			<td align="center" valign="middle" class="smalltbltext"><?php echo $enp?></td>
           	<td align="center" valign="middle" class="smalltbltext"><?php echo $onob1?></td>
          	<td align="center" valign="middle" class="smalltbltext"><?php echo $oqty1?></td>
          	<td align="center" valign="middle" class="smalltbltext"><?php echo $cnob1?></td>
@@ -601,6 +607,7 @@ else
 			<td align="center" valign="middle" class="smalltbltext"><?php echo $crop;?></td>
     		<td align="center" valign="middle" class="smalltbltext"><?php echo $variety;?></td>
 		   	<td align="center" valign="middle" class="smalltbltext"><?php echo $lotno;?></td>
+			<td align="center" valign="middle" class="smalltbltext"><?php echo $enp?></td>
           	<td align="center" valign="middle" class="smalltbltext"><?php echo $onob1?></td>
          	<td align="center" valign="middle" class="smalltbltext"><?php echo $oqty1?></td>
          	<td align="center" valign="middle" class="smalltbltext"><?php echo $cnob1?></td>

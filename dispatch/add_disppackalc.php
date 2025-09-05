@@ -1572,7 +1572,7 @@ function chkbarcode1(mltval)
 			showUser(bardet,'barchk','barchk1',mltval,trid,ver,ups,mchksel,upstyp)
 			mltval="'"+mltval+"'";
 			//alert(mltval);
-			setTimeout('showpmode('+mltval+')', 1000);
+			setTimeout('showpmode('+mltval+')', 5000);
 			
 		}
 	}

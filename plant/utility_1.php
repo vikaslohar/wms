@@ -1240,7 +1240,7 @@ $lotnor=$lotno."R";
 $lotnoc=$lotno."C";
 $lotnop=$lotno."P";
 $opstk=""; 
-$sql_lot=mysqli_query($link,"select * from tbl_lot_ldg where orlot='".$lotno."' and plantcode='$plantcode' order by lotldg_id limit 0,1") or die(mysqli_error($link));
+$sql_lot=mysqli_query($link,"select lotldg_trtype from tbl_lot_ldg where orlot='".$lotno."' and plantcode='$plantcode' order by lotldg_id limit 0,1") or die(mysqli_error($link));
 $tot_lot=mysqli_num_rows($sql_lot);
 $row_lot=mysqli_fetch_array($sql_lot);
 if($tot_lot>0)
@@ -1263,13 +1263,13 @@ if($tot_lot>0)
 if($tot_lot==0)
 {
 //echo "select * from tbl_lot_ldg_pack where orlot='".$lotno."' order by lotldg_id asc";
-	$sql_lot=mysqli_query($link,"select * from tbl_lot_ldg_pack where orlot='".$lotno."' and plantcode='$plantcode' order by lotdgp_id asc limit 0,1") or die(mysqli_error($link));
+	$sql_lot=mysqli_query($link,"select balqty from tbl_lot_ldg_pack where orlot='".$lotno."' and plantcode='$plantcode' order by lotdgp_id asc limit 0,1") or die(mysqli_error($link));
 	$tot_lot=mysqli_num_rows($sql_lot);
 	$row_lot=mysqli_fetch_array($sql_lot);
 	$opstk=$row_lot['balqty'];
 }
 $discardqty=0; $totloss=0; $totbatch=0;
-$sql_discard=mysqli_query($link,"select * from tbl_discard_sub where lotnumber='".$lotno."' and plantcode='$plantcode' order by did asc") or die(mysqli_error($link));
+$sql_discard=mysqli_query($link,"select qty from tbl_discard_sub where lotnumber='".$lotno."' and plantcode='$plantcode' order by did asc") or die(mysqli_error($link));
 $tot_discard=mysqli_num_rows($sql_discard);
 while($row_discard=mysqli_fetch_array($sql_discard))
 {
@@ -1277,15 +1277,15 @@ while($row_discard=mysqli_fetch_array($sql_discard))
 }
 
 $dryloss=0;
-$sql_dryloss=mysqli_query($link,"select * from tbl_dryingsub where lotno='".$lotnor."' and plantcode='$plantcode' order by subtrid asc") or die(mysqli_error($link));
+$sql_dryloss=mysqli_query($link,"select subtrid from tbl_dryingsub where lotno='".$lotnor."' and plantcode='$plantcode' order by subtrid asc") or die(mysqli_error($link));
 $tot_dryloss=mysqli_num_rows($sql_dryloss);
 if($tot_dryloss==0)
 {
-	$sql_dryloss=mysqli_query($link,"select * from tbl_dryingsub where lotno='".$lotnoc."' and plantcode='$plantcode' order by subtrid asc") or die(mysqli_error($link));
+	$sql_dryloss=mysqli_query($link,"select subtrid from tbl_dryingsub where lotno='".$lotnoc."' and plantcode='$plantcode' order by subtrid asc") or die(mysqli_error($link));
 }
 while($row_dryloss=mysqli_fetch_array($sql_dryloss))
 {
-	$sql_dryloss1=mysqli_query($link,"select * from tbl_dryingsubsub where subtrid='".$row_dryloss['subtrid']."' and plantcode='$plantcode' order by subsubid asc") or die(mysqli_error($link));
+	$sql_dryloss1=mysqli_query($link,"select dryingloss from tbl_dryingsubsub where subtrid='".$row_dryloss['subtrid']."' and plantcode='$plantcode' order by subsubid asc") or die(mysqli_error($link));
 	while($row_ryloss1=mysqli_fetch_array($sql_dryloss1))
 	{
 		$dryloss=$dryloss+$row_ryloss1['dryingloss'];
@@ -1293,7 +1293,7 @@ while($row_dryloss=mysqli_fetch_array($sql_dryloss))
 }
 
 $pakloss=0; $pakbatch=0;
-$sql_pakloss=mysqli_query($link,"select * from tbl_pnpslipsub where pnpslipsub_orlot='".$lotno."' and plantcode='$plantcode' order by pnpslipsub_id asc") or die(mysqli_error($link));
+$sql_pakloss=mysqli_query($link,"select pnpslipmain_id, pnpslipsub_packloss, pnpslipsub_packcc, pnpslipsub_packtype, pnpslipsub_packqty from tbl_pnpslipsub where pnpslipsub_orlot='".$lotno."' and plantcode='$plantcode' order by pnpslipsub_id asc") or die(mysqli_error($link));
 //$tot_dryloss=mysqli_num_rows($sql_dryloss);
 while($row_pakloss=mysqli_fetch_array($sql_pakloss))
 {
@@ -1309,7 +1309,7 @@ while($row_pakloss=mysqli_fetch_array($sql_pakloss))
 }
 
 $proloss=0; $probatch=0;
-$sql_proloss=mysqli_query($link,"select * from tbl_proslipsub where proslipsub_orlot='".$lotno."' and plantcode='$plantcode' order by proslipsub_id asc") or die(mysqli_error($link));
+$sql_proloss=mysqli_query($link,"select proslipsub_tlqty, proslipsub_processtype, proslipsub_conqty from tbl_proslipsub where proslipsub_orlot='".$lotno."' and plantcode='$plantcode' order by proslipsub_id asc") or die(mysqli_error($link));
 //$tot_dryloss=mysqli_num_rows($sql_dryloss);
 while($row_proloss=mysqli_fetch_array($sql_proloss))
 {
@@ -1321,7 +1321,7 @@ while($row_proloss=mysqli_fetch_array($sql_proloss))
 }
 
 $rvloss=0; $rvobatch=0;
-$sql_rvloss=mysqli_query($link,"select * from tbl_revalidate where rv_lotno='".$lotnop."' and plantcode='$plantcode' order by rv_id asc") or die(mysqli_error($link));
+$sql_rvloss=mysqli_query($link,"select rv_qcnop, rv_rvtyp, rv_bqty from tbl_revalidate where rv_lotno='".$lotnop."' and plantcode='$plantcode' order by rv_id asc") or die(mysqli_error($link));
 //$tot_dryloss=mysqli_num_rows($sql_dryloss);
 while($row_rvloss=mysqli_fetch_array($sql_rvloss))
 {
@@ -1333,11 +1333,11 @@ while($row_rvloss=mysqli_fetch_array($sql_rvloss))
 }
 
 $p2closs=0; $p2cbatch=0;
-$sql_p2closs=mysqli_query($link,"select * from tbl_psunpp2c where unp_orlot='".$lotno."' and plantcode='$plantcode' order by unp_id asc") or die(mysqli_error($link));
+$sql_p2closs=mysqli_query($link,"select unp_id, unp_p2ctype from tbl_psunpp2c where unp_orlot='".$lotno."' and plantcode='$plantcode' order by unp_id asc") or die(mysqli_error($link));
 $tot_p2closs=mysqli_num_rows($sql_p2closs);
 while($row_p2closs=mysqli_fetch_array($sql_p2closs))
 {
-	$sql_p2closs1=mysqli_query($link,"select * from tbl_psunpp2c_sub where unp_id='".$row_p2closs['unp_id']."' and plantcode='$plantcode' order by unps_id asc") or die(mysqli_error($link));
+	$sql_p2closs1=mysqli_query($link,"select unp_qty from tbl_psunpp2c_sub where unp_id='".$row_p2closs['unp_id']."' and plantcode='$plantcode' order by unps_id asc") or die(mysqli_error($link));
 	while($row_p2closs1=mysqli_fetch_array($sql_p2closs1))
 	{
 		//$p2closs=$p2closs+$row_p2closs1['dryingloss'];
@@ -1352,7 +1352,7 @@ $totloss=$dryloss+$pakloss+$proloss+$rvloss+$p2closs;
 $totbatch=$pakbatch+$probatch+$rvobatch+$p2cbatch;
 //echo "select * from tbl_lot_ldg where orlot='".$lotno."' and lotldg_trid!='".$row_lot['lotldg_trid']."' order by lotldg_id asc";
 $totdispqty=0; $dispbulk=0; $disptdf=0; $stkoutdisp=0; $qtyremdisp=0;
-$sql_lotldg=mysqli_query($link,"select * from tbl_lot_ldg where orlot='".$lotno."' and plantcode='$plantcode' order by lotldg_id asc") or die(mysqli_error($link));
+$sql_lotldg=mysqli_query($link,"select lotldg_trtype, lotldg_trqty from tbl_lot_ldg where orlot='".$lotno."' and plantcode='$plantcode' order by lotldg_id asc") or die(mysqli_error($link));
 $tot_lotldg=mysqli_num_rows($sql_lotldg);
 //$row_lotldg=mysqli_fetch_array($sql_lotldg);
 while($row_lotldg=mysqli_fetch_array($sql_lotldg))
@@ -1375,7 +1375,7 @@ while($row_lotldg=mysqli_fetch_array($sql_lotldg))
 	}
 }
 //echo "select * from tbl_lot_ldg_pack where orlot='".$lotno."' and lotldg_id!='".$row_lot['lotldg_id']."' order by lotdgp_id asc";
-$sql_lotldgpak=mysqli_query($link,"select * from tbl_lot_ldg_pack where orlot='".$lotno."' and plantcode='$plantcode' order by lotdgp_id asc") or die(mysqli_error($link));
+$sql_lotldgpak=mysqli_query($link,"select trtype, tqty from tbl_lot_ldg_pack where orlot='".$lotno."' and plantcode='$plantcode' order by lotdgp_id asc") or die(mysqli_error($link));
 $tot_lotldgpak=mysqli_num_rows($sql_lotldgpak);
 //$row_lotldgpak=mysqli_fetch_array($sql_lotldgpak);
 $dispqty=0; $dispbulk1=0; $disptdf1=0; $stkoutdisp1=0; $qtyremdisp1=0; 
@@ -1406,19 +1406,19 @@ $totdispqty=$dispbulk+$disptdf+$stkoutdisp+$qtyremdisp+$dispqty+$dispbulk1+$disp
 //echo $lotnop;
 $allocqty=0;
 //echo "select distinct dallocs_id from tbl_dallocsub_sub where dallocss_lotno='".$lotnop."' order by dallocss_id asc";
-$sql_allocss=mysqli_query($link,"select * from tbl_dallocsub_sub where dallocss_lotno='".$lotnop."' and plantcode='$plantcode' order by dallocss_id asc") or die(mysqli_error($link));
+$sql_allocss=mysqli_query($link,"select dallocs_id, dallocss_ups from tbl_dallocsub_sub where dallocss_lotno='".$lotnop."' and plantcode='$plantcode' order by dallocss_id asc") or die(mysqli_error($link));
 $alloups="";
 while($row_allocss=mysqli_fetch_array($sql_allocss))
 {
 	if($row_allocss['dallocs_id']!=$allocssid)
 	{
-		$sql_allocs=mysqli_query($link,"select * from tbl_dalloc_sub where dallocs_id='".$row_allocss['dallocs_id']."' and dallocs_ups='".$row_allocss['dallocss_ups']."' and dallocs_dflg=0 and plantcode='$plantcode' order by dallocs_id asc") or die(mysqli_error($link));
+		$sql_allocs=mysqli_query($link,"select dallocs_id, dallocs_ups from tbl_dalloc_sub where dallocs_id='".$row_allocss['dallocs_id']."' and dallocs_ups='".$row_allocss['dallocss_ups']."' and dallocs_dflg=0 and plantcode='$plantcode' order by dallocs_id asc") or die(mysqli_error($link));
 		$tot_allocs=mysqli_num_rows($sql_allocs);
 		$row_allocs=mysqli_fetch_array($sql_allocs);
 		
 		if($tot_allocs>0)
 		{
-			$sql_allocss2=mysqli_query($link,"select * from tbl_dallocsub_sub where dallocs_id='".$row_allocs['dallocs_id']."' and dallocss_ups='".$row_allocs['dallocs_ups']."' and dallocss_lotno='".$lotnop."' and plantcode='$plantcode' order by dallocss_id asc") or die(mysqli_error($link));
+			$sql_allocss2=mysqli_query($link,"select dallocss_qty, dallocss_dispqty from tbl_dallocsub_sub where dallocs_id='".$row_allocs['dallocs_id']."' and dallocss_ups='".$row_allocs['dallocs_ups']."' and dallocss_lotno='".$lotnop."' and plantcode='$plantcode' order by dallocss_id asc") or die(mysqli_error($link));
 			while($row_allocss2=mysqli_fetch_array($sql_allocss2))
 			{
 				$allocqty=$allocqty+($row_allocss2['dallocss_qty']-$row_allocss2['dallocss_dispqty']);
@@ -1440,7 +1440,7 @@ while($row_stock=mysqli_fetch_array($sql_stock))
 	$sql_stock1=mysqli_query($link,"select MAX(lotdgp_id) from tbl_lot_ldg_pack where lotno='".$lotnop."' and subbinid='".$row_stock['subbinid']."' and plantcode='$plantcode'") or die(mysqli_error($link));
 	$row_stock1=mysqli_fetch_array($sql_stock1);
 	//echo "select * from tbl_lot_ldg_pack where lotno='".$lotnop."' and lotdgp_id='".$row_stock1[0]."'";
-	$sql_stock12=mysqli_query($link,"select * from tbl_lot_ldg_pack where lotno='".$lotnop."' and lotdgp_id='".$row_stock1[0]."' and plantcode='$plantcode'") or die(mysqli_error($link));
+	$sql_stock12=mysqli_query($link,"select balqty from tbl_lot_ldg_pack where lotno='".$lotnop."' and lotdgp_id='".$row_stock1[0]."' and plantcode='$plantcode'") or die(mysqli_error($link));
 	$row_stock12=mysqli_fetch_array($sql_stock12);
 	
 	$stkinhand=$stkinhand+$row_stock12['balqty'];
@@ -1455,7 +1455,7 @@ while($row_stock=mysqli_fetch_array($sql_stock))
 	$sql_stock1=mysqli_query($link,"select MAX(lotldg_id) from tbl_lot_ldg where orlot='".$lotno."' and lotldg_subbinid='".$row_stock['lotldg_subbinid']."' and plantcode='$plantcode'") or die(mysqli_error($link));
 	$row_stock1=mysqli_fetch_array($sql_stock1);
 //echo "select * from tbl_lot_ldg where orlot='".$lotno."' and lotldg_id='".$row_stock1[0]."' and plantcode='$plantcode'";	
-	$sql_stock12=mysqli_query($link,"select * from tbl_lot_ldg where orlot='".$lotno."' and lotldg_id='".$row_stock1[0]."' and plantcode='$plantcode'") or die(mysqli_error($link));
+	$sql_stock12=mysqli_query($link,"select lotldg_balqty from tbl_lot_ldg where orlot='".$lotno."' and lotldg_id='".$row_stock1[0]."' and plantcode='$plantcode'") or die(mysqli_error($link));
 	$row_stock12=mysqli_fetch_array($sql_stock12);
 	
 	$stkinhand=$stkinhand+$row_stock12['lotldg_balqty'];
@@ -1641,7 +1641,7 @@ $pp=$vchk;
 	$trdate4=$trday4."-".$trmonth4."-".$tryear4;
 	
 	$nob=0; $qty=0;
-	$sql_tbl=mysqli_query($link,"select * from tblarr_sloc where arr_id='".$row_whouse['arrsub_id']."' and arr_tr_id='".$row_whouse['arrival_id']."' and plantcode='$plantcode'")or die(mysqli_error($link));
+	$sql_tbl=mysqli_query($link,"select bags, qty from tblarr_sloc where arr_id='".$row_whouse['arrsub_id']."' and arr_tr_id='".$row_whouse['arrival_id']."' and plantcode='$plantcode'")or die(mysqli_error($link));
 
 	while($row_arr=mysqli_fetch_array($sql_tbl))
 	{ 
