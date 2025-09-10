@@ -25,16 +25,57 @@
 	require_once("../include/config.php");
 	require_once("../include/connection.php");
 	
+	function getFinancialYears($count = 15) {
+		$years = [];
+		$currentYear = date('Y');
+		$currentMonth = date('n');
+		if ($currentMonth < 4) {
+			$currentYear--;
+		}
+	
+		for ($i = 0; $i < $count; $i++) {
+			$start = $currentYear - $i;
+			$end = $start + 1;
+			$years[] = "$start-$end";
+		}
+		return $years;
+	}
+	
+	// Ordered months in FY (April to March)
+	$months = [
+		"April" => 4,
+		"May" => 5,
+		"June" => 6,
+		"July" => 7,
+		"August" => 8,
+		"September" => 9,
+		"October" => 10,
+		"November" => 11,
+		"December" => 12,
+		"January" => 1,
+		"February" => 2,
+		"March" => 3,
+	];
+	
+	$selectedYear = '';
+	$selectedMonth = '';
+	$startDate = '';
+	$endDate = '';
+	$monthList = [];
+	
 	if(isset($_POST['frm_action'])=='submit')
 	{
-		$txtupsdc=trim($_POST['txtupsdc']);
-		$cid=trim($_POST['txtcrop']);
-		$itemid=trim($_POST['txtvariety']);
-		$txtqcsts=trim($_POST['txtqcsts']);
-		$slchk=trim($_POST['valchkreq']);
-		
-		
-		echo "<script>window.location='report_pswstock1.php?slchk=$slchk&txtcrop=$cid&txtvariety=$itemid&txtupsdc=$txtupsdc&txtqcsts=$txtqcsts'</script>";
+		$cid = $_REQUEST['txtcrop'];
+		//echo "<br />";
+		$itemid = $_REQUEST['txtvariety'];
+		//echo "<br />";
+		$financial_year = $_REQUEST['financial_year'];
+		//echo "<br />";
+		$month = $_REQUEST['month'];
+		//echo "<br />";
+		$txtplant = $_REQUEST['txtplant'];
+		//exit;		
+		echo "<script>window.location='report_monthlysr1.php?txtcrop=$cid&txtvariety=$itemid&financial_year=$financial_year&month=$month&txtplant=$txtplant'</script>";
 	}
 ?>
 
@@ -43,11 +84,16 @@
 <script type="text/javascript" src="../include/animatedcollapse.js"></script>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>psw - Report - Pack Seed Stock Report</title>
-<link href="../include/main_psw.css" rel="stylesheet" type="text/css" />
-<link href="../include/vnrtrac_psw.css" rel="stylesheet" type="text/css" />
+<title>Plant Manager-Report -  Financial Year wise Monthly Sales Return Report</title>
+<link href="../include/main_plantm.css" rel="stylesheet" type="text/css" />
+<link href="../include/vnrtrac_plantm.css" rel="stylesheet" type="text/css" />
 </head>
-<script src="stockrep.js"></script>
+<!--- Calender code --->
+<link href="../calendar/calendar-blue.css" rel="stylesheet" />
+<script type="text/javascript" src="../calendar/calendar.js"></script>
+<script type="text/javascript" src="../calendar/calendar-en.js"></script>
+<!--- Calender code --->
+<script src="stock.js"></script>
 <script type="text/javascript">
 
 //SuckerTree Horizontal Menu (Sept 14th, 06)
@@ -85,14 +131,22 @@ window.attachEvent("onload", buildsubmenus_horizontal)
 </script>
 <SCRIPT language="JavaScript">
 
-
 function slchk(slval)
 {
 	document.frmaddDepartment.slck.value=slval;
 }
-
+function slchk2(slval)
+{
+	document.frmaddDepartment.slck2.value=slval;
+}
 function mySubmit()
 { 
+	var f=0;
+	if(document.frmaddDepartment.financial_year.value == "")
+	{
+		alert("Please select Financial Year");
+		return false;
+	}
 	if(document.frmaddDepartment.txtcrop.value == "")
 	{
 		alert("Please select Crop");
@@ -109,30 +163,14 @@ function test1(fet11)
 {
 	if (fet11!="")
 	{
-	document.frmaddDepartment.fet1.value=fet11;
+		document.frmaddDepartment.fet1.value=fet11;
 	}
 }	
 function modetchk(classval)
 {	//alert("hi");
 	showUser(classval,'vitem','item','','','','','');
 }
-function upschk(verval)
-{
-	var crop=document.frmaddDepartment.txtcrop.value;
-	document.frmaddDepartment.txtupsdc.selectedIndex=0;
-	document.frmaddDepartment.txtupsdc.value="";
-	showUser(verval,'upschd','upsch',crop,'','','');
-}
-function verchk()
-{
-	if(document.frmaddDepartment.txtvariety.value=="")
-	{
-		alert("Please select Variety");
-		document.frmaddDepartment.txtupsdc.value="";
-		document.frmaddDepartment.txtvariety.focus();
-		return false;
-	}
-}
+
 </script>
 
 <body>
@@ -140,89 +178,105 @@ function verchk()
   <tr>
     <td valign="top"><table width="1003" height="72" border="0" cellspacing="0" cellpadding="0" align="center">
         <tr>
-          <td valign="top"><?php require_once("../include/arr_psw.php");?></td>
+          <td valign="top"><?php require_once("../include/arr_plants.php");?></td>
         </tr>
       </table>
       <table width="100%" style=" z-index:-1;" height="auto" align="center" border="0" cellspacing="0" cellpadding="0">
         <tr>
-          <td width="100%" valign="top" align="center"><img src="../images/psw_curvetop.gif" /></td>
+          <td width="100%" valign="top" align="center"><img src="../images/arr_curvetop.gif" /></td>
         </tr>
         <tr>
           <td width="100%" valign="top" height="auto" align="center"  class="midbgline">
 		  <!-- actual page start--->	
 
-  <table  width="974" border="0" cellpadding="0" cellspacing="0" bordercolor="#0BC5F4" >
+  <table  width="974" border="0" cellpadding="0" cellspacing="0" bordercolor="#2e81c1" >
   <tr><td>
-   <table  width="974" border="0" cellpadding="0" cellspacing="0" bordercolor="#0BC5F4" >
+   <table  width="974" border="0" cellpadding="0" cellspacing="0" bordercolor="#2e81c1" >
 	   <tr style="padding:0px 0px 0px 0px" >
 	  <td width="32" height="25"><img src="../images/rupee1.jpg" align="right" width="30" height="30" />&nbsp;</td>
 	  <td width="940" class="Mainheading" height="25">
-	  <table width="940" border="0" cellpadding="0" cellspacing="0" bordercolor="#0BC5F4" style="border-bottom:solid; border-bottom-color:#0BC5F4" >
+	  <table width="940" border="0" cellpadding="0" cellspacing="0" bordercolor="#2e81c1" style="border-bottom:solid; border-bottom-color:#2e81c1" >
 	    <tr >
-	      <td width="813" height="30"class="Mainheading">Pack Seed Stock Report </td>
+	      <td width="813" height="30"class="Mainheading"  >Financial Year wise Monthly Sales Return Report </td>
 	    </tr></table></td>
 	  </tr>
 	  </table></td></tr>
 	   	  
 	  <td align="center" colspan="4" >
 	  
-	  <form name="frmaddDepartment" method="post" action="<?php $_SERVER['PHP_SELF']; ?>" > 
-	  <input type="hidden" name="slck" value="yes" />
+	<form id="mainform" name="frmaddDepartment" method="post" action="<?php $_SERVER['PHP_SELF']; ?>" onsubmit="return mySubmit();"   > 
+	<input name="frm_action" value="submit" type="hidden"> 
+	<input type="hidden" name="slck" value="no" />
+	<input type="hidden" name="slck2" value="no" />
+	<input type="hidden" name="cdate" value="<?php echo date("d-m-Y", time());?>" />
 	    <table  border="0" cellspacing="0" cellpadding="0" align="center" width="974"  style="border-collapse:collapse">
           <tr height="7">
             <td height="7"></td>
           </tr>
           <tr>
             <td width="30"></td>
-            <td><table align="center" border="1" width="750" cellspacing="0" cellpadding="0" bordercolor="#0BC5F4" style="border-collapse:collapse" >
+            <td><table align="center" border="1" width="700" cellspacing="0" cellpadding="0" bordercolor="#2e81c1" style="border-collapse:collapse" >
                 <tr class="tblsubtitle" height="25">
-                  <td colspan="4" align="center" class="tblheading">Pack Seed Stock Report</td>
+                  <td colspan="4" align="center" class="tblheading">Financial Year wise Monthly Sales Return Report</td>
                 </tr>
                 <tr height="15">
                   <td colspan="4" align="right" class="tblheading"><font color="#FF0000" >* </font>indicates required field&nbsp;</td>
                 </tr>
+
+               <tr class="Dark" height="25">
+                  <td width="104" height="30" align="right" valign="middle" class="tblheading">&nbsp;Financial Year&nbsp;</td>
+                  <td width="242" align="left"  valign="middle" >&nbsp;<select name="financial_year" id="financial_year" class="form-select" required>
+                <option value="">-- Select --</option>
+                <?php foreach (getFinancialYears() as $year): ?>
+                    <option value="<?= $year ?>" <?= ($year === $selectedYear) ? 'selected' : '' ?>>
+                        <?= $year ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>&nbsp;<font color="#FF0000" >*</font></td>
+                   <td width="110" align="right"  valign="middle" class="tblheading">&nbsp;Month (Optional)&nbsp;</td>
+                  <td width="234" align="left"  valign="middle" >&nbsp;<select name="month" id="month" class="form-select">
+                <option value="ALL">ALL</option>
+                <?php foreach (array_keys($months) as $month): ?>
+                    <option value="<?= $month ?>" <?= ($month === $selectedMonth) ? 'selected' : '' ?>>
+                        <?= $month ?>
+                    </option>
+                <?php endforeach; ?>
+            </select></td>
+</tr>
 <?php
 $quer3=mysqli_query($link,"SELECT cropid, cropname FROM tblcrop  order by cropname Asc"); 
 ?>
- <tr class="Light" height="25">
-<td width="128" align="right"  valign="middle" class="tblheading">Crop&nbsp;</td>
-<td width="230" align="left"  valign="middle" class="tbltext">&nbsp;<select class="tbltext" name="txtcrop" style="width:170px;" onChange="modetchk(this.value)">
+
+<tr class="Light" height="25">
+<td width="104" align="right"  valign="middle" class="tblheading">Crop&nbsp;</td>
+<td width="242" align="left"  valign="middle" class="tbltext" >&nbsp;<select class="tbltext" name="txtcrop" style="width:170px;" onChange="modetchk(this.value)">
 <option value="ALL" selected>--ALL--</option>
 	<?php while($noticia = mysqli_fetch_array($quer3)) { ?>
 		<option value="<?php echo $noticia['cropid'];?>" />   
 		<?php echo $noticia['cropname'];?>
 		<?php } ?>
-	</select>&nbsp;<font color="#FF0000">*</font>&nbsp;</td>
-
-	<td width="116" align="right"  valign="middle" class="tblheading">Variety&nbsp;</td>
-    <td width="266" align="left"  valign="middle" class="tbltext" id="vitem">&nbsp;<select class="tbltext" id="itm" name="txtvariety" style="width:170px;" onchange="upschk(this.value);" >
+	</select>
+              <font color="#FF0000">*</font>&nbsp;</td>
+<?php
+$quer4=mysqli_query($link,"SELECT varietyid, popularname FROM tblvariety order by popularname Asc"); 
+?>
+	<td align="right"  valign="middle" class="tblheading" >Variety&nbsp;</td>
+    <td align="left"  valign="middle" class="tbltext" id="vitem" >&nbsp;<select class="tbltext" id="itm" name="txtvariety" style="width:170px;" >
 <option value="ALL" selected>--ALL--</option>
 </select>&nbsp;<font color="#FF0000">*</font>&nbsp;</td>
                 
 </tr>
-  <tr class="Dark" height="25">
-<td width="128" align="right"  valign="middle" class="tblheading">UPS&nbsp;</td>
-<td width="230" align="left"  valign="middle" class="tbltext" id="upschd" >&nbsp;<select class="tbltext" name="txtupsdc" id="txtupsdc" style="width:100px;" onchange="verchk(this.value);" >
-<option value="ALL" selected>ALL</option>
-</select>&nbsp;</td>
-<?php
-$quer4=mysqli_query($link,"SELECT varietyid, popularname FROM tblvariety  order by popularname Asc"); 
-?>
-	<td width="116" align="right"  valign="middle" class="tblheading">Pack QC Status&nbsp;</td>
-    <td width="266" align="left"  valign="middle" class="tbltext" id="vitem">&nbsp;<select class="tbltext" name="txtqcsts" id="txtqcsts" style="width:100px;" >
-<option value="Both" selected>Both</option>
-<option value="DoT" >DoT</option>
-<option value="DoSF" >DoSF</option>
-</select>&nbsp;</td>
-                
-</tr> 
-<tr class="Light" height="30">
-<td align="right"  valign="middle" class="tblheading" >Type&nbsp;</td>
-<td align="left"  valign="middle" class="tbltext" colspan="3">&nbsp;<input type="radio" name="valchkreq" class="tbltext" value="ALL" checked="checked" />&nbsp;ALL&nbsp;<input type="radio" name="valchkreq" class="tbltext" value="yes"  />&nbsp;Ready to Dispatch Stock&nbsp;&nbsp;<input type="radio" name="valchkreq" class="tbltext" value="no"  />&nbsp;Under Re-printing<input type="hidden" name="vcreqsel" value="" /></td>
+ <tr class="Dark" height="25">
+<td width="104" align="right"  valign="middle" class="tblheading">Plant&nbsp;</td>
+<td align="left"  valign="middle" class="tbltext" colspan="3" >&nbsp;<select class="tbltext" name="txtplant" id="txtplant" style="width:90px;">
+<option value="D" selected>Deorjhal</option>
+<option value="B" >Boriya</option>
+</select>&nbsp;<font color="#FF0000">*</font>&nbsp;</td>
+
 </tr>
-				 
-</table>
-                <table width="750" align="center" cellpadding="5" cellspacing="5" border="0" >
+
+              </table>
+                <table width="700" align="center" cellpadding="5" cellspacing="5" border="0" >
                   <tr >
                     <td valign="top" align="center"><input name="Submit" type="image" src="../images/submit_1.gif" alt="Submit Value"  border="0" style="display:inline;cursor:pointer;" onClick="return mySubmit();" />
                         <input type="hidden" name="txtinv" />

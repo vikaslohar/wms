@@ -283,7 +283,7 @@ $quer3=mysqli_query($link,"SELECT cropid, cropname FROM tblcrop order by cropnam
                 </tr>
 				<tr class="Light" height="25">
                   
-	<td align="right"  valign="middle" class="tblheading" colspan="2" >With Re-Printing&nbsp;</td>
+	<td align="right"  valign="middle" class="tblheading" colspan="2" >Type&nbsp;</td>
     <td align="left"  valign="middle" class="tbltext" id="vitem2" colspan="2">&nbsp;<input type="radio" name="withsummery" value="yes"  />&nbsp;Summery&nbsp;&nbsp;<input type="radio" name="withsummery" value="no"  />&nbsp;Detail (Lot wise)</td>
                 </tr>
  </table><br />

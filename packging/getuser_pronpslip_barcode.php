@@ -305,13 +305,13 @@ function chkmlt(mltval, mltno)
 				x++;
 			}
 		}
-		if(x==0)
+		/*if(x==0)
 		{
 			alert("Invalid Barcode");
 			document.getElementById('m'+[mltno]).value="";
 			document.getElementById('m'+[mltn]).focus();
 			return false;
-		}
+		}*/
 		for(var i=0; i<ycode.length; i++)
 		{
 			if(ycode[i]==b)
@@ -319,13 +319,13 @@ function chkmlt(mltval, mltno)
 				y++;
 			}
 		}
-		if(y==0)
+		/*if(y==0)
 		{
 			alert("Invalid Barcode");
 			document.getElementById('m'+[mltno]).value="";
 			document.getElementById('m'+[mltn]).focus();
 			return false;
-		}
+		}*/
 
 		var mltm=document.from.srno.value;
 		var cnt=0;

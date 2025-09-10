@@ -236,7 +236,8 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 	//}
 				
 $ups=$row_rr2['packtype'];		
-	
+	$sql_rps=mysqli_query($link,"Select packaging_tflg from tbl_rpspackaging where plantcode='$plantcode' and packaging_lotno='".$row_arr_home['lotno']."' and (packaging_tflg=0 OR packaging_tflg=2) ") or die(mysqli_error($link));
+	if($tot_rps=mysqli_num_rows($sql_rps)>0) {$cnt=0; }	
 if($cnt>0)
 {
 //$totalqty=$totalqty+$totqty; 

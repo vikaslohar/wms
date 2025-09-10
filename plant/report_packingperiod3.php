@@ -368,7 +368,8 @@ while($row_rr=mysqli_fetch_array($sql_rr))
 			}
 		//}
 	//}
-		
+	$sql_rps=mysqli_query($link,"Select packaging_tflg from tbl_rpspackaging where plantcode='$plantcode' and packaging_lotno='".$row_arr_home['lotno']."' and (packaging_tflg=0 OR packaging_tflg=2) ") or die(mysqli_error($link));
+	if($tot_rps=mysqli_num_rows($sql_rps)>0) {$cnt=0; }		
 $ups=$row_rr2['packtype'];	
 if($cnt>0)
 {

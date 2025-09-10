@@ -213,8 +213,18 @@ class DB_Functions {
 	}
 	else
 	{
-		$stmt = $this->conn_ps->prepare("SELECT  slnew_id, slnew_date, slnew_logid, slnew_fromflg, slnew_toflg, slnew_tflg  FROM tbl_slocnew WHERE plantcode='$plantcode' and slnew_logid=? and slnew_fromflg!=1 ORDER BY slnew_id DESC");
-		$stmt->bind_param("s", $scode);
+		if($trid>0)
+		{
+			$stmt = $this->conn_ps->prepare("SELECT  slnew_id, slnew_date, slnew_logid, slnew_fromflg, slnew_toflg, slnew_tflg  FROM tbl_slocnew WHERE plantcode='$plantcode' and slnew_id=? and slnew_fromflg!=1 ORDER BY slnew_id DESC");
+			$stmt->bind_param("i", $trid);
+		}
+		else
+		{
+			$stmt = $this->conn_ps->prepare("SELECT  slnew_id, slnew_date, slnew_logid, slnew_fromflg, slnew_toflg, slnew_tflg  FROM tbl_slocnew WHERE plantcode='$plantcode' and slnew_logid=? and slnew_fromflg!=1 ORDER BY slnew_id DESC");
+			$stmt->bind_param("s", $scode);
+		}
+		//$stmt = $this->conn_ps->prepare("SELECT  slnew_id, slnew_date, slnew_logid, slnew_fromflg, slnew_toflg, slnew_tflg  FROM tbl_slocnew WHERE plantcode='$plantcode' and slnew_logid=? and slnew_fromflg!=1 ORDER BY slnew_id DESC");
+		//$stmt->bind_param("s", $scode);
 	}
         $stmt->execute();
         $stmt->store_result();
@@ -319,7 +329,7 @@ class DB_Functions {
 							}
 							
 						}
-						$slnttnob=0; $slnttqty=0; $slnttnomp=0;  $slnttwb=0; 
+						$slnttnob=0; $slnttqty=0; $slnttnomp=0;  $slnttwb=0;   $slntbalnob=0; 
 						$stmt_slocto = $this->conn_ps->prepare("SELECT  slnt_tqty, slnt_tnob, slnt_textnomp, slnt_textwb, slnt_tnomp, slnt_twb, slnt_tbalnomp, slnt_tbalwb FROM tbl_slocnew_to WHERE slnew_id=? and slnf_id=? ");
 						$stmt_slocto->bind_param("ii", $slnew_id, $slnf_id);
 						$stmt_slocto->execute();
@@ -332,13 +342,52 @@ class DB_Functions {
 								$slnttnomp=$slnttnomp+$slnt_tnomp;
 								$slnttwb=$slnttwb+$slnt_twb;
 								$slnttqty=$slnttqty+$slnt_tqty;
+								$slntbalnob=$slntbalnob+$slnt_tbalnob;
 							}
 						}
 						$stmt_slocto->close();
 						
-						if($slnttqty!=$slnf_fqty)
+						$slnt_id2=0; $fg=0;
+						$stmt_slocto2 = $this->conn_ps->prepare("SELECT  slnt_tqty, slnt_tnob, slnt_textnomp, slnt_textwb, slnt_tnomp, slnt_twb, slnt_tbalnomp, slnt_tbalwb, slnt_tbalnob, slnt_tbalqty, slnt_id FROM tbl_slocnew_to WHERE slnew_id=? and slnf_id=? order by slnt_id desc");
+						$stmt_slocto2->bind_param("ii", $slnew_id, $slnf_id);
+						$stmt_slocto2->execute();
+						$stmt_slocto2->store_result();
+						$stmt_slocto2->bind_result($slnt_tqty2, $slnt_tnob2, $slnt_textnomp2, $slnt_textwb2, $slnt_tnomp2, $slnt_twb2, $slnt_tbalnomp2, $slnt_tbalwb2, $slnt_tbalnob2, $slnt_tbalqty2, $slnt_id2);
+						if ($stmt_slocto2->num_rows>0) {
+							$stmt_slocto2->fetch();
+						}
+						$stmt_slocto2->close();
+						if($slnt_id2>0 && $slnt_tbalqty2==0){$fg=1;}
+						$tqtflg=$tqtflg+$slnt_tbalqty2;
+						if($fg==0)//if($slnttqty!=$slnf_fqty)
 						{
-							if($slnf_fnob<=0){$slnf_fnob=0;} if($slnf_fwb<=0){$slnf_fwb=0;}if($slnf_fnomp<=0){$slnf_fnomp=0;}if($slnf_fqty<=0){$slnf_fqty=0;}							
+							if($slnf_fnob<=0){$slnf_fnob=0;} if($slnf_fwb<=0){$slnf_fwb=0;}if($slnf_fnomp<=0){$slnf_fnomp=0;}if($slnf_fqty<=0){$slnf_fqty=0;}			
+							if($tmode=="place")
+							{
+								if($slnttqty>0)
+								{								
+									$extnnob=$slnt_tbalnob2;
+									//if($extnnob!=$slntbalnob && $slntbalnob>0) {$extnnob=$slntbalnob;}
+									$extqty=$slnf_fqty-$slnttqty;
+									$extqty=round($extqty,3);
+									if($extqty<=0){$extqty=0;}
+								}
+								else
+								{
+									$extnnob=$slnf_fnob;
+									//if($extnnob!=$slntbalnob && $slntbalnob>0) {$extnnob=$slntbalnob;}
+									$extqty=$slnf_fqty;
+									$extqty=round($extqty,3);
+									if($extqty<=0){$extqty=0;}
+								}
+							}
+							else
+							{
+								$extnnob=$slnf_fextnob;
+								$extqty=$slnf_fextqty;
+								if($extqty<=0){$extqty=0;}
+							}	
+													
 							$userSR["fromtrid"] = $slnf_id;
 							$userSR["trdate"] = $slnf_fdate;
 							$userSR["scode"] = $slnew_logid;
@@ -351,10 +400,10 @@ class DB_Functions {
 							$userSR["wh"] = $whperticulars;
 							$userSR["bin"] = $binname;
 							$userSR["subbin"] = $subbinname;
-							$userSR["extnob"] = $slnf_fnob-$slnttnob;
+							$userSR["extnob"] = $extnnob;
 							$userSR["extnomp"] = $slnf_fnomp-$slnttnomp;
 							$userSR["extwb"] = $slnf_fwb-$slnttwb;
-							$userSR["extqty"] = $slnf_fqty-$slnttqty;
+							$userSR["extqty"] = $extqty;
 							$userSR["nob"] = $slnf_fnob;
 							$userSR["nomp"] = $slnf_fnomp;
 							$userSR["wb"] = $slnf_fwb;
@@ -363,6 +412,7 @@ class DB_Functions {
 							$userSR["balnomp"] = $slnf_fbalnomp;
 							$userSR["balwb"] = $slnf_fbalwb;
 							$userSR["balqty"] = $slnf_fbalqty;
+							//$userSR["tobalnob"] = $slntbalnob;
 							$userSR["tonob"] = $slnttnob;
 							$userSR["tonomp"] = $slnttnomp;
 							$userSR["towb"] = $slnttwb;
@@ -3219,7 +3269,7 @@ public function GetTranSetupLotyrcodelist() {
 									}
 									else
 									{*/
-									if($x==0)
+									if($x==0 && $lotldg_balqty>0)
 									{
 										$userSR=array();  $ups=''; $nomp=0; $wb=0; $wtinmp=0;
 										if($lotldg_balbags<=0){$lotldg_balbags=0;} if($wb<=0){$wb=0;}if($nomp<=0){$nomp=0;}if($lotldg_balqty<=0){$lotldg_balqty=0;}
@@ -3372,7 +3422,7 @@ public function GetTranSetupLotyrcodelist() {
 											}
 										}
 											$userSR=array();  $lotldg_sstage='Pack'; $wb=0; $lotldg_balbags=0;
-										if($x==0)										
+										if($x==0 && $balqty>0)										
 										{
 											if($lotldg_balbags<=0){$lotldg_balbags=0;} if($wb<=0){$wb=0;}if($balnomp<=0){$balnomp=0;}if($balqty<=0){$balqty=0;}										
 											$userSR["crop"] = $cropname;
@@ -3792,14 +3842,14 @@ public function GetTranSetupLotyrcodelist() {
 						$stmt_variety->close();
 					}
 //return "select slnf_id from tbl_slocnew_from where slnew_id=$slnew_id and slnf_crop=$cropid and slnf_variety=$varietyid and slnf_lotno='$lot_no' ";
-					$slnf_id=0;
+					$slnf_id=0; $slnffqty=0;
 					//$stmt_slocfrom = $this->conn_ps->prepare("select slnf_id from tbl_slocnew_from where slnew_id=? and slnf_crop=? and slnf_variety=? and slnf_lotno=? ");
-					$stmt_slocfrom = $this->conn_ps->prepare("select slnf_id from tbl_slocnew_from where slnew_id=? and slnf_id=?");
+					$stmt_slocfrom = $this->conn_ps->prepare("select slnf_id, slnf_fqty from tbl_slocnew_from where slnew_id=? and slnf_id=?");
 					$stmt_slocfrom->bind_param("ii", $slnew_id, $fromtrid);
 					//$stmt_slocfrom->bind_param("iiis", $slnew_id, $cropid, $varietyid, $lot_no);
 					$stmt_slocfrom->execute();
 					$stmt_slocfrom->store_result();
-					$stmt_slocfrom->bind_result($slnf_id);
+					$stmt_slocfrom->bind_result($slnf_id, $slnffqty);
 					$stmt_slocfrom->fetch();
 					$stmt_slocfrom->close();
 					if($slnf_id>0)
@@ -3910,7 +3960,10 @@ public function GetTranSetupLotyrcodelist() {
 														$typ='SLOCSUO'; $typ2='SLOCSUC';
 														
 														$balq=$lotldg_balqty-$slnt_tqty;
-														$balb=$lotldg_balbags-$slnt_tnob;
+														//$balb=$lotldg_balbags-$slnt_tnob;
+														//if($balq>0 && $balb<=0){$balb=1;}
+														$balb=$slnt_tbalnob;
+														if($balb!=$slnf_fbalnob && $slnf_fbalnob>0){$balb=$slnf_fbalnob;}
 														if($balq>0 && $balb<=0){$balb=1;}
 														$stmt_arrsub = $this->conn_ps->prepare("Insert into tbl_lot_ldg (lotldg_lotno, lotldg_trtype, lotldg_trid, lotldg_trdate, lotldg_whid, lotldg_binid, lotldg_subbinid, lotldg_opbags, lotldg_opqty, lotldg_trbags, lotldg_trqty, lotldg_balbags, lotldg_balqty, yearcode, lotldg_variety, lotldg_crop, lotldg_sstage, lotldg_sstatus, lotldg_moisture, lotldg_gemp, lotldg_vchk, lotldg_got1, lotldg_qc, lotldg_qctestdate, orlot, lotldg_gs, lotldg_resverstatus, lotldg_revcomment, lotldg_gottestdate, lotldg_got, lotldg_srtyp, lotldg_srflg, lotldg_genpurity, lotldg_mergerflg, lotldg_unlistflg, leduration, leupto, plantcode) Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
 														$stmt_arrsub->bind_param("ssisiiiisisisssssssssssssisssssisiisss", $lotno, $typ, $slnew_id, $dt, $slnf_fwh, $slnf_fbin, $slnf_fsbin, $lotldg_balbags, $lotldg_balqty, $slnt_tnob, $slnt_tqty, $balb, $balq, $yearcode, $lotldg_variety, $lotldg_crop, $lotldg_sstage, $lotldg_sstatus, $lotldg_moisture, $lotldg_gemp, $lotldg_vchk, $lotldg_got1, $lotldg_qc, $lotldg_qctestdate, $orlot, $lotldg_gs, $lotldg_resverstatus, $lotldg_revcomment, $lotldg_gottestdate, $lotldg_got, $lotldg_srtyp, $lotldg_srflg, $lotldg_genpurity, $lotldg_mergerflg, $lotldg_unlistflg, $leduration, $leupto, $plantcode);
@@ -3918,7 +3971,7 @@ public function GetTranSetupLotyrcodelist() {
 														if($result_arrsub){$flag=1;}
 														//$arrsub_id=$stmt_arrsub->insert_id;
 														$stmt_arrsub->close();
-														
+														$lotldg_balbags=0; $lotldg_balqty=0;
 														$stmt_ldgraw2new = $this->conn_ps->prepare("SELECT max(lotldg_id) FROM tbl_lot_ldg WHERE lotldg_subbinid = ? and lotldg_lotno = ? and plantcode=? ");
 														$stmt_ldgraw2new->bind_param("iss", $slnt_tsbin, $lotno, $plantcode);
 														$result2new=$stmt_ldgraw2new->execute();
@@ -3926,6 +3979,7 @@ public function GetTranSetupLotyrcodelist() {
 														$stmt_ldgraw2new->bind_result($lotldgidnew);
 														//looping through all the records
 														$stmt_ldgraw2new->fetch();
+														$stmt_ldgraw2new->close();
 															
 														$stmt_ldgraw3new = $this->conn_ps->prepare("SELECT lotldg_balbags, lotldg_balqty FROM tbl_lot_ldg WHERE lotldg_id = ?  and plantcode=?");
 														$stmt_ldgraw3new->bind_param("is", $lotldgidnew, $plantcode);
@@ -3933,8 +3987,9 @@ public function GetTranSetupLotyrcodelist() {
 														$stmt_ldgraw3new->store_result();
 														$stmt_ldgraw3new->bind_result($lotldg_balbags, $lotldg_balqty);
 														$stmt_ldgraw3new->fetch();
+														$stmt_ldgraw3new->close();
 																 
-														$balbags=$lotldg_balbags+$slnt_tnob;
+														$balbags=$slnt_tnob;
 														$balqty=$lotldg_balqty+$slnt_tqty;
 														$zero=0;
 														$stmt_arrsub11 = $this->conn_ps->prepare("Insert into tbl_lot_ldg (lotldg_lotno, lotldg_trtype, lotldg_trid, lotldg_trdate, lotldg_whid, lotldg_binid, lotldg_subbinid, lotldg_opbags, lotldg_opqty, lotldg_trbags, lotldg_trqty, lotldg_balbags, lotldg_balqty, yearcode, lotldg_variety, lotldg_crop, lotldg_sstage, lotldg_sstatus, lotldg_moisture, lotldg_gemp, lotldg_vchk, lotldg_got1, lotldg_qc, lotldg_qctestdate, orlot, lotldg_gs, lotldg_resverstatus, lotldg_revcomment, lotldg_gottestdate, lotldg_got, lotldg_srtyp, lotldg_srflg, lotldg_genpurity, lotldg_mergerflg, lotldg_unlistflg, leduration, leupto, plantcode) Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
@@ -3992,7 +4047,7 @@ public function GetTranSetupLotyrcodelist() {
 														$typ='SLOCSUO'; $typ2='SLOCSUC';
 														
 														$balq=$lotldg_balqty-$slnt_tqty;
-														$balb=$lotldg_balbags-$slnt_tnob;
+														$balb=$slnt_tbalnob;//$balb=$lotldg_balbags-$slnt_tnob;
 														$balmp=$balnomp-$slnt_tnomp;
 														
 														$stmt_arrsub = $this->conn_ps->prepare("Insert into tbl_lot_ldg_pack (lotno, trtype, lotldg_id, lotldg_trdate, whid, binid, subbinid, opnop, optqty, nop, tqty, balnop, balnomp, yearcode, lotldg_variety, lotldg_crop, lotldg_sstage, lotldg_sstatus, lotldg_moisture, lotldg_gemp, lotldg_vchk, lotldg_got1, lotldg_qc, lotldg_qctestdate, orlot, lotldg_resverstatus, lotldg_revcomment, lotldg_gottestdate, lotldg_got, lotldg_srtyp, lotldg_srflg, plantcode, opnomp, nomp, balqty, packtype, packlabels, wtinmp) Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
@@ -4023,8 +4078,8 @@ public function GetTranSetupLotyrcodelist() {
 														$stmt_ldgraw3new->close();
 														}
 																 
-														$bbags=$balnop+$slnt_tnob;
-														$bnomp=$balnomp+$slnt_tnomp;
+														$bbags=$slnt_tnob;
+														$bnomp=$slnt_tbalnob+$slnt_tnomp;
 														$bqty=$balqty+$slnt_tqty;
 														if($bbags<=0){$bbags=0;}if($bnomp<=0){$bnomp=0;}if($bqty<=0){$bqty=0;}
 														$zero=0;
@@ -4083,8 +4138,37 @@ public function GetTranSetupLotyrcodelist() {
 		
 		if($flg>0)
 		{
-			$stmt60 = $this->conn_ps->prepare("Update tbl_slocnew SET slnew_toflg=2 where slnew_id = ? ");
-			$stmt60->bind_param("i", $slnew_id);
+			//return "SELECT slnt_tbalqty FROM tbl_slocnew_to WHERE slnew_id=$slnew_id group by slnt_lotno order by slnt_id desc";		 
+			$val=2; $tqtflg=0;  $totrows=0;
+			$stmt_slocf2 = $this->conn_ps->prepare("SELECT  slnf_id FROM tbl_slocnew_from WHERE slnew_id=? ");
+			$stmt_slocf2->bind_param("i", $slnew_id);
+			$stmt_slocf2->execute();
+			$stmt_slocf2->store_result();
+			$totrows=$stmt_slocf2->num_rows;
+			$stmt_slocf2->bind_result($slnf_id);
+			if($totrows>0)
+			{
+				while($stmt_slocf2->fetch())
+				{
+					$stmt_slocto2 = $this->conn_ps->prepare("SELECT  slnt_tbalqty FROM tbl_slocnew_to WHERE slnew_id=? and slnf_id=?  order by slnt_id desc");
+					$stmt_slocto2->bind_param("ii", $slnew_id, $slnf_id);
+					$stmt_slocto2->execute();
+					$stmt_slocto2->store_result();
+					$stmt_slocto2->bind_result($slnt_tbalqty);
+					if ($stmt_slocto2->num_rows>0) {
+						$stmt_slocto2->fetch();
+						if($slnt_tbalqty==0) {$tqtflg=$tqtflg+1;}
+					}
+					$stmt_slocto2->close();
+				}
+			}
+			$stmt_slocf2->close();
+			
+			if($tqtflg==$totrows) {$val=1;} //return $tqtflg." == ".$totrows." = ".$val;
+//return $slnt_tbalqty." = ".$val;
+			
+			$stmt60 = $this->conn_ps->prepare("Update tbl_slocnew SET slnew_toflg=? where slnew_id = ? ");
+			$stmt60->bind_param("ii", $val, $slnew_id);
 			$result60 = $stmt60->execute();
 			if($result60){$flg=1;}
 			$stmt60->close();
@@ -4899,7 +4983,43 @@ public function GetTranSetupLotyrcodelist() {
 	public function GetTodataFinalSubmit($trid, $scode) {
 	//return $jdata;
 		$plantcode = $this->getPlantcode($scode); $zero=0; $one=1; $two=2; $flag=0;  $dt=date("Y-m-d");
-        $stmt = $this->conn_ps->prepare("SELECT  slnew_id, slnew_date, slnew_logid, slnew_fromflg, slnew_toflg, slnew_tflg  FROM tbl_slocnew WHERE slnew_tflg!=1 AND slnew_toflg!=1 and slnew_id=? AND plantcode='$plantcode' ORDER BY slnew_id DESC");
+		$tqtflg=0;
+		$stmt_slocf2 = $this->conn_ps->prepare("SELECT  slnf_id FROM tbl_slocnew_from WHERE slnew_id=? ");
+		$stmt_slocf2->bind_param("i", $trid);
+		$stmt_slocf2->execute();
+		$stmt_slocf2->store_result();
+		$totrows=$stmt_slocf2->num_rows;
+		$stmt_slocf2->bind_result($slnf_id);
+		if($totrows>0)
+		{
+			while($stmt_slocf2->fetch())
+			{
+				$stmt_slocto2 = $this->conn_ps->prepare("SELECT  slnt_tbalqty FROM tbl_slocnew_to WHERE slnew_id=? and slnf_id=? order by slnt_id desc");
+				$stmt_slocto2->bind_param("ii", $trid, $slnf_id);
+				$stmt_slocto2->execute();
+				$stmt_slocto2->store_result();
+				$stmt_slocto2->bind_result($slnt_tbalqty);
+				if ($stmt_slocto2->num_rows>0) {
+					$stmt_slocto2->fetch();
+						if($slnt_tbalqty>0) {$tqtflg=$tqtflg+1;}
+				}
+				$stmt_slocto2->close();
+			}
+		}
+		$stmt_slocf2->close();
+		//return $tqtflg;
+		if($tqtflg==0) {
+			$val=1;
+			
+			$stmt60 = $this->conn_ps->prepare("Update tbl_slocnew SET slnew_toflg=? where slnew_id = ? ");
+			$stmt60->bind_param("ii", $val, $trid);
+			$result60 = $stmt60->execute();
+			if($result60){$flg=1;}
+			$stmt60->close();
+		} //return $tqtflg." = ".$val;
+		
+		
+        $stmt = $this->conn_ps->prepare("SELECT  slnew_id, slnew_date, slnew_logid, slnew_fromflg, slnew_toflg, slnew_tflg  FROM tbl_slocnew WHERE slnew_tflg!=1 AND slnew_toflg=1 and slnew_id=? AND plantcode='$plantcode' ORDER BY slnew_id DESC");
        $stmt->bind_param("s", $trid);
         $stmt->execute();
         $stmt->store_result();

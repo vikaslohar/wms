@@ -36,6 +36,7 @@
 		//exit; 
 		$pid = $_REQUEST['txtitem'];
 		$subflg = $_REQUEST['subflg'];
+		$dt=date("Y-m-d");	
 		
 		$sql_arr=mysqli_query($link,"select * from tbl_rpspackaging where plantcode='$plantcode' and packaging_id='".$pid."'") or die(mysqli_error($link));
 		while($row_arr=mysqli_fetch_array($sql_arr))
@@ -236,14 +237,15 @@
 							$alqtys=$row_issuetbl['lotldg_alqtys'];
 							$alnomps=$row_issuetbl['lotldg_alnomps'];
 							$spremflg=$row_issuetbl['lotldg_spremflg'];
-								
+							
+							
 							$barcodes2=$barcodes;
 							if($barcodes2!="")
 								$barcodes2=$barcodes2.",".$a;
 							else
 								$barcodes2=$a;
 											
- 							$sql_ins_main="insert into tbl_lot_ldg_pack (yearcode, trtype, lotldg_id, lotldg_trdate, lotno, lotldg_crop, lotldg_variety, whid, binid, subbinid, opnop, opnomp, optqty, nop, nomp, tqty, balnop, balnomp, balqty, lotldg_sstage, lotldg_sstatus, lotldg_moisture, lotldg_gemp, lotldg_vchk, lotldg_got1, lotldg_qc, lotldg_got, lotldg_qctestdate, lotldg_gottestdate, orlot, lotldg_srtyp, lotldg_srflg, lotldg_resverstatus, lotldg_revcomment, lotldg_genpurity, trstage, packtype, packlabels, barcodes, wtinmp, lotldg_dop, lotldg_valperiod, lotldg_valupto, lotldg_rvflg, lotldg_alflg, lotldg_dispflg, lotldg_altrids, lotldg_alqtys, lotldg_alnomps, lotldg_spremflg, plantcode) values('$yearcode','PACKAGINGSLIP', '$pid', '$arrival_date', '$lotno', '$crop', '$variety', '$whid', '$binid', '$subbinid', '$opnop', '$opnomp', '$optqty', '$zxcv', '$packnomp', '$ptp', '$zxcv', '$packnomp', '$ptp', '$sstage', '$sstatus', '$moist', '$gemp', '$vchk', '$got1', '$qc', '$gotstatus', '$qctestdate', '$gottestdate', '$orlot', '$srtyp', '$srflg', '$resverstatus', '$revcomment', '$geneticpurity', '$sstage', '$packtype', '$packlabels', '$barcodes2', '$wtinmp', '$dop1', '$valperiod', '$valupto', '$rvflg', '$alflg', '$dispflg', '$altrids', '$alqtys', '$alnomps', '$spremflg', '$plantcode')";
+ 							$sql_ins_main="insert into tbl_lot_ldg_pack (yearcode, trtype, lotldg_id, lotldg_trdate, lotno, lotldg_crop, lotldg_variety, whid, binid, subbinid, opnop, opnomp, optqty, nop, nomp, tqty, balnop, balnomp, balqty, lotldg_sstage, lotldg_sstatus, lotldg_moisture, lotldg_gemp, lotldg_vchk, lotldg_got1, lotldg_qc, lotldg_got, lotldg_qctestdate, lotldg_gottestdate, orlot, lotldg_srtyp, lotldg_srflg, lotldg_resverstatus, lotldg_revcomment, lotldg_genpurity, trstage, packtype, packlabels, barcodes, wtinmp, lotldg_dop, lotldg_valperiod, lotldg_valupto, lotldg_rvflg, lotldg_alflg, lotldg_dispflg, lotldg_altrids, lotldg_alqtys, lotldg_alnomps, lotldg_spremflg, plantcode) values('$yearcode','PACKAGINGSLIP', '$pid', '$dt', '$lotno', '$crop', '$variety', '$whid', '$binid', '$subbinid', '$opnop', '$opnomp', '$optqty', '$zxcv', '$packnomp', '$ptp', '$zxcv', '$packnomp', '$ptp', '$sstage', '$sstatus', '$moist', '$gemp', '$vchk', '$got1', '$qc', '$gotstatus', '$qctestdate', '$gottestdate', '$orlot', '$srtyp', '$srflg', '$resverstatus', '$revcomment', '$geneticpurity', '$sstage', '$packtype', '$packlabels', '$barcodes2', '$wtinmp', '$dop1', '$valperiod', '$valupto', '$rvflg', '$alflg', '$dispflg', '$altrids', '$alqtys', '$alnomps', '$spremflg', '$plantcode')";
 							
 						//$sql_ins_main="insert into tbl_lot_ldg_pack (yearcode, trtype, lotldg_id, lotldg_trdate, lotno, lotldg_crop, lotldg_variety, whid, binid, subbinid, opnop, opnomp, optqty, nop, nomp, tqty, balnop, balnomp, balqty, lotldg_sstage, lotldg_sstatus, lotldg_moisture, lotldg_gemp, lotldg_vchk, lotldg_got1, lotldg_qc, lotldg_got, lotldg_qctestdate, lotldg_gottestdate, orlot, lotldg_srtyp, lotldg_srflg, lotldg_resverstatus, lotldg_revcomment, lotldg_genpurity, trstage, packtype, packlabels, barcodes, wtinmp, lotldg_dop, lotldg_valperiod, lotldg_valupto) values('$yearcode','PACKSMC', '$pid', '$arrival_date', '$lotno', '$crop', '$variety', '$whid', '$binid', '$subbinid', '$opnop', '$opnomp', '$optqty', '$opnop', '$opnomp', '$optqty', '$balnop', '$balnomp', '$balqty', '$sstage', '$sstatus', '$moist', '$gemp', '$vchk', '$got1', '$qc', '$gotstatus', '$qctestdate', '$gottestdate', '$orlot', '$srtyp', '$srflg', '$resverstatus', '$revcomment', '$geneticpurity', '$sstage', '$packtype', '$packlabels', '$barcodes', '$wtinmp', '$dop1', '$valperiod', '$valupto')";
 						//exit;
@@ -393,7 +395,7 @@
 											$a_mpmainbarc=mysqli_num_rows($sql_mpmainbarc);
 											if($a_mpmainbarc == 0)
 											{
- 												$sql_ins_main24="insert into tbl_mpmain (mpmain_date, mpmain_trid, mpmain_trtype, mpmain_crop, mpmain_variety, mpmain_lotno, mpmain_upssize, mpmain_barcode, mpmain_wtmp, mpmain_mptnop, mpmain_opnop, mpmain_opqty, mpmain_nop, mpmain_qty, mpmain_balnop, mpmain_balqty, mpmain_wh, mpmain_bin, mpmain_subbin, mpmain_yearcode, mpmain_logid, mpmain_lotnop, mpmain_mptype, plantcode) values('$arrival_date', '$pid', 'PACKSMC', '$crop', '$variety', '$lotno2', '$packtype', '$bval1', '$wtinmp', '$nopinmp', '0', '0', '$balnop2', '$balqty2', '$balnop2', '$balqty2', '$whid', '$binid', '$subbinid', '$yearcode', '$logid', '$ltnop', '$mpptyp', '$plantcode')";
+ 												$sql_ins_main24="insert into tbl_mpmain (mpmain_date, mpmain_trid, mpmain_trtype, mpmain_crop, mpmain_variety, mpmain_lotno, mpmain_upssize, mpmain_barcode, mpmain_wtmp, mpmain_mptnop, mpmain_opnop, mpmain_opqty, mpmain_nop, mpmain_qty, mpmain_balnop, mpmain_balqty, mpmain_wh, mpmain_bin, mpmain_subbin, mpmain_yearcode, mpmain_logid, mpmain_lotnop, mpmain_mptype, plantcode) values('$dt', '$pid', 'PACKSMC', '$crop', '$variety', '$lotno2', '$packtype', '$bval1', '$wtinmp', '$nopinmp', '0', '0', '$balnop2', '$balqty2', '$balnop2', '$balqty2', '$whid', '$binid', '$subbinid', '$yearcode', '$logid', '$ltnop', '$mpptyp', '$plantcode')";
 												mysqli_query($link,$sql_ins_main24) or die(mysqli_error($link));
 											}
 										}
@@ -448,7 +450,7 @@
 			$ncode1=1;
 		}
 		
- 		 $sql_main="update tbl_rpspackaging set packaging_tflg=1, packaging_tcode=$ncode1  where packaging_id ='$pid'";
+ 		 $sql_main="update tbl_rpspackaging set packaging_tflg=1, packaging_tcode=$ncode1, packaging_date='$dt'  where packaging_id ='$pid'";
 		 $a123456=mysqli_query($link,$sql_main) or die(mysqli_error($link));
 		//exit;
 		echo "<script>window.location='home_packagingrps.php'</script>";	

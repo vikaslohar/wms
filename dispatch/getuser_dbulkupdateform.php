@@ -77,7 +77,7 @@ if(isset($_POST['subsubtrid'])) { $subsubtrid=$_POST['subsubtrid']; }
 		
 if($z1 == 0)
 {
-  $sql_main="insert into tbl_dbulk(dbulk_tcode, dbulk_date, dbulk_partytype, dbulk_state, dbulk_location, dbulk_party, dbulk_yearcode, dbulk_logid, tmode, trans_name, trans_lorryrepno, trans_vehno, trans_paymode, courier_name, docket_no, pname_byhand, dbulk_remarks, plantcode) values ('$txtid', '$tdate1', '$txtpp', '$txtstatesl', '$locationname', '$txtstfp', '$yearid_id', '$logid', '$txt11', '$txttname', '$txtlrn', '$txtvn', '$txt13', '$txtcname', '$txtdc', '$txtpname', '$remarks', '$plantcode')";
+  $sql_main="insert into tbl_dbulk(dbulk_tcode, dbulk_date, dbulk_partytype, dbulk_state, dbulk_location, dbulk_party, dbulk_yearcode, dbulk_logid, tmode, trans_name, trans_lorryrepno, trans_vehno, trans_paymode, courier_name, docket_no, pname_byhand, dbulk_remarks, plantcode, dbulk_tflg) values ('$txtid', '$tdate1', '$txtpp', '$txtstatesl', '$locationname', '$txtstfp', '$yearid_id', '$logid', '$txt11', '$txttname', '$txtlrn', '$txtvn', '$txt13', '$txtcname', '$txtdc', '$txtpname', '$remarks', '$plantcode',2)";
 if(mysqli_query($link,$sql_main) or die(mysqli_error($link)))
 {
 	$mainid=mysqli_insert_id($link);

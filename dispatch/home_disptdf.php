@@ -438,7 +438,7 @@ if($srno%2!=0)
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $nnob;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $nqty;?></td>
 	<!--<td align="center" valign="middle" class="smalltbltext"><?php echo $sloc;?></td>-->
-    <td align="center" valign="middle" class="smalltbltext"><a href="edit_dispatch_tdf.php?pid=<?php echo $arrival_id;?>" ><img border="0" src="../images/edit.png"  style="display:inline;cursor:pointer;"  /></a></a></td>
+    <td align="center" valign="middle" class="smalltbltext"><a href="edit_dispatch_tdf.php?pid=<?php echo $arrival_id;?>" ><img border="0" src="../images/edit.png"  style="display:inline;cursor:pointer;"  /></a></td>
 </tr>
 <?php
 }
@@ -457,7 +457,7 @@ else
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $nnob;?></td>
 	<td align="center" valign="middle" class="smalltbltext"><?php echo $nqty;?></td>
 	<!--<td align="center" valign="middle" class="smalltbltext"><?php echo $sloc;?></td>-->
-    <td align="center" valign="middle" class="smalltbltext"><a href="edit_dispatch_tdf.php?pid=<?php echo $arrival_id;?>" ><img border="0" src="../images/edit.png"  style="display:inline;cursor:pointer;"  /></a></a></td>
+    <td align="center" valign="middle" class="smalltbltext"><a href="edit_dispatch_tdf.php?pid=<?php echo $arrival_id;?>" ><img border="0" src="../images/edit.png"  style="display:inline;cursor:pointer;"  /></a></td>
 </tr>
 <?php
 }

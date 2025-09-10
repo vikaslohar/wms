@@ -69,7 +69,8 @@
 	$txtorganiser = $_REQUEST['txtorganiser'];
 	$txtcrop = $_REQUEST['txtcrop'];
 	$txtvariety = $_REQUEST['txtvariety'];
-	
+	$plantcode = $_REQUEST['txtplant'];
+
 	$selectedYear = $_REQUEST['financial_year'] ?? '';
     $selectedMonth = $_REQUEST['month'] ?? '';
 
@@ -98,11 +99,13 @@
         }
     }
 	
-	  	
-	$dh="Financial_Year_wise_Monthly_Arrival_Report-".$plantcode];
+	$plantname='';
+	if($plantcode=="D"){ $plantname="Deorjhal Plant";} else if($plantcode=="B"){$plantname="Boriya Plant";} else {$plantname="";}
+	
+	$dh="Financial_Year_wise_Monthly_Arrival_Report_".$plantname;
 	$datahead = array($dh);
 	//$datahead1 = array("Arrival Report");
-	$datahead1=array("Financial Year wise Monthly Arrival Report-".$plantcode);
+	$datahead1=array("Financial Year wise Monthly Arrival Report-$plantname");
 	$data1 = array();
 	
 	function cleanData(&$str)
@@ -118,11 +121,13 @@
 		header("Content-Type: application/vnd.ms-excel"); 
  	 $datatitle2 = array("Financial Year",htmlspecialchars($selectedYear),"Month",$selectedMonth);
 	 $datatitle3 = array("#","Crop Type","Crop","Variety","Type","Size");
+	  	
 if ($selectedMonth!="ALL" && $startDate && $endDate){
 array_push($datatitle3,$selectedMonth);
 }elseif ($selectedMonth=="ALL" && count($monthList)){ 
 foreach ($monthList as $item){
-array_push($datatitle3,$item['month']);
+$m=$item['month'];
+array_push($datatitle3,$m);
 }}
 
 $d=1;
@@ -202,6 +207,7 @@ $d++;
 }
 }
 }
+
 elseif ($selectedMonth=="ALL" && count($monthList)>0)
 {
 	$startDate2=$monthList[0]['start_date'];
@@ -255,8 +261,9 @@ elseif ($selectedMonth=="ALL" && count($monthList)>0)
 	}
 
 	$vert=explode(",",$verty);
+	 $data2=array();
 	foreach ($vert as $vertyname){ 
-			
+	 $temp=array();		
 	$sq_var2=mysqli_query($link,"select vt, cropname from tblvariety where popularname='".$vertyname."' order by popularname Asc") or die(mysqli_error($link));
 	$row_var2=mysqli_fetch_array($sq_var2);
 	$variety=$vertyname;	
@@ -269,7 +276,7 @@ elseif ($selectedMonth=="ALL" && count($monthList)>0)
 	$croptype=$row_crop2['croptype'];
 	
 	$data1[$d]=array($d,$croptype,$crop,$variety,$vtype,$crpsize); 
-	$d++;
+	
 	
 	foreach ($monthList as $item){
 		
@@ -313,28 +320,44 @@ elseif ($selectedMonth=="ALL" && count($monthList)>0)
 			//echo $sql;
 			$sql_tbl_sub=mysqli_query($link,$sql) or die(mysqli_error($link));
 			$subtbltot=mysqli_num_rows($sql_tbl_sub);
-			while($row_tbl_sub=mysqli_fetch_array($sql_tbl_sub))
+			$ac = 0;  // default
+			while($row_tbl_sub = mysqli_fetch_array($sql_tbl_sub))
 			{
-				$aq=explode(".",$row_tbl_sub[0]);
-				if($aq[1]==000){$ac=$aq[0];}else{$ac=$row_tbl_sub[0];}
-				
+				$aq = explode(".", $row_tbl_sub[0]);
+				if ($aq[0] !== null) {
+					if (isset($aq[1]) && $aq[1] == 000) {
+						$ac = $aq[0];
+					} else {
+						$ac = $row_tbl_sub[0];
+					}
+				}
 			}
 		}
-		array_push($data1[$d],$ac);
+		$temp[] = $ac;
+
+	}//print_r($temp);
+	//array_push($data1[$d],$temp);
+	$data2[$d]=$temp;
+//print_r($data2);
+	$d++;
+
 	}
-	}
-	}	
+		
 }
 //}
+//print_r($data2);
+//exit;
 echo implode("\t", $datahead1);
 echo "\n";
 echo implode("\t", $datatitle2);
 echo "\n";
 echo implode("\t", $datatitle3);
 echo "\n";
-foreach($data1 as $row1)
+//foreach($data1 as $row1)
+for($i=1; $i<$d; $i++)
 { 
-	#array_walk($row1, 'cleanData'); 
-	echo implode("\t", array_values($row1))."\n"; 
+	echo implode("\t", array_values($data1[$i] )); 
+	echo "\t";
+	echo implode("\t", array_values($data2[$i]));
+	echo "\n";
 }
-#echo implode("\t", $datatitle3) ;
