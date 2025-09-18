@@ -484,17 +484,17 @@ class DB_Functions {
 					
 					if($setuptype=="Add")
 					{
-						$stmt60 = $this->conn_ps->prepare("Insert into tblarrival_sub_unld (arrival_id, lotimpid, lotcrop, lotvariety, qty, act1, tarewt, lotno, orlot, old, pdndate, pdnno, spcodef, spcodem, organiser, farmer, ploc, lotstate, pper, plotno, sstage, prodtype, plantcode) Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
+						$stmt60 = $this->conn_ps->prepare("Insert into tblarrival_sub_unld (arrival_id, lotimpid, lotcrop, lotvariety, qty, qty1, tarewt, lotno, orlot, old, pdndate, pdnno, spcodef, spcodem, organiser, farmer, ploc, lotstate, pper, plotno, sstage, prodtype, plantcode) Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
 						$stmt60->bind_param("iisssssssssssssssssssss", $arrival_id, $lotimpid, $lotcrop, $popularname, $qtydc, $nobdc, $tarewt, $lotn, $orlot, $lotno, $pdndate, $pdnno, $lotspcodef, $lotspcodem, $lotorganiser, $lotfarmer, $lotploc, $lotstate, $lotpper, $lotplotno, $stage, $prodtype, $plantcode);
 					}
 					else if($setuptype=="Edit")
 					{
-						$stmt60 = $this->conn_ps->prepare("UPDATE tblarrival_sub_unld SET qty=?, act1=? where arrsub_id=?");
+						$stmt60 = $this->conn_ps->prepare("UPDATE tblarrival_sub_unld SET qty=?, qty1=? where arrsub_id=?");
 						$stmt60->bind_param("sii", $qtydc, $nobdc, $arrsub_id);
 					}
 					else
 					{
-						$stmt60 = $this->conn_ps->prepare("Insert into tblarrival_sub_unld (arrival_id, lotimpid, lotcrop, lotvariety, qty, act1, tarewt, lotno, orlot, old, pdndate, pdnno, spcodef, spcodem, organiser, farmer, ploc, lotstate, pper, plotno, sstage, prodtype, plantcode) Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
+						$stmt60 = $this->conn_ps->prepare("Insert into tblarrival_sub_unld (arrival_id, lotimpid, lotcrop, lotvariety, qty, qty1, tarewt, lotno, orlot, old, pdndate, pdnno, spcodef, spcodem, organiser, farmer, ploc, lotstate, pper, plotno, sstage, prodtype, plantcode) Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
 						$stmt60->bind_param("iisssssssssssssssssssss", $arrival_id, $lotimpid, $lotcrop, $popularname, $qtydc, $nobdc, $tarewt, $lotn, $orlot, $lotno, $pdndate, $pdnno, $lotspcodef, $lotspcodem, $lotorganiser, $lotfarmer, $lotploc, $lotstate, $lotpper, $lotplotno, $stage, $prodtype, $plantcode);
 					}
 					$result60 = $stmt60->execute();
@@ -542,7 +542,7 @@ class DB_Functions {
 			$stmt->close();
         
 			$lotcrop=''; $lotvariety=''; $lotno=''; $orlot=''; $qty=0; $act1=0; $tarewt=0; $old='';   $user10=array();
-			$stmt_lotimp = $this->conn_ps->prepare("SELECT lotcrop, lotvariety, lotno, orlot, qty, act1, old, arrsub_id, spcodef, spcodem FROM tblarrival_sub_unld WHERE arrival_id = ? ");
+			$stmt_lotimp = $this->conn_ps->prepare("SELECT lotcrop, lotvariety, lotno, orlot, qty, qty1, old, arrsub_id, spcodef, spcodem FROM tblarrival_sub_unld WHERE arrival_id = ? ");
 			$stmt_lotimp->bind_param("i", $trid);
 			$result_lotimp=$stmt_lotimp->execute();
 			$stmt_lotimp->store_result();
@@ -705,7 +705,7 @@ public function GetTranSetupLotyrcodelist() {
 			$stmt->close();
         
 			$lotcrop=''; $lotvariety=''; $lotno=''; $orlot=''; $qty=0; $act1=0; $tarewt=0; $old='';   $user10=array();
-			$stmt_lotimp = $this->conn_ps->prepare("SELECT lotcrop, lotvariety, lotno, orlot, qty, act1, old, arrsub_id, spcodef, spcodem FROM tblarrival_sub_unld WHERE arrival_id = ? ");
+			$stmt_lotimp = $this->conn_ps->prepare("SELECT lotcrop, lotvariety, lotno, orlot, qty, qty1, old, arrsub_id, spcodef, spcodem FROM tblarrival_sub_unld WHERE arrival_id = ? ");
 			$stmt_lotimp->bind_param("i", $trid);
 			$result_lotimp=$stmt_lotimp->execute();
 			$stmt_lotimp->store_result();
@@ -1864,7 +1864,7 @@ public function GetTranSetupLotyrcodelist() {
 			//looping through all the records
 			$stmt_2->fetch();
 			
-			$stmt_lotimp = $this->conn_ps->prepare("SELECT lotno, orlot, tarewt, old, arrsub_id, qty, act1, lotcrop, lotvariety  FROM tblarrival_sub_unld WHERE arrival_id = ? AND old = ? ");
+			$stmt_lotimp = $this->conn_ps->prepare("SELECT lotno, orlot, tarewt, old, arrsub_id, qty, qty1, lotcrop, lotvariety  FROM tblarrival_sub_unld WHERE arrival_id = ? AND old = ? ");
 			$stmt_lotimp->bind_param("is", $trid, $lotno);
 			$result_lotimp=$stmt_lotimp->execute();
 			$stmt_lotimp->store_result();
@@ -1993,7 +1993,7 @@ public function GetTranSetupLotyrcodelist() {
 					$diff=$qty-$grosswt; 
 					$diff1=$act1-$totnob;
 					
-					$stmtsub = $this->conn_ps->prepare("Update tblarrival_sub_unld SET moisture=?, gemp=?, vchk=?, got=?, qc=?, remarks=?, got1=?, sstatus=?, qcstatus=?, sample=?, harvestdate=?, gi=?, leduration=?, leupto=?, act=?, diff=?, qty1=?, diff1=? where arrival_id = ? and arrsub_id = ? ");
+					$stmtsub = $this->conn_ps->prepare("Update tblarrival_sub_unld SET moisture=?, gemp=?, vchk=?, got=?, qc=?, remarks=?, got1=?, sstatus=?, qcstatus=?, sample=?, harvestdate=?, gi=?, leduration=?, leupto=?, act=?, diff=?, act1=?, diff1=? where arrival_id = ? and arrsub_id = ? ");
 					$stmtsub->bind_param("sisssssssisissiissii", $moisture, $gemp, $purity, $gottype, $qcstatus, $remark, $got1, $seedstatus, $qcstatus, $val, $harvestdate, $geoindex, $leduration, $ledate, $grosswt, $diff, $totnob, $diff1, $arrival_id, $arrsub_id);
 					$resultsub = $stmtsub->execute();
 					if($resultsub){$flg=3;//"Update tblarrival_sub_unld SET moisture=$moisture, gemp=$gemp, vchk=$purity, got=$gottype, qc=$qcstatus, remarks=$remark, got1=$got1, sstatus=$seedstatus, qcstatus=$qcstatus, sample=$val, harvestdate=$harvestdate, gi=$geoindex, leduration=$leduration, leupto=$ledate, act=$grosswt, diff=$diff, qty1=$totnob, diff1=$diff1 where arrival_id = $arrival_id and arrsub_id = $arrsub_id";
@@ -2026,7 +2026,7 @@ public function GetTranSetupLotyrcodelist() {
 			//looping through all the records
 			$stmt_2->fetch();
 			
-			$stmt_lotimp = $this->conn_ps->prepare("SELECT lotno, orlot, tarewt, old, arrsub_id, qty, act1 FROM tblarrival_sub_unld WHERE arrival_id = ? AND old = ? ");
+			$stmt_lotimp = $this->conn_ps->prepare("SELECT lotno, orlot, tarewt, old, arrsub_id, qty, qty1 FROM tblarrival_sub_unld WHERE arrival_id = ? AND old = ? ");
 			$stmt_lotimp->bind_param("is", $trid, $lotno);
 			$result_lotimp=$stmt_lotimp->execute();
 			$stmt_lotimp->store_result();
@@ -2158,7 +2158,7 @@ public function GetTranSetupLotyrcodelist() {
 					$val=1; $gemp=0; $got12=explode(" ", $gotstatus); $got1=$got12[1];
 					$diff=$qty-$grosswt; 
 					$diff1=$act1-$totnob;
-					$stmtsub = $this->conn_ps->prepare("Update tblarrival_sub_unld SET moisture=?, gemp=?, vchk=?, got=?, qc=?, remarks=?, got1=?, sstatus=?, qcstatus=?, sample=?, harvestdate=?, gi=?, leduration=?, leupto=?, act=?, diff=?, qty1=?, diff1=? where arrival_id = ? and arrsub_id = ? ");
+					$stmtsub = $this->conn_ps->prepare("Update tblarrival_sub_unld SET moisture=?, gemp=?, vchk=?, got=?, qc=?, remarks=?, got1=?, sstatus=?, qcstatus=?, sample=?, harvestdate=?, gi=?, leduration=?, leupto=?, act=?, diff=?, act1=?, diff1=? where arrival_id = ? and arrsub_id = ? ");
 					$stmtsub->bind_param("sisssssssisissiissii", $moisture, $gemp, $purity, $gottype, $qcstatus, $remark, $got1, $seedstatus, $qcstatus, $val, $harvestdate, $geoindex, $leduration, $ledate, $arrival_id, $arrsub_id, $grosswt, $diff, $totnob, $diff1);
 					$resultsub = $stmtsub->execute();
 					if($resultsub){$flg=1;}  
@@ -2684,7 +2684,7 @@ public function GetTranSetupLotyrcodelist() {
 							$lotno=$pcode.$exoldlot."/00000/00R";
 							$orlot=$pcode.$exoldlot."/00000/00";
 							$qtydc=0; $nobdc=0; $tarewt=0;
-							$stmt_arrsub = $this->conn_ps->prepare("Insert into tblarrival_sub_unld (arrival_id, lotimpid, lotcrop, lotvariety, qty, act1, tarewt, lotno, orlot, old, pdndate, pdnno, spcodef, spcodem, organiser, farmer, ploc, lotstate, pper, plotno, sstage, prodtype, plantcode) Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
+							$stmt_arrsub = $this->conn_ps->prepare("Insert into tblarrival_sub_unld (arrival_id, lotimpid, lotcrop, lotvariety, qty, qty1, tarewt, lotno, orlot, old, pdndate, pdnno, spcodef, spcodem, organiser, farmer, ploc, lotstate, pper, plotno, sstage, prodtype, plantcode) Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
 							$stmt_arrsub->bind_param("iisssssssssssssssssssss", $arrival_id, $lotimpid, $lotcrop, $popularname, $qtydc, $nobdc, $tarewt, $lotno, $orlot, $exoldlot, $pdndate, $pdnno, $lotspcodef, $lotspcodem, $lotorganiser, $lotfarmer, $lotploc, $lotstate, $lotpper, $lotplotno, $stage, $prodtype, $plantcode);
 						
 							//$stmt_arrsub = $this->conn_ps->prepare("insert into tblarrival_sub_unld (arrival_id, old, lotno, orlot)  Values(?,?,?,?) ");

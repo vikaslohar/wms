@@ -36,9 +36,10 @@
 			<li><a href="../sales/sr_arrival_report.php">&nbsp;Sales&nbsp;Return&nbsp;Arrival&nbsp;Report</a></li>
 			<li><a href="../sales/report_srutilisation.php">&nbsp;SR&nbsp;Arrival&nbsp;vs&nbsp;Utilisation&nbsp;Report</a></li>
 			<li><a href="../sales/report_rawsscrop.php">&nbsp;Substandard&nbsp;Seed&nbsp;Report</a></li>
-			<!--<li><a href="../sales/preport_plant.php">&nbsp;Stock&nbsp;Transfer&nbsp;CropVariety&nbsp;Wise&nbsp;Report</a></li>
+			<li><a href="../sales/unverify_sr_report.php">&nbsp;NoN&nbsp;Verified&nbsp;Sales&nbsp;Return&nbsp;Report</a></li>
+			<li><a href="../sales/verified_sr_report.php">&nbsp;Verified&nbsp;Sales&nbsp;Return&nbsp;Report</a></li>
 					 
-						<li><a href="../sales/report_crop.php">&nbsp;Arrival&nbsp;Crop&nbsp;Variety&nbsp;Wise&nbsp;Report</a></li>-->
+			<!--			<li><a href="../sales/report_crop.php">&nbsp;Arrival&nbsp;Crop&nbsp;Variety&nbsp;Wise&nbsp;Report</a></li>-->
 					  
               </ul>
             </li>

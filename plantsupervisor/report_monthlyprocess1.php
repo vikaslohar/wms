@@ -246,12 +246,12 @@ alert("While Launching New Window...\nYour browser maybe blocking up Popup windo
 <?php
  if ($selectedMonth!="ALL" && $startDate && $endDate){
 ?>
-<th align="center" valign="middle" class="smalltblheading" colspan="4" ><?php $selectedMonth;?></th>
+<th align="center" valign="middle" class="smalltblheading" colspan="4" ><?php echo $selectedMonth;?></th>
 <?php }elseif ($selectedMonth=="ALL" && count($monthList)){ ?>
 <?php
 foreach ($monthList as $item){
 ?>
-<th align="center" valign="middle" class="smalltblheading" colspan="4" ><?= $item['month']; ?></th>
+<th align="center" valign="middle" class="smalltblheading" colspan="4" ><?php echo $item['month']; ?></th>
 <?php }} ?>
 </tr>
 <tr class="tblsubtitle" height="25">
@@ -275,6 +275,7 @@ foreach ($monthList as $item){
 </thead>
 <tbody>
 <?php
+
 if($selectedMonth!="ALL" && $startDate && $endDate)
 {
 	$srno=1; $x=0;
@@ -313,10 +314,8 @@ if($selectedMonth!="ALL" && $startDate && $endDate)
 			$tot_arr_home=mysqli_num_rows($sql_srsub);
 			while($row_srsub=mysqli_fetch_array($sql_srsub))
 			{
-				if($arrival_id!=""){$arrival_id=$arrival_id.",".$row_arr_home['proslipmain_id'];} else {$arrival_id=$row_arr_home['proslipmain_id'];}
+				if($arrival_id!=""){$arrival_id=$arrival_id.",".$row_srsub['proslipmain_id'];} else {$arrival_id=$row_srsub['proslipmain_id'];}
 			}	
-	
-			
 		
 			$sq_crop2=mysqli_query($link,"SELECT seedsize, croptype, cropname FROM tblcrop where cropid='".$row_tbl_sub1['proslipmain_crop']."' order by cropname Asc") or die(mysqli_error($link));
 			$row_crop2=mysqli_fetch_array($sq_crop2);
@@ -345,7 +344,7 @@ if($selectedMonth!="ALL" && $startDate && $endDate)
 				}
 				$totalplper=round((($totalpl/$rawqty)*100),3);
 			}
-			
+		//echo $rawqty." = ".$conqty." = ".$totalpl." = ".$totalplper."<br />";	
 if($srno%2!=0)
 {
 ?>			  
@@ -461,9 +460,9 @@ elseif ($selectedMonth=="ALL" && count($monthList)>0)
 		$tot_arr_home=mysqli_num_rows($sql_srsub);
 		while($row_srsub=mysqli_fetch_array($sql_srsub))
 		{
-			if($arrival_id!=""){$arrival_id=$arrival_id.",".$row_arr_home['proslipmain_id'];} else {$arrival_id=$row_arr_home['proslipmain_id'];}
+			if($arrival_id!=""){$arrival_id=$arrival_id.",".$row_srsub['proslipmain_id'];} else {$arrival_id=$row_srsub['proslipmain_id'];}
 		}	
-		
+//echo $arrival_id;
 		$sq_var2=mysqli_query($link,"select vt, popularname, cropname from tblvariety where varietyid='".$vertyname."' order by popularname Asc") or die(mysqli_error($link));
 		$row_var2=mysqli_fetch_array($sq_var2);
 		$variety=$row_var2['popularname'];	
@@ -480,7 +479,7 @@ elseif ($selectedMonth=="ALL" && count($monthList)>0)
 		$rawqty=0; $conqty=0; $totalpl=0; $totalplper=0;
 		if($arrival_id!='')
 		{
-			$sql="select SUM(proslipsub_oqty), SUM(proslipsub_conqty), SUM(proslipsub_tlqty), SUM(proslipsub_tlper) from tbl_proslipsub where proslipmain_id IN($arrival_id) ";
+			$sql="select SUM(proslipsub_pqty), SUM(proslipsub_conqty), SUM(proslipsub_tlqty), SUM(proslipsub_tlper) from tbl_proslipsub where proslipmain_id IN($arrival_id) ";
 			//echo $sql;
 			$sql_tbl_sub=mysqli_query($link,$sql) or die(mysqli_error($link));
 			$subtbltot=mysqli_num_rows($sql_tbl_sub);
@@ -488,7 +487,7 @@ elseif ($selectedMonth=="ALL" && count($monthList)>0)
 			{
 				$rawqty=$rawqty+$row_tbl_sub[0];
 				$conqty=$conqty+$row_tbl_sub[1];
-				$totalpl=$rawqty+$row_tbl_sub[2];
+				$totalpl=$totalpl+$row_tbl_sub[2];
 				$x++;
 			}
 			$totalplper=round((($totalpl/$rawqty)*100),3);
@@ -546,9 +545,7 @@ paging:         false,
 searching: false,
 ordering:  false,
 fixedHeader: true,
-fixedColumns:   {
-left: 6
-}
+
 } );
 } );
 </script>

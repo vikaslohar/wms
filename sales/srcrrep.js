@@ -49,6 +49,27 @@ xmlHttp.open("GET",url,true);
 xmlHttp.send(null);
 }
 
+if(tp=="loclist")
+{
+var url="getuser_location2.php";
+url=url+"?a="+str;
+url=url+"&sid="+Math.random();
+xmlHttp.onreadystatechange=stateChanged ;
+xmlHttp.open("GET",url,true);
+xmlHttp.send(null);
+}
+
+if(tp=="partylist")
+{
+var url="getuser_party1.php";
+url=url+"?a="+str;
+url=url+"&b="+d;
+url=url+"&sid="+Math.random();
+xmlHttp.onreadystatechange=stateChanged ;
+xmlHttp.open("GET",url,true);
+xmlHttp.send(null);
+}
+
 }
 
 

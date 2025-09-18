@@ -30,7 +30,8 @@
 		$variety = $_REQUEST['txtvariety'];
 		$slchk = $_REQUEST['slchk'];
 		$slchk2 = $_REQUEST['slchk2'];
-		
+	set_time_limit(0);
+	ini_set('max_execution_time', 0);	
 	$crp="ALL"; $ver="ALL";
 	$qry="select Distinct lotldg_crop, lotldg_variety from tbl_lot_ldg where plantcode='".$plantcode."' and  lotldg_sstage='Condition'";
 

@@ -431,7 +431,7 @@ elseif ($selectedMonth=="ALL" && count($monthList)>0)
 		$startDate=$item['start_date'];
 		$endDate=$item['end_date'];
 		
-		$dbulk_id=''; $x=0; $disp_id=''; $varietylist='';
+		$dbulk_id=''; $x=0; $disp_id=''; $varietylist=''; $temp=array();
 
 		$sql_bulkm=mysqli_query($link,"select dbulk_id from tbl_dbulk where dbulk_date<='$endDate' and dbulk_date>='$startDate' and dbulk_tflg=1 and plantcode='$plantcode' order by dbulk_date asc ") or die(mysqli_error($link));
 		$tot_bulkm=mysqli_num_rows($sql_bulkm);

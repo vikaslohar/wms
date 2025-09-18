@@ -533,8 +533,8 @@ while($row_tbl_sub=mysqli_fetch_array($sql_tbl_sub))
 $dq=explode(".",$row_tbl_sub['qty']);
 if($dq[1]==000){$dcq=$dq[0];}else{$dcq=$row_tbl_sub['qty'];}
 
-$dn=explode(".",$row_tbl_sub['act1']);
-if($dn[1]==000){$dcn=$dn[0];}else{$dcn=$row_tbl_sub['act1'];}
+$dn=explode(".",$row_tbl_sub['qty1']);
+if($dn[1]==000){$dcn=$dn[0];}else{$dcn=$row_tbl_sub['qty1'];}
 
 $actnob=0; $actqty=0; $differencenob=0; $differenceqty=0;
 $sql_item=mysqli_query($link,"select * from tblarrsub_sub_unld where arrival_id='".$arrival_id."' and arrsub_id='".$row_tbl_sub['arrsub_id']."' and plantcode='$plantcode' order by arrsubsub_id") or die(mysqli_error($link));

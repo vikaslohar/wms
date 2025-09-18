@@ -20,6 +20,7 @@
 				<li><a href="../csw/add_sloc_binw.php">&nbsp;SLOC&nbsp;Updation&nbsp;Sub-Bin&nbsp;wise</a></li>
 				<li><a href="../csw/home_remqty.php">&nbsp;Condition&nbsp;Seed&nbsp;Release&nbsp;</a></li>
 				<li><a href="../csw/home_slocnew.php">&nbsp;SLOC&nbsp;Updation&nbsp;New</a></li>
+				<li><a href="../csw/home_newbatch.php">&nbsp;Batch&nbsp;Creation&nbsp;</a></li>
 			 </ul>
             </li>
             <li><a href="index1.php">Reports</a>

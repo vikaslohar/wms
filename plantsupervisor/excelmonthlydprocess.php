@@ -102,10 +102,10 @@
 	$plantname='';
 	if($plantcode=="D"){ $plantname="Deorjhal Plant";} else if($plantcode=="B"){$plantname="Boriya Plant";} else {$plantname="";}
 	
-	$dh="Financial_Year_wise_Monthly_Sales_Return_Report_".$plantname;
+	$dh="Financial_Year_wise_Monthly_Processing_Report_".$plantname;
 	$datahead = array($dh);
 	//$datahead1 = array("Arrival Report");
-	$datahead1=array("Financial Year wise Monthly Sales Return Report-$plantname");
+	$datahead1=array("Financial Year wise Monthly Processing Report-$plantname");
 	$data1 = array();
 	$data2 = array();
 
@@ -122,91 +122,94 @@
 		header("Content-Type: application/vnd.ms-excel"); 
  		$datatitle2 = array("Financial Year",htmlspecialchars($selectedYear),"Month",$selectedMonth);
 		$datatitle3 = array("#","Crop Type","Crop","Variety","Type","Size");
+		$datatitle4 = array("","","","","","");
 	  	
 if ($selectedMonth!="ALL" && $startDate && $endDate){
-array_push($datatitle3,$selectedMonth);
+array_push($datatitle3,$selectedMonth,"","","");
 }elseif ($selectedMonth=="ALL" && count($monthList)){ 
 foreach ($monthList as $item){
 $m=$item['month'];
-array_push($datatitle3,$m);
+array_push($datatitle3,$m,"","","");
 }}
 
+if ($selectedMonth!="ALL" && $startDate && $endDate){
+array_push($datatitle4,"Raw Seed","Condition Seed","Remnant (RM)","Remnant (RM)%");
+}elseif ($selectedMonth=="ALL" && count($monthList)){ 
+foreach ($monthList as $item){
+array_push($datatitle4,"Raw Seed","Condition Seed","Remnant (RM)","Remnant (RM)%");
+}}
 $d=1;
 if($selectedMonth!="ALL" && $startDate && $endDate)
 {
 
-	$arrival_id='';
-	$sql_srsub=mysqli_query($link,"select Distinct salesr_id from tbl_salesrv_sub where salesrs_dovfy <= '$endDate' and salesrs_dovfy >= '$startDate' and plantcode='$plantcode' ") or die(mysqli_error($link));
-	$tot_arr_home=mysqli_num_rows($sql_srsub);
-	while($row_srsub=mysqli_fetch_array($sql_srsub))
-	{
-	
-		$sql_arr_home=mysqli_query($link,"select salesr_id from tbl_salesrv where salesr_id = '".$row_srsub['salesr_id']."'  and salesr_flg=1 and salesr_vflg=1 and plantcode='$plantcode' ") or die(mysqli_error($link));
-		$tot_arr_home=mysqli_num_rows($sql_arr_home);
-		if($tot_arr_home > 0)
-		{
-			while($row_arr_home=mysqli_fetch_array($sql_arr_home))
-			{
-				if($arrival_id!=""){$arrival_id=$arrival_id.",".$row_arr_home['salesr_id'];} else {$arrival_id=$row_arr_home['salesr_id'];}
-			}
-		}
-	}	
-	$sql1="select distinct salesrs_crop from tbl_salesrv_sub where salesr_id IN($arrival_id) and salesrs_dovfy <= '$endDate' and salesrs_dovfy >= '$startDate' and plantcode='$plantcode'  ";
+	$sql1="select distinct proslipmain_crop from tbl_proslipmain where proslipmain_date <= '$endDate' and proslipmain_date >= '$startDate' and plantcode='$plantcode'  ";
 	if($txtcrop!="ALL")
 	{
-		$sql1.=" and salesrs_crop='".$txtcrop."'";
+		$sql1.=" and proslipmain_crop='".$txtcrop."'";
 	}
 	if($txtvariety!="ALL")
 	{
-		$sql1.=" and salesrs_variety='".$txtvariety."'";
+		$sql1.=" and proslipmain_variety='".$txtvariety."'";
 	}
-		$sql1.=" order by salesrs_crop asc";
+		$sql1.=" order by proslipmain_crop asc";
 		//echo $sql;
 	$sql_tbl_sub1=mysqli_query($link,$sql1) or die(mysqli_error($link));
 	$subtbltot1=mysqli_num_rows($sql_tbl_sub1);
 	while($row_tbl_sub1=mysqli_fetch_array($sql_tbl_sub1))
 	{
 		
-		$sql2="select distinct salesrs_variety from tbl_salesrv_sub where salesr_id IN($arrival_id) and salesrs_dovfy <= '$endDate' and salesrs_dovfy >= '$startDate' and plantcode='$plantcode' ";
-		$sql2.=" and salesrs_crop='".$row_tbl_sub1['salesrs_crop']."'";
+		$sql2="select distinct proslipmain_variety from tbl_proslipmain where proslipmain_date <= '$endDate' and proslipmain_date >= '$startDate' and plantcode='$plantcode' ";
+		$sql2.=" and proslipmain_crop='".$row_tbl_sub1['proslipmain_crop']."'";
 		if($txtvariety!="ALL")
 		{
-			$sql2.=" and salesrs_variety='".$txtvariety."'";
+			$sql2.=" and proslipmain_variety='".$txtvariety."'";
 		}
-			$sql2.=" order by salesrs_variety asc";
+			$sql2.=" order by proslipmain_variety asc";
 			//echo $sql;
 		$sql_tbl_sub2=mysqli_query($link,$sql2) or die(mysqli_error($link));
 		$subtbltot2=mysqli_num_rows($sql_tbl_sub2);
 		while($row_tbl_sub2=mysqli_fetch_array($sql_tbl_sub2))
 		{
-			
 		
-			$sq_crop2=mysqli_query($link,"SELECT seedsize, croptype, cropname FROM tblcrop where cropid='".$row_tbl_sub1['salesrs_crop']."' order by cropname Asc") or die(mysqli_error($link));
+			$arrival_id='';
+			$sql_srsub=mysqli_query($link,"select Distinct proslipmain_id from tbl_proslipmain where proslipmain_date <= '$endDate' and proslipmain_date >= '$startDate' and plantcode='$plantcode' and proslipmain_crop='".$row_tbl_sub1['proslipmain_crop']."' and proslipmain_variety='".$row_tbl_sub2['proslipmain_variety']."' ") or die(mysqli_error($link));
+			$tot_arr_home=mysqli_num_rows($sql_srsub);
+			while($row_srsub=mysqli_fetch_array($sql_srsub))
+			{
+				if($arrival_id!=""){$arrival_id=$arrival_id.",".$row_srsub['proslipmain_id'];} else {$arrival_id=$row_srsub['proslipmain_id'];}
+			}	
+		
+			$sq_crop2=mysqli_query($link,"SELECT seedsize, croptype, cropname FROM tblcrop where cropid='".$row_tbl_sub1['proslipmain_crop']."' order by cropname Asc") or die(mysqli_error($link));
 			$row_crop2=mysqli_fetch_array($sq_crop2);
 			$crpsize=$row_crop2['seedsize'];
 			$croptype=$row_crop2['croptype'];
 			$crop=$row_crop2['cropname'];
 			
-			$sq_var2=mysqli_query($link,"select vt, popularname from tblvariety where varietyid='".$row_tbl_sub2['salesrs_variety']."' order by popularname Asc") or die(mysqli_error($link));
+			$sq_var2=mysqli_query($link,"select vt, popularname from tblvariety where varietyid='".$row_tbl_sub2['proslipmain_variety']."' order by popularname Asc") or die(mysqli_error($link));
 			$row_var2=mysqli_fetch_array($sq_var2);
 			$variety=$row_var2['popularname'];	
 			$vtype=$row_var2['vt'];	
 			
-			$sql="select SUM(salesrs_qtydc) from tbl_salesrv_sub where salesr_id IN($arrival_id) and salesrs_dovfy <= '$endDate' and salesrs_dovfy >= '$startDate' and plantcode='$plantcode' and salesrs_crop='".$row_tbl_sub1['salesrs_crop']."' and salesrs_variety='".$row_tbl_sub2['salesrs_variety']."' order by salesrs_crop, salesrs_variety asc";
-				//echo $sql;
-			$sql_tbl_sub=mysqli_query($link,$sql) or die(mysqli_error($link));
-			$subtbltot=mysqli_num_rows($sql_tbl_sub);
-			while($row_tbl_sub=mysqli_fetch_array($sql_tbl_sub))
+			$rawqty=0; $conqty=0; $totalpl=0; $totalplper=0;
+			if($arrival_id!='')
 			{
-				$aq=explode(".",$row_tbl_sub[0]);
-				if($aq[1]==000){$ac=$aq[0];}else{$ac=$row_tbl_sub[0];}
-				$x++;
+				$sql="select SUM(proslipsub_oqty), SUM(proslipsub_conqty), SUM(proslipsub_tlqty), SUM(proslipsub_tlper) from tbl_proslipsub where proslipmain_id IN($arrival_id) ";
+				//echo $sql;
+				$sql_tbl_sub=mysqli_query($link,$sql) or die(mysqli_error($link));
+				$subtbltot=mysqli_num_rows($sql_tbl_sub);
+				while($row_tbl_sub=mysqli_fetch_array($sql_tbl_sub))
+				{
+					$rawqty=$rawqty+$row_tbl_sub[0];
+					$conqty=$conqty+$row_tbl_sub[1];
+					$totalpl=$rawqty+$row_tbl_sub[2];
+					$x++;
+				}
+				$totalplper=round((($totalpl/$rawqty)*100),3);
 			}
-				
-	
+		//echo $rawqty." = ".$conqty." = ".$totalpl." = ".$totalplper."<br />";	
 
 
-$data1[$d]=array($d,$croptype,$crop,$variety,$vtype,$crpsize,$ac); 
+$data1[$d]=array($d,$croptype,$crop,$variety,$vtype,$crpsize,$rawqty,$conqty,$totalpl,$totalplper); 
 $d++;
 }
 }
@@ -218,48 +221,35 @@ elseif ($selectedMonth=="ALL" && count($monthList)>0)
 	$endDate2=$monthList[11]['end_date'];
 	$srno=1;$arrivalid=""; $x=0; $verty="";
 	
-	$sql_srsub=mysqli_query($link,"select Distinct salesr_id from tbl_salesrv_sub where salesrs_dovfy <= '$endDate2' and salesrs_dovfy >= '$startDate2' and plantcode='$plantcode' ") or die(mysqli_error($link));
-	$tot_arr_home=mysqli_num_rows($sql_srsub);
-	while($row_srsub=mysqli_fetch_array($sql_srsub))
-	{
-		$sql_arr_home=mysqli_query($link,"select salesr_id from tbl_salesrv where salesr_id = '".$row_srsub['salesr_id']."'  and salesr_flg=1 and salesr_vflg=1 and plantcode='$plantcode' ") or die(mysqli_error($link));
-		$tot_arr_home=mysqli_num_rows($sql_arr_home);
-		if($tot_arr_home > 0)
-		{
-			while($row_arr_home=mysqli_fetch_array($sql_arr_home))
-			{
-				if($arrival_id!=""){$arrival_id=$arrival_id.",".$row_arr_home['salesr_id'];} else {$arrival_id=$row_arr_home['salesr_id'];}
-			}
-		}
-	}
-
-	$sql1o="select distinct salesrs_crop from tbl_salesrv_sub where salesr_id IN($arrival_id) and salesrs_dovfy <= '$endDate2' and salesrs_dovfy >= '$startDate2' and plantcode='$plantcode'  ";
+	$sql1o="select distinct proslipmain_crop from tbl_proslipmain where proslipmain_date <= '$endDate2' and proslipmain_date >= '$startDate2' and plantcode='$plantcode'  ";
 	if($txtcrop!="ALL")
 	{
-		$sql1o.=" and salesrs_crop='".$txtcrop."'";
+		$sql1o.=" and proslipmain_crop='".$txtcrop."'";
 	}
 	if($txtvariety!="ALL")
 	{
-		$sql1o.=" and salesrs_variety='".$txtvariety."'";
+		$sql1o.=" and proslipmain_variety='".$txtvariety."'";
 	}
-		$sql1o.=" order by salesrs_crop asc";
+		$sql1o.=" order by proslipmain_crop asc";
 		//echo $sql;
 	$sql_tbl_sub1o=mysqli_query($link,$sql1o) or die(mysqli_error($link));
 	$subtbltot1o=mysqli_num_rows($sql_tbl_sub1o);
 	while($row_tbl_sub1o=mysqli_fetch_array($sql_tbl_sub1o))
 	{
-		$sql2o="select distinct salesrs_variety from tbl_salesrv_sub where salesr_id IN($arrival_id) and salesrs_dovfy <= '$endDate2' and salesrs_dovfy >= '$startDate2' and plantcode='$plantcode'  and salesrs_crop='".$row_tbl_sub1o['salesrs_crop']."'";
+		
+		$sql2o="select distinct proslipmain_variety from tbl_proslipmain where proslipmain_date <= '$endDate2' and proslipmain_date >= '$startDate2' and plantcode='$plantcode' ";
+		$sql2o.=" and proslipmain_crop='".$row_tbl_sub1o['proslipmain_crop']."'";
 		if($txtvariety!="ALL")
 		{
-			$sql2o.=" and salesrs_variety='".$txtvariety."'";
+			$sql2o.=" and proslipmain_variety='".$txtvariety."'";
 		}
-			$sql2o.=" order by salesrs_variety asc";
+			$sql2o.=" order by proslipmain_variety asc";
 			//echo $sql;
 		$sql_tbl_sub2o=mysqli_query($link,$sql2o) or die(mysqli_error($link));
 		$subtbltot2o=mysqli_num_rows($sql_tbl_sub2o);
 		while($row_tbl_sub2o=mysqli_fetch_array($sql_tbl_sub2o))
 		{
-			if($verty!=""){$verty=$verty.",".$row_tbl_sub2o['salesrs_variety'];} else {$verty=$row_tbl_sub2o['salesrs_variety'];}
+			if($verty!=""){$verty=$verty.",".$row_tbl_sub2o['proslipmain_variety'];} else {$verty=$row_tbl_sub2o['proslipmain_variety'];}
 		}
 	}
 
@@ -285,49 +275,45 @@ elseif ($selectedMonth=="ALL" && count($monthList)>0)
 		$startDate=$item['start_date'];
 		$endDate=$item['end_date'];
 		
-		$arrival_id=''; $ac='0'; 
-		
-		$sql_srsub=mysqli_query($link,"select Distinct salesr_id from tbl_salesrv_sub where salesrs_dovfy <= '$endDate' and salesrs_dovfy >= '$startDate' and plantcode='$plantcode' ") or die(mysqli_error($link));
+		$arrival_id='';
+		$sql_srsub=mysqli_query($link,"select Distinct proslipmain_id from tbl_proslipmain where proslipmain_date <= '$endDate' and proslipmain_date >= '$startDate' and plantcode='$plantcode' and proslipmain_variety='".$vertyname."' ") or die(mysqli_error($link));
 		$tot_arr_home=mysqli_num_rows($sql_srsub);
 		while($row_srsub=mysqli_fetch_array($sql_srsub))
 		{
-			$sql_arr_home=mysqli_query($link,"select salesr_id from tbl_salesrv where salesr_id = '".$row_srsub['salesr_id']."' and salesr_flg=1 and salesr_vflg=1 and plantcode='$plantcode' ") or die(mysqli_error($link));
-			$tot_arr_home=mysqli_num_rows($sql_arr_home);
-			if($tot_arr_home > 0)
-			{
-				while($row_arr_home=mysqli_fetch_array($sql_arr_home))
-				{
-					if($arrival_id!=""){$arrival_id=$arrival_id.",".$row_arr_home['salesr_id'];} else {$arrival_id=$row_arr_home['salesr_id'];}
-				}
-			}
-		}
-		$x++;	
-		if($arrival_id!="")
+			if($arrival_id!=""){$arrival_id=$arrival_id.",".$row_srsub['proslipmain_id'];} else {$arrival_id=$row_srsub['proslipmain_id'];}
+		}	
+//echo $arrival_id;
+		$sq_var2=mysqli_query($link,"select vt, popularname, cropname from tblvariety where varietyid='".$vertyname."' order by popularname Asc") or die(mysqli_error($link));
+		$row_var2=mysqli_fetch_array($sq_var2);
+		$variety=$row_var2['popularname'];	
+		$vtype=$row_var2['vt'];	
+		
+		
+		$sq_crop2=mysqli_query($link,"SELECT seedsize, croptype, cropname FROM tblcrop where cropid='".$row_var2['cropname']."' order by cropname Asc") or die(mysqli_error($link));
+		$row_crop2=mysqli_fetch_array($sq_crop2);
+		$crpsize=$row_crop2['seedsize'];
+		$croptype=$row_crop2['croptype'];
+		$crop=$row_crop2['cropname'];
+		
+		
+		$rawqty=0; $conqty=0; $totalpl=0; $totalplper=0;
+		if($arrival_id!='')
 		{
-			$sq_var2=mysqli_query($link,"select vt, cropid, popularname from tblvariety where varietyid='".$vertyname."' order by popularname Asc") or die(mysqli_error($link));
-			$row_var2=mysqli_fetch_array($sq_var2);
-			$crop=$row_var2['cropid'];
-			$variety=$row_var2['popularname'];	
-			$vtype=$row_var2['vt'];	
-			
-			$sql="select SUM(salesrs_qtydc) from tbl_salesrv_sub where salesr_id IN($arrival_id) and salesrs_dovfy<='$endDate' and salesrs_dovfy>='$startDate' and plantcode='$plantcode' and salesrs_variety='".$vertyname."' order by salesrs_crop, salesrs_variety asc";
+			$sql="select SUM(proslipsub_pqty), SUM(proslipsub_conqty), SUM(proslipsub_tlqty), SUM(proslipsub_tlper) from tbl_proslipsub where proslipmain_id IN($arrival_id) ";
 			//echo $sql;
 			$sql_tbl_sub=mysqli_query($link,$sql) or die(mysqli_error($link));
 			$subtbltot=mysqli_num_rows($sql_tbl_sub);
 			while($row_tbl_sub=mysqli_fetch_array($sql_tbl_sub))
 			{
-				$aq = explode(".", $row_tbl_sub[0]);
-				if ($aq[0] !== null) {
-					if (isset($aq[1]) && $aq[1] == 000) {
-						$ac = $aq[0];
-					} else {
-						$ac = $row_tbl_sub[0];
-					}
-				}
+				$rawqty=$rawqty+$row_tbl_sub[0];
+				$conqty=$conqty+$row_tbl_sub[1];
+				$totalpl=$totalpl+$row_tbl_sub[2];
+				$x++;
 			}
+			$totalplper=round((($totalpl/$rawqty)*100),3);
 		}
-	
-	$temp[]=$ac;		
+	array_push($temp,$rawqty,$conqty,$totalpl,$totalplper);
+	//$temp[]=$ac;		
 
 	}
 	
@@ -351,6 +337,8 @@ echo "\n";
 echo implode("\t", $datatitle2);
 echo "\n";
 echo implode("\t", $datatitle3);
+echo "\n";
+echo implode("\t", $datatitle4);
 echo "\n";
 //foreach($data1 as $row1)
 for($i=1; $i<$d; $i++)

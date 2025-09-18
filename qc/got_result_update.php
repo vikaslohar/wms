@@ -16,11 +16,11 @@
 		$loginid=$_SESSION['loginid'];
 		$logid=$_SESSION['logid'];
 		$lgnid=$_SESSION['logid'];
-	$plantcode=$_SESSION['plantcode'];
-	$plantcode1=$_SESSION['plantcode1'];
-	$plantcode2=$_SESSION['plantcode2'];
-	$plantcode3=$_SESSION['plantcode3'];
-	$plantcode4=$_SESSION['plantcode4'];
+		$plantcode=$_SESSION['plantcode'];
+		$plantcode1=$_SESSION['plantcode1'];
+		$plantcode2=$_SESSION['plantcode2'];
+		$plantcode3=$_SESSION['plantcode3'];
+		$plantcode4=$_SESSION['plantcode4'];
 	}
 	
 	require_once("../include/config.php");
@@ -88,8 +88,6 @@
 		
 if(isset($_POST['frm_action'])=='submit')
 {
-	$connnew = mysqli_connect("localhost","wfuser","P1o5RSOloG8jCAN8") or die("Error:".mysqli_error($connnew));
-	$dbnew = mysqli_select_db($connnew,"wmsfocusdb") or die("Error:".mysqli_error($connnew));
 	
 	$tid=trim($_POST['tid']);
 	$txtinsitu=trim($_POST['insitu']);
@@ -216,39 +214,6 @@ if(isset($_POST['frm_action'])=='submit')
   	$opurity=$row_ck['genpurity'];
 	$sampno=$row_ck['gottest_sampno'];
 	
-	/*if($ores=="RT")
-	{//echo "RT";
-		$sql_sub_sub="insert into tbl_gottest(gottest_spdate, gottest_gotdate, gottest_dosdate, gottest_got, gottest_variety, gottest_crop, gottest_lotno, gottest_oldlot, gottest_srdate, gottest_trstage, gottest_gotstatus, gottest_sampleno,  gottest_aflg, gottest_bflg, gottest_cflg, gottest_resultflg, gottest_gotflg, gottest_gotrefno, gotstatus, gottest_gotauth, gottest_gotsampdflg, yearid, logid, logid1, logid2, genpurity, gottest_sampno) values('$spdt', '$ogotdate', '$odosdate', '$ogot', '$ver', '$crp', '$olot', '$oldlot22', '$srdt', '$stge', '$ogotstatus', '$smpno', '$oaflg', '$obflg', '$ocflg', '$oresflg', '$ogotflg', '$ogotrefno', '$ogotauth', '$ogotsmpdflg', '$yearid', '$logid', '$logid1', '$logid2', '$opurity', '$sampno')";
-		if(mysqli_query($link,$sql_sub_sub) or die(mysqli_error($link)))
-		{
-			$id=mysqli_insert_id($link);
-			if($result!="RT")
-			{
-				$sql_sub_sub12="update tbl_gottest set gottest_gotstatus='$result', gottest_gotdate='$obdate', gottest_gotrefno='$refno', gottest_gotauth='$auth', genpurity='$genpurity', gottest_gotflg=1 where gottest_tid='$id'";
-				if(mysqli_query($link,$sql_sub_sub12) or die(mysqli_error($link)))
-				{
-					$x="";
-					$sql_sub="update tbl_lot_ldg set lotldg_got='$result', lotldg_gottestdate='$obdate', lotldg_srtyp='$x', lotldg_srflg='0', lotldg_genpurity='$genpurity' where orlot='$oldlot22'";
-					$qq=mysqli_query($link,$sql_sub) or die(mysqli_error($link));
-					$sql_sub2="update tbl_lot_ldg_pack set lotldg_got='$result', lotldg_gottestdate='$obdate', lotldg_srtyp='$x', lotldg_srflg='0', lotldg_genpurity='$genpurity' where orlot='$oldlot22'";
-					$qq2=mysqli_query($link,$sql_sub2) or die(mysqli_error($link));
-					$sql_subchk="update tbl_softr_sub2 set softrsub_srflg='0' where softrsub_lotno ='$oldlot22'";
-					mysqli_query($link,$sql_subchk) or die(mysqli_error($link));
-				}
-			}
-			else
-			{
-				$sql_sub_sub12="update tbl_gottest set gottest_gotstatus='$result', gottest_gotdate='$obdate', genpurity='$genpurity', gottest_gotflg=0 where gottest_tid='$id'";
-				mysqli_query($link,$sql_sub_sub12) or die(mysqli_error($link));
-				$sql_sub="update tbl_lot_ldg set lotldg_got='$result', lotldg_gottestdate='$obdate', lotldg_genpurity='$genpurity' where orlot='$oldlot22'";
-				$qq=mysqli_query($link,$sql_sub) or die(mysqli_error($link));
-				$sql_sub2="update tbl_lot_ldg_pack set lotldg_got='$result', lotldg_gottestdate='$obdate', lotldg_genpurity='$genpurity' where orlot='$oldlot22'";
-				$qq2=mysqli_query($link,$sql_sub2) or die(mysqli_error($link));
-			}
-		}
-	}
-	else
-	{//echo "Not RT";*/
 
 	if($result!="RT")
 	{
@@ -280,145 +245,7 @@ if(isset($_POST['frm_action'])=='submit')
 	}
 	
 	
-	if($result=="OK" || $result=="BL" || $result=="Fail")
-	{
-		$sql_fnyear=mysqli_query($link,"select * from tblfnyears where years_flg=1") or die(mysqli_error($link));
-		$row_fnyear=mysqli_fetch_array($sql_fnyear);
-		$fnyear=$row_fnyear['ycode'];
-		
-		$zzz=implode(",", str_split($olotno22));
-		$abc=$zzz[0].$zzz[2].$zzz[4].$zzz[6].$zzz[8].$zzz[10].$zzz[12];
-		$abc2=$zzz[2].$zzz[4].$zzz[6].$zzz[8].$zzz[10].$zzz[12];
-		$lotnumb=$zzz[4];
-		$blendorlot=$abc."00000/00";
-		$blendedcontlots='';	
-		$sql_focusdbcode1="SELECT * FROM tbl_frn where wffrn_batch='$abc' ORDER BY wffrn_batch DESC";
-		$res_focusdbcode1=mysqli_query($connnew,$sql_focusdbcode1)or die(mysqli_error($connnew));
-		if(mysqli_num_rows($res_focusdbcode1) > 0)
-		{
-			$rowfdb=mysqli_fetch_array($res_focusdbcode1);
-			$doc_code="";
-			$narration="GOT Result";
-			if($result=="Fail")
-			{
-				$tdt=explode("-",$obdate);
-				$monthNum  = $tdt[1];
-				$monthName = date('M', mktime(0, 0, 0, $monthNum, 10)); // Mar
-				
-				$sql_fnyear=mysqli_query($link,"select * from tblfnyears where years_flg=1") or die(mysqli_error($link));
-				$row_fnyear=mysqli_fetch_array($sql_fnyear);
-				$fnyear=$row_fnyear['ycode'];	
-					
-				$sql_focusdbcode1="SELECT MAX(wffrn_code) FROM tbl_frn where wffrn_month='$monthName' and wffrn_yearcode='$fnyear' and (wffrn_trtype='Processing' OR wffrn_trtype='GOT')  ORDER BY wffrn_code DESC";
-				$res_focusdbcode1=mysqli_query($connnew,$sql_focusdbcode1)or die(mysqli_error($connnew));
-				
-				if(mysqli_num_rows($res_focusdbcode1) > 0)
-				{
-					$row_focusdbcode1=mysqli_fetch_row($res_focusdbcode1);
-					$t_focusdbcode1=$row_focusdbcode1['0'];
-					$doccode=$t_focusdbcode1+1;
-					if($doccode==0){$doccode=1;}
-					$doccode2=sprintf("%00005d",$doccode);
-				}
-				else
-				{
-					$doccode=1; 
-					$doccode2=sprintf("%00005d",$doccode);
-				}
-				
-				$sql_crp=mysqli_query($link,"select * from tblcrop where cropid='".$crp."'") or die(mysqli_error($link));
-				$row_crp=mysqli_fetch_array($sql_crp);
-				$crp=$row_crp['cropname'];
-				$cropcode=$row_crp['cropcode'];
-				$crptype="PRODUCTION - ".$row_crp['croptype'];
-				if($row_crp['croptype']=='Fruit Crop'){$crptype="PRODUCTION - ".'Vegetable Crop';}
-		
-				$sql_var=mysqli_query($link,"select * from tblvariety where varietyid='".$ver."'") or die(mysqli_error($link));
-				$row_var=mysqli_fetch_array($sql_var);
-				$ver=$row_var['popularname'];
-				$itemcode=$row_var['variety_newcode'];
-				
-				$sql_arrsubtbl=mysqli_query($link,"select * from tblarrival_sub where old='".$abc2."'") or die(mysqli_error($link));
-				$row_arrsubtbl=mysqli_fetch_array($sql_arrsubtbl);
-				$frnno=$row_arrsubtbl['ncode'];
-				
-				if($lotnumb==9)
-				{
-					$sql_arrsubtbl=mysqli_query($link,"select * from tbl_blends where blends_orlot='".$blendorlot."'") or die(mysqli_error($link));
-					while($row_arrsubtbl=mysqli_fetch_array($sql_arrsubtbl))
-					{
-						if($blendedcontlots!='') { $blendedcontlots=$blendedcontlots.",".$row_arrsubtbl['blends_lotno']; }
-						else  { $blendedcontlots=$row_arrsubtbl['blends_lotno']; }
-					}
-				}
-				
-				if($lotnumb==8)
-				{
-					$sql_arrsubtbl=mysqli_query($link,"select * from tbl_cobdryingsub where norlot='".$blendorlot."'") or die(mysqli_error($link));
-					while($row_arrsubtbl=mysqli_fetch_array($sql_arrsubtbl))
-					{
-						if($blendedcontlots!='') { $blendedcontlots=$blendedcontlots.",".$row_arrsubtbl['lotno']; }
-						else  { $blendedcontlots=$row_arrsubtbl['lotno']; }
-					}
-				}
-				
-				$doc_code="DPN/".$fnyear."/".$monthName."/".$doccode2;
-				$tdt=date("Y-m-d");
-				
-				$sql_arrsub=mysqli_query($link,"select * from tbl_proslipsub where proslipsub_lotno='".$olotno22."'") or die(mysqli_error($link));
-				if($a_arrsub=mysqli_num_rows($sql_arrsub)>0)
-				{
-					$row_arrsub=mysqli_fetch_array($sql_arrsub);
-					$sql_arr=mysqli_query($link,"select * from tbl_proslipmain where proslipmain_id='".$row_arrsub['proslipmain_id']."'") or die(mysqli_error($link));
-					$row_arr=mysqli_fetch_array($sql_arr);
-					$ogotrefno=$row_arr['proslipmain_proslipno'];
-				}
-				
-				$farmercode=$rowfdb['wffrn_vendorac'];
-				
-				if($farmercode=="" || $farmercode==NULL || $farmercode=="NULL")
-				{
-					$qryarrsub="select * from tbllotimp where lotnumber='".$abc2."' ";
-					$sqlarrsub=mysqli_query($link,$qryarrsub) or die(mysqli_error($link));
-					$rowarrsub=mysqli_fetch_array($sqlarrsub);
-					$farmername=$rowarrsub['lotfarmer'];
-					if(trim($rowarrsub['farmer_id'])!='' && trim($rowarrsub['farmer_id'])!='0' && trim($rowarrsub['farmer_id'])!=NULL)
-					{ $farmercode=trim($rowarrsub['farmer_id']);  }
-					else if(trim($rowarrsub['farmer_code'])!='' && trim($rowarrsub['farmer_code'])!='0' && trim($rowarrsub['farmer_code'])!=NULL)
-					{ $farmercode=trim($rowarrsub['farmer_code']); }
-					else 
-					{
-						
-						$sql_prodlocw=mysqli_query($link,"select * from tbl_productionlocation where productionlocation='".$rowarrsub['lotploc']."' and state='".$rowarrsub['lotstate']."' ") or die(mysqli_error($link)); 
-						$row_prodlocw=mysqli_fetch_array($sql_prodlocw);
-						
-						$sql_farmerw=mysqli_query($link,"select * from tblfarmer where farmername='".$rowarrsub['lotfarmer']."' and productionlocationid='".$row_prodlocw['productionlocationid']."'") or die(mysqli_error($link)); 
-						$row_farmerw=mysqli_fetch_array($sql_farmerw);
-						if(trim($row_farmerw['farmercode'])!='' && trim($row_farmerw['farmercode'])!='0' && trim($row_farmerw['farmercode'])!=NULL)
-						{ $farmercode=$row_farmerw['farmercode']; }
-						else if(trim($row_farmerw['farmer_code'])!='' && trim($row_farmerw['farmer_code'])!='0' && trim($row_farmerw['farmer_code'])!=NULL)
-						{ $farmercode=$row_farmerw['farmer_code']; }
-						else
-						{ $farmercode=''; }
-					}
-				}
-				$narration='Processing Slip  No. '.$ogotrefno." FRN NO ".$frnno; 
-				
-				$accode="DEBIT NOTE GOT-FAIL";
-				$acname="DEBIT NOTE GOT-FAIL";
-				
-				$sql_focusdb="insert into tbl_frn (wffrn_arrid, wffrn_docno, wffrn_date, wffrn_businessentity, wffrn_narration, wffrn_crop, wffrn_item, wffrn_batch, wffrn_code, wffrn_month, wffrn_yearcode, wffrn_trtype, wffrn_unit, wffrn_warehouse, wffrn_qty, wffrn_farmername, Doc_Type, wffrn_ploss, wffrn_pper, wffrn_vendorac, wffrn_department, wffrn_itemcode, account_code, account_name, wffrn_cropcode, constituent_lotnos, got_result, gp_percentage) values('$tid', '".$doc_code."', '".$obdate."', 'HEAD OFFICE', '".$narration."', '".$rowfdb['wffrn_crop']."', '".$rowfdb['wffrn_item']."', '".$rowfdb['wffrn_batch']."', '".$doccode."', '".$monthName."', '".$fnyear."', 'GOT', 'KGS', 'Raw Seed', '".$rowfdb['wffrn_qty']."', '".$rowfdb['wffrn_farmername']."', 'Purchase Debit-CS-Seedtrac', '".$rowfdb['wffrn_ploss']."', '".$rowfdb['wffrn_pper']."', '".$farmercode."', '".$crptype."', '".$itemcode."', '".$accode."', '".$acname."', '".$cropcode."', '".$blendedcontlots."', '".$result."','".$genpurity."')";
-				if($focusdb_xz=mysqli_query($connnew,$sql_focusdb) or die(mysqli_error($connnew)))
-				{
-					//$wfid=mysqli_insert_id($connnew);
-				}
-			}
-			else
-			{
-			
-			}
-		}
-	}
+	
 	
 //}
 //exit; 

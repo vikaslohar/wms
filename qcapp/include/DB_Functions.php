@@ -6265,7 +6265,6 @@ class DB_Functions {
 					$gotm_ackdate=$gotm_ackdate1[2]."-".$gotm_ackdate1[1]."-".$gotm_ackdate1[0];
 				}
 				
-				
 				if($gotm_id>0)
 				{
 					if($gotm_crop!=''){

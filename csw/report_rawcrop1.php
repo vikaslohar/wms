@@ -27,7 +27,8 @@
 	require_once("../include/config.php");
 	require_once("../include/connection.php");
 	
-		
+	set_time_limit(0);
+	ini_set('max_execution_time', 0);	
 		$crop = $_REQUEST['txtcrop'];
 		$variety = $_REQUEST['txtvariety'];
 		$slchk = $_REQUEST['slchk'];

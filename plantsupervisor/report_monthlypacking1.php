@@ -111,7 +111,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Plant - Report - Financial Year wise Monthly Processing Report</title>
+<title>Plant - Report - Financial Year wise Monthly Packing Report</title>
 
 <link href="../include/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
 <link href="../include/fixedColumns.dataTables.min.css" rel="stylesheet" type="text/css" />
@@ -207,7 +207,7 @@ alert("While Launching New Window...\nYour browser maybe blocking up Popup windo
 	  <td width="940" class="Mainheading" height="25">
 	  <table width="940" border="0" cellpadding="0" cellspacing="0" bordercolor="#2e81c1" style="border-bottom:solid; border-bottom-color:#2e81c1" >
 	    <tr >
-	      <td width="940" height="25">&nbsp; Financial Year wise Monthly Processing Report <?php if($plantcode=="D"){echo "Deorjhal Plant";} else if($plantcode=="B"){echo "Boriya Plant";} else {echo "";}?></td>
+	      <td width="940" height="25">&nbsp; Financial Year wise Monthly Packing Report <?php if($plantcode=="D"){echo "Deorjhal Plant";} else if($plantcode=="B"){echo "Boriya Plant";} else {echo "";}?></td>
 	    </tr></table></td>
 	  </tr>
 	  </table></td></tr>
@@ -241,111 +241,146 @@ alert("While Launching New Window...\nYour browser maybe blocking up Popup windo
 <th align="center" valign="middle" class="smalltblheading" rowspan="2" >Crop Type</th>
 <th align="center" valign="middle" class="smalltblheading" rowspan="2" >Crop</th>
 <th align="center" valign="middle" class="smalltblheading" rowspan="2" >Variety</th>
+<th align="center" valign="middle" class="smalltblheading" rowspan="2" >UPS</th>
 <th align="center" valign="middle" class="smalltblheading" rowspan="2" >Type</th>
 <th align="center" valign="middle" class="smalltblheading" rowspan="2" > Size</th>
 <?php
  if ($selectedMonth!="ALL" && $startDate && $endDate){
 ?>
-<th align="center" valign="middle" class="smalltblheading" colspan="4" ><?php $selectedMonth;?></th>
+<th align="center" valign="middle" class="smalltblheading" colspan="4" ><?php echo $selectedMonth;?></th>
 <?php }elseif ($selectedMonth=="ALL" && count($monthList)){ ?>
 <?php
 foreach ($monthList as $item){
 ?>
-<th align="center" valign="middle" class="smalltblheading" colspan="4" ><?= $item['month']; ?></th>
+<th align="center" valign="middle" class="smalltblheading" colspan="4" ><?php echo $item['month']; ?></th>
 <?php }} ?>
 </tr>
 <tr class="tblsubtitle" height="25">
 <?php
  if ($selectedMonth!="ALL" && $startDate && $endDate){
 ?>
-<th align="center" valign="middle" class="smalltblheading">Raw Seed</th>
-<th align="center" valign="middle" class="smalltblheading">Condition Seed</th>
-<th align="center" valign="middle" class="smalltblheading">Remnant (RM)</th>
-<th align="center" valign="middle" class="smalltblheading">Remnant (RM)%</th>
+<th align="center" valign="middle" class="smalltblheading">Picked for Packing Qty</th>
+<th align="center" valign="middle" class="smalltblheading">Pack Seed Qty</th>
+<th align="center" valign="middle" class="smalltblheading">Packing Loss</th>
+<th align="center" valign="middle" class="smalltblheading">Packing Loss %</th>
 <?php }elseif ($selectedMonth=="ALL" && count($monthList)){ ?>
 <?php
 foreach ($monthList as $item){
 ?>
-<th align="center" valign="middle" class="smalltblheading">Raw Seed</th>
-<th align="center" valign="middle" class="smalltblheading">Condition Seed</th>
-<th align="center" valign="middle" class="smalltblheading">Remnant (RM)</th>
-<th align="center" valign="middle" class="smalltblheading">Remnant (RM)%</th>
+<th align="center" valign="middle" class="smalltblheading">Picked for Packing Qty</th>
+<th align="center" valign="middle" class="smalltblheading">Pack Seed Qty</th>
+<th align="center" valign="middle" class="smalltblheading">Packing Loss</th>
+<th align="center" valign="middle" class="smalltblheading">Packing Loss %</th>
 <?php }} ?>
 </tr>
 </thead>
 <tbody>
 <?php
+
 if($selectedMonth!="ALL" && $startDate && $endDate)
 {
 	$srno=1; $x=0;
 	
-	$sql1="select distinct proslipmain_crop from tbl_proslipmain where proslipmain_date <= '$endDate' and proslipmain_date >= '$startDate' and plantcode='$plantcode'  ";
+	$sql1="select distinct lotldg_crop from tbl_lot_ldg_pack where lotldg_trdate <= '$endDate' and lotldg_trdate >= '$startDate' and plantcode='$plantcode' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='PACKAGINGSLIP')  ";
 	if($txtcrop!="ALL")
 	{
-		$sql1.=" and proslipmain_crop='".$txtcrop."'";
+		$sql1.=" and lotldg_crop='".$txtcrop."'";
 	}
 	if($txtvariety!="ALL")
 	{
-		$sql1.=" and proslipmain_variety='".$txtvariety."'";
+		$sql1.=" and lotldg_variety='".$txtvariety."'";
 	}
-		$sql1.=" order by proslipmain_crop asc";
+		$sql1.=" order by lotldg_crop asc";
 		//echo $sql;
 	$sql_tbl_sub1=mysqli_query($link,$sql1) or die(mysqli_error($link));
 	$subtbltot1=mysqli_num_rows($sql_tbl_sub1);
 	while($row_tbl_sub1=mysqli_fetch_array($sql_tbl_sub1))
 	{
 		
-		$sql2="select distinct proslipmain_variety from tbl_proslipmain where proslipmain_date <= '$endDate' and proslipmain_date >= '$startDate' and plantcode='$plantcode' ";
-		$sql2.=" and proslipmain_crop='".$row_tbl_sub1['proslipmain_crop']."'";
+		$sql2="select distinct lotldg_variety from tbl_lot_ldg_pack where lotldg_trdate <= '$endDate' and lotldg_trdate >= '$startDate' and plantcode='$plantcode' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='PACKAGINGSLIP') ";
+		$sql2.=" and lotldg_crop='".$row_tbl_sub1['lotldg_crop']."'";
 		if($txtvariety!="ALL")
 		{
-			$sql2.=" and proslipmain_variety='".$txtvariety."'";
+			$sql2.=" and lotldg_variety='".$txtvariety."'";
 		}
-			$sql2.=" order by proslipmain_variety asc";
+			$sql2.=" order by lotldg_variety asc";
 			//echo $sql;
 		$sql_tbl_sub2=mysqli_query($link,$sql2) or die(mysqli_error($link));
 		$subtbltot2=mysqli_num_rows($sql_tbl_sub2);
 		while($row_tbl_sub2=mysqli_fetch_array($sql_tbl_sub2))
 		{
-		
-			$arrival_id='';
-			$sql_srsub=mysqli_query($link,"select Distinct proslipmain_id from tbl_proslipmain where proslipmain_date <= '$endDate' and proslipmain_date >= '$startDate' and plantcode='$plantcode' and proslipmain_crop='".$row_tbl_sub1['proslipmain_crop']."' and proslipmain_variety='".$row_tbl_sub2['proslipmain_variety']."' ") or die(mysqli_error($link));
-			$tot_arr_home=mysqli_num_rows($sql_srsub);
-			while($row_srsub=mysqli_fetch_array($sql_srsub))
+			$sql3="select distinct packtype from tbl_lot_ldg_pack where lotldg_trdate <= '$endDate' and lotldg_trdate >= '$startDate' and plantcode='$plantcode' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='PACKAGINGSLIP') and lotldg_crop='".$row_tbl_sub1['lotldg_crop']."' and lotldg_variety='".$row_tbl_sub2['lotldg_variety']."' order by packtype asc";
+			$sql_tbl_sub3=mysqli_query($link,$sql3) or die(mysqli_error($link));
+			$subtbltot3=mysqli_num_rows($sql_tbl_sub3);
+			while($row_tbl_sub3=mysqli_fetch_array($sql_tbl_sub3))
 			{
-				if($arrival_id!=""){$arrival_id=$arrival_id.",".$row_arr_home['proslipmain_id'];} else {$arrival_id=$row_arr_home['proslipmain_id'];}
-			}	
-	
-			
-		
-			$sq_crop2=mysqli_query($link,"SELECT seedsize, croptype, cropname FROM tblcrop where cropid='".$row_tbl_sub1['proslipmain_crop']."' order by cropname Asc") or die(mysqli_error($link));
-			$row_crop2=mysqli_fetch_array($sq_crop2);
-			$crpsize=$row_crop2['seedsize'];
-			$croptype=$row_crop2['croptype'];
-			$crop=$row_crop2['cropname'];
-			
-			$sq_var2=mysqli_query($link,"select vt, popularname from tblvariety where varietyid='".$row_tbl_sub2['proslipmain_variety']."' order by popularname Asc") or die(mysqli_error($link));
-			$row_var2=mysqli_fetch_array($sq_var2);
-			$variety=$row_var2['popularname'];	
-			$vtype=$row_var2['vt'];	
-			
-			$rawqty=0; $conqty=0; $totalpl=0; $totalplper=0;
-			if($arrival_id!='')
-			{
-				$sql="select SUM(proslipsub_oqty), SUM(proslipsub_conqty), SUM(proslipsub_tlqty), SUM(proslipsub_tlper) from tbl_proslipsub where proslipmain_id IN($arrival_id) ";
-				//echo $sql;
-				$sql_tbl_sub=mysqli_query($link,$sql) or die(mysqli_error($link));
-				$subtbltot=mysqli_num_rows($sql_tbl_sub);
-				while($row_tbl_sub=mysqli_fetch_array($sql_tbl_sub))
+				$ups=$row_tbl_sub3['packtype'];
+				$sq_crop2=mysqli_query($link,"SELECT seedsize, croptype, cropname FROM tblcrop where cropid='".$row_tbl_sub1['lotldg_crop']."' order by cropname Asc") or die(mysqli_error($link));
+				$row_crop2=mysqli_fetch_array($sq_crop2);
+				$crpsize=$row_crop2['seedsize'];
+				$croptype=$row_crop2['croptype'];
+				$crop=$row_crop2['cropname'];
+				
+				$sq_var2=mysqli_query($link,"select vt, popularname from tblvariety where varietyid='".$row_tbl_sub2['lotldg_variety']."' order by popularname Asc") or die(mysqli_error($link));
+				$row_var2=mysqli_fetch_array($sq_var2);
+				$variety=$row_var2['popularname'];	
+				$vtype=$row_var2['vt'];	
+				$arrival_id='';
+				$sql_srsub=mysqli_query($link,"select Distinct lotldg_id from tbl_lot_ldg_pack where lotldg_trdate <= '$endDate' and lotldg_trdate >= '$startDate' and plantcode='$plantcode' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='PACKAGINGSLIP') and lotldg_crop='".$row_tbl_sub1['lotldg_crop']."' and lotldg_variety='".$row_tbl_sub2['lotldg_variety']."' and packtype='".$row_tbl_sub3['packtype']."' ") or die(mysqli_error($link));
+				$tot_arr_home=mysqli_num_rows($sql_srsub);
+				while($row_srsub=mysqli_fetch_array($sql_srsub))
 				{
-					$rawqty=$rawqty+$row_tbl_sub[0];
-					$conqty=$conqty+$row_tbl_sub[1];
-					$totalpl=$rawqty+$row_tbl_sub[2];
-					$x++;
-				}
-				$totalplper=round((($totalpl/$rawqty)*100),3);
-			}
+					if($arrival_id!=""){$arrival_id=$arrival_id.",".$row_srsub['lotldg_id'];} else {$arrival_id=$row_srsub['lotldg_id'];}
+				}	
 			
+				$rawqty=0; $conqty=0; $totalpl=0; $totalplper=0;
+				if($arrival_id!='')
+				{
+					$sql="select Distinct trtype from tbl_lot_ldg_pack where lotldg_trdate <= '$endDate' and lotldg_trdate >= '$startDate' and plantcode='$plantcode' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='PACKAGINGSLIP') and lotldg_crop='".$row_tbl_sub1['lotldg_crop']."' and lotldg_variety='".$row_tbl_sub2['lotldg_variety']."' and packtype='".$row_tbl_sub3['packtype']."' and lotldg_id IN($arrival_id) ";
+					//echo $sql;
+					$sql_tbl_sub=mysqli_query($link,$sql) or die(mysqli_error($link));
+					$subtbltot=mysqli_num_rows($sql_tbl_sub);
+					while($row_tbl_sub=mysqli_fetch_array($sql_tbl_sub))
+					{
+						if($row_tbl_sub['trtype']=='PNPSLIP' || $row_tbl_sub['trtype']=='NSTPNPSLIP')
+						{
+							$sql_is=mysqli_query($link,"select pnpslipmain_id from tbl_pnpslipmain where  pnpslipmain_id IN($arrival_id) and pnpslipmain_crop='".$row_tbl_sub1['lotldg_crop']."' and pnpslipmain_variety='".$row_tbl_sub2['lotldg_variety']."' and pnpslipmain_tflag=1 order by pnpslipmain_id asc") or die(mysqli_error($link));
+							while($row_is=mysqli_fetch_array($sql_is))
+							{ 
+								$sql_istbl=mysqli_query($link,"select sum(pnpslipsub_pickpqty), sum(pnpslipsub_packqty), sum(pnpslipsub_packloss), sum(pnpslipsub_packcc) from tbl_pnpslipsub where pnpslipmain_id='".$row_is['pnpslipmain_id']."' and pnpslipsub_ups='".$row_tbl_sub3['packtype']."' order by pnpslipsub_id asc") or die(mysqli_error($link)); 
+								$t=mysqli_num_rows($sql_istbl);
+								while($row_pnpsub=mysqli_fetch_array($sql_istbl))
+								{ 
+									$rawqty=$rawqty+$row_pnpsub[0]; 
+									$totalpl=$totalpl+($row_pnpsub[2]+$row_pnpsub[3]); 
+									$conqty=$conqty+$row_pnpsub[1]; 
+								}	
+							}
+						}
+						if($row_tbl_sub['trtype']=='PACKAGINGSLIP')
+						{
+							$sql_is=mysqli_query($link,"select packaging_id from tbl_rpspackaging where packaging_id IN($arrival_id) and packaging_crop='".$row_tbl_sub1['lotldg_crop']."' and packaging_variety='".$row_tbl_sub2['lotldg_variety']."' and packaging_upssize='".$row_tbl_sub3['packtype']."' and packaging_tflg=1 order by packaging_id asc") or die(mysqli_error($link));
+							while($row_is=mysqli_fetch_array($sql_is))
+							{ 
+								$sql_istbl=mysqli_query($link,"select sum(packagingsub_extqty), sum(packagingsub_ccqty), sum(packagingsub_ccqty) from tbl_rpspackaging_sub where packaging_id='".$row_is['packaging_id']."' order by packagingsub_id asc") or die(mysqli_error($link)); 
+								$t=mysqli_num_rows($sql_istbl);
+								while($row_pnpsub=mysqli_fetch_array($sql_istbl))
+								{ 
+									$rawqty=$rawqty+$row_pnpsub[0]; 
+									$totalpl=$totalpl+($row_pnpsub[1]+$row_pnpsub[2]); 
+									$conqty=$conqty+($row_pnpsub[0]-($row_pnpsub[1]+$row_pnpsub[2])); 
+								}	
+							}
+						}
+						$x++;
+					}
+					$tot=$totalpl/$rawqty;
+					if($tot>0)
+					{
+						$totalplper=round(($tot*100),3);
+					}
+				}
+			//echo $rawqty." = ".$conqty." = ".$totalpl." = ".$totalplper."<br />";	
 if($srno%2!=0)
 {
 ?>			  
@@ -355,6 +390,7 @@ if($srno%2!=0)
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $croptype;?> </td>
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $crop;?> </td>
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $variety;?> </td>
+	<td align="center" valign="middle" class="smalltbltext"> <?php echo $ups;?> </td>
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $vtype;?> </td>
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $crpsize;?> </td>
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $rawqty;?> </td>
@@ -372,6 +408,7 @@ else
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $croptype;?> </td>
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $crop;?> </td>
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $variety;?> </td>
+	<td align="center" valign="middle" class="smalltbltext"> <?php echo $ups;?> </td>
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $vtype;?> </td>
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $crpsize;?> </td>
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $rawqty;?> </td>
@@ -384,7 +421,7 @@ else
 $srno=$srno+1;
 }
 }
-
+}
 
 
 }
@@ -394,57 +431,58 @@ elseif ($selectedMonth=="ALL" && count($monthList)>0)
 	$endDate2=$monthList[11]['end_date'];
 	$srno=1;$arrivalid=""; $x=0; $verty="";
 	
-	$sql1o="select distinct proslipmain_crop from tbl_proslipmain where proslipmain_date <= '$endDate2' and proslipmain_date >= '$startDate2' and plantcode='$plantcode'  ";
+	$sql1="select distinct lotldg_crop from tbl_lot_ldg_pack where lotldg_trdate <= '$endDate2' and lotldg_trdate >= '$startDate2' and plantcode='$plantcode' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='PACKAGINGSLIP')  ";
 	if($txtcrop!="ALL")
 	{
-		$sql1o.=" and proslipmain_crop='".$txtcrop."'";
+		$sql1.=" and lotldg_crop='".$txtcrop."'";
 	}
 	if($txtvariety!="ALL")
 	{
-		$sql1o.=" and proslipmain_variety='".$txtvariety."'";
+		$sql1.=" and lotldg_variety='".$txtvariety."'";
 	}
-		$sql1o.=" order by proslipmain_crop asc";
+		$sql1.=" order by lotldg_crop asc";
 		//echo $sql;
-	$sql_tbl_sub1o=mysqli_query($link,$sql1o) or die(mysqli_error($link));
-	$subtbltot1o=mysqli_num_rows($sql_tbl_sub1o);
-	while($row_tbl_sub1o=mysqli_fetch_array($sql_tbl_sub1o))
+	$sql_tbl_sub1=mysqli_query($link,$sql1) or die(mysqli_error($link));
+	$subtbltot1=mysqli_num_rows($sql_tbl_sub1);
+	while($row_tbl_sub1=mysqli_fetch_array($sql_tbl_sub1))
 	{
 		
-		$sql2o="select distinct proslipmain_variety from tbl_proslipmain where proslipmain_date <= '$endDate2' and proslipmain_date >= '$startDate2' and plantcode='$plantcode' ";
-		$sql2o.=" and proslipmain_crop='".$row_tbl_sub1o['proslipmain_crop']."'";
+		$sql2="select distinct lotldg_variety from tbl_lot_ldg_pack where lotldg_trdate <= '$endDate2' and lotldg_trdate >= '$startDate2' and plantcode='$plantcode' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='PACKAGINGSLIP') ";
+		$sql2.=" and lotldg_crop='".$row_tbl_sub1['lotldg_crop']."'";
 		if($txtvariety!="ALL")
 		{
-			$sql2o.=" and proslipmain_variety='".$txtvariety."'";
+			$sql2.=" and lotldg_variety='".$txtvariety."'";
 		}
-			$sql2o.=" order by proslipmain_variety asc";
+			$sql2.=" order by lotldg_variety asc";
 			//echo $sql;
-		$sql_tbl_sub2o=mysqli_query($link,$sql2o) or die(mysqli_error($link));
-		$subtbltot2o=mysqli_num_rows($sql_tbl_sub2o);
-		while($row_tbl_sub2o=mysqli_fetch_array($sql_tbl_sub2o))
+		$sql_tbl_sub2=mysqli_query($link,$sql2) or die(mysqli_error($link));
+		$subtbltot2=mysqli_num_rows($sql_tbl_sub2);
+		while($row_tbl_sub2=mysqli_fetch_array($sql_tbl_sub2))
 		{
-			if($verty!=""){$verty=$verty.",".$row_tbl_sub2o['proslipmain_variety'];} else {$verty=$row_tbl_sub2o['proslipmain_variety'];}
-		}
-	}
-
-	$vert=explode(",",$verty);
-	foreach ($vert as $vertyname){ 
+			$sql3="select distinct packtype from tbl_lot_ldg_pack where lotldg_trdate <= '$endDate2' and lotldg_trdate >= '$startDate2' and plantcode='$plantcode' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='PACKAGINGSLIP') and lotldg_crop='".$row_tbl_sub1['lotldg_crop']."' and lotldg_variety='".$row_tbl_sub2['lotldg_variety']."' order by packtype asc";
+			$sql_tbl_sub3=mysqli_query($link,$sql3) or die(mysqli_error($link));
+			$subtbltot3=mysqli_num_rows($sql_tbl_sub3);
+			while($row_tbl_sub3=mysqli_fetch_array($sql_tbl_sub3))
+			{
+				$ups=$row_tbl_sub3['packtype'];
 			
-	$sq_var2=mysqli_query($link,"select vt, cropname, popularname from tblvariety where varietyid='".$vertyname."' order by popularname Asc") or die(mysqli_error($link));
-	$row_var2=mysqli_fetch_array($sq_var2);
-	$variety=$row_var2['popularname'];	
-	$vtype=$row_var2['vt'];	
-	
-	$sq_crop2=mysqli_query($link,"SELECT seedsize, cropname, croptype FROM tblcrop where cropid='".$row_var2['cropname']."' order by cropname Asc") or die(mysqli_error($link));
-	$row_crop2=mysqli_fetch_array($sq_crop2);
-	$crop=$row_crop2['cropname'];
-	$crpsize=$row_crop2['seedsize'];
-	$croptype=$row_crop2['croptype'];
+				$sq_crop2=mysqli_query($link,"SELECT seedsize, croptype, cropname FROM tblcrop where cropid='".$row_tbl_sub1['lotldg_crop']."' order by cropname Asc") or die(mysqli_error($link));
+				$row_crop2=mysqli_fetch_array($sq_crop2);
+				$crpsize=$row_crop2['seedsize'];
+				$croptype=$row_crop2['croptype'];
+				$crop=$row_crop2['cropname'];
+				
+				$sq_var2=mysqli_query($link,"select vt, popularname from tblvariety where varietyid='".$row_tbl_sub2['lotldg_variety']."' order by popularname Asc") or die(mysqli_error($link));
+				$row_var2=mysqli_fetch_array($sq_var2);
+				$variety=$row_var2['popularname'];	
+				$vtype=$row_var2['vt'];	
 	?>
 	<tr class="Light" height="25">
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $srno;?> </td>
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $croptype;?> </td>
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $crop;?> </td>
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $variety;?> </td>
+	<td align="center" valign="middle" class="smalltbltext"> <?php echo $ups;?> </td>
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $vtype;?> </td>
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $crpsize;?> </td>
 	<?php
@@ -457,42 +495,61 @@ elseif ($selectedMonth=="ALL" && count($monthList)>0)
 		$arrival_id=''; $ac='';
 		
 		$arrival_id='';
-		$sql_srsub=mysqli_query($link,"select Distinct proslipmain_id from tbl_proslipmain where proslipmain_date <= '$endDate' and proslipmain_date >= '$startDate' and plantcode='$plantcode' and proslipmain_variety='".$vertyname."' ") or die(mysqli_error($link));
+		$sql_srsub=mysqli_query($link,"select Distinct lotldg_id from tbl_lot_ldg_pack where lotldg_trdate <= '$endDate' and lotldg_trdate >= '$startDate' and plantcode='$plantcode' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='PACKAGINGSLIP') and lotldg_crop='".$row_tbl_sub1['lotldg_crop']."' and lotldg_variety='".$row_tbl_sub2['lotldg_variety']."' and packtype='".$row_tbl_sub3['packtype']."' ") or die(mysqli_error($link));
 		$tot_arr_home=mysqli_num_rows($sql_srsub);
 		while($row_srsub=mysqli_fetch_array($sql_srsub))
 		{
-			if($arrival_id!=""){$arrival_id=$arrival_id.",".$row_arr_home['proslipmain_id'];} else {$arrival_id=$row_arr_home['proslipmain_id'];}
+			if($arrival_id!=""){$arrival_id=$arrival_id.",".$row_srsub['lotldg_id'];} else {$arrival_id=$row_srsub['lotldg_id'];}
 		}	
-		
-		$sq_var2=mysqli_query($link,"select vt, popularname, cropname from tblvariety where varietyid='".$vertyname."' order by popularname Asc") or die(mysqli_error($link));
-		$row_var2=mysqli_fetch_array($sq_var2);
-		$variety=$row_var2['popularname'];	
-		$vtype=$row_var2['vt'];	
-		
-		
-		$sq_crop2=mysqli_query($link,"SELECT seedsize, croptype, cropname FROM tblcrop where cropid='".$row_var2['cropname']."' order by cropname Asc") or die(mysqli_error($link));
-		$row_crop2=mysqli_fetch_array($sq_crop2);
-		$crpsize=$row_crop2['seedsize'];
-		$croptype=$row_crop2['croptype'];
-		$crop=$row_crop2['cropname'];
-		
-		
+	
 		$rawqty=0; $conqty=0; $totalpl=0; $totalplper=0;
 		if($arrival_id!='')
 		{
-			$sql="select SUM(proslipsub_oqty), SUM(proslipsub_conqty), SUM(proslipsub_tlqty), SUM(proslipsub_tlper) from tbl_proslipsub where proslipmain_id IN($arrival_id) ";
+			$sql="select Distinct trtype from tbl_lot_ldg_pack where lotldg_trdate <= '$endDate' and lotldg_trdate >= '$startDate' and plantcode='$plantcode' and (trtype='PNPSLIP' or trtype='NSTPNPSLIP' or trtype='PACKRV' or trtype='PACKAGINGSLIP') and lotldg_crop='".$row_tbl_sub1['lotldg_crop']."' and lotldg_variety='".$row_tbl_sub2['lotldg_variety']."' and packtype='".$row_tbl_sub3['packtype']."' and lotldg_id IN($arrival_id) ";
 			//echo $sql;
 			$sql_tbl_sub=mysqli_query($link,$sql) or die(mysqli_error($link));
 			$subtbltot=mysqli_num_rows($sql_tbl_sub);
 			while($row_tbl_sub=mysqli_fetch_array($sql_tbl_sub))
 			{
-				$rawqty=$rawqty+$row_tbl_sub[0];
-				$conqty=$conqty+$row_tbl_sub[1];
-				$totalpl=$rawqty+$row_tbl_sub[2];
+				if($row_tbl_sub['trtype']=='PNPSLIP' || $row_tbl_sub['trtype']=='NSTPNPSLIP')
+				{
+					$sql_is=mysqli_query($link,"select pnpslipmain_id from tbl_pnpslipmain where  pnpslipmain_id IN($arrival_id) and pnpslipmain_crop='".$row_tbl_sub1['lotldg_crop']."' and pnpslipmain_variety='".$row_tbl_sub2['lotldg_variety']."' and pnpslipmain_tflag=1 order by pnpslipmain_id asc") or die(mysqli_error($link));
+					while($row_is=mysqli_fetch_array($sql_is))
+					{ 
+						$sql_istbl=mysqli_query($link,"select sum(pnpslipsub_pickpqty), sum(pnpslipsub_packqty), sum(pnpslipsub_packloss), sum(pnpslipsub_packcc) from tbl_pnpslipsub where pnpslipmain_id='".$row_is['pnpslipmain_id']."' and pnpslipsub_ups='".$row_tbl_sub3['packtype']."' order by pnpslipsub_id asc") or die(mysqli_error($link)); 
+						$t=mysqli_num_rows($sql_istbl);
+						while($row_pnpsub=mysqli_fetch_array($sql_istbl))
+						{ 
+							$rawqty=$rawqty+$row_pnpsub[0]; 
+							$totalpl=$totalpl+($row_pnpsub[2]+$row_pnpsub[3]); 
+							$conqty=$conqty+$row_pnpsub[1]; 
+						}	
+					}
+				}
+				if($row_tbl_sub['trtype']=='PACKAGINGSLIP')
+				{
+					$sql_is=mysqli_query($link,"select packaging_id from tbl_rpspackaging where packaging_id IN($arrival_id) and packaging_crop='".$row_tbl_sub1['lotldg_crop']."' and packaging_variety='".$row_tbl_sub2['lotldg_variety']."' and packaging_upssize='".$row_tbl_sub3['packtype']."' and packaging_tflg=1 order by packaging_id asc") or die(mysqli_error($link));
+					while($row_is=mysqli_fetch_array($sql_is))
+					{ 
+						$sql_istbl=mysqli_query($link,"select sum(packagingsub_extqty), sum(packagingsub_ccqty), sum(packagingsub_ccqty) from tbl_rpspackaging_sub where packaging_id='".$row_is['packaging_id']."' order by packagingsub_id asc") or die(mysqli_error($link)); 
+						$t=mysqli_num_rows($sql_istbl);
+						while($row_pnpsub=mysqli_fetch_array($sql_istbl))
+						{ 
+							$rawqty=$rawqty+$row_pnpsub[0]; 
+							$totalpl=$totalpl+($row_pnpsub[1]+$row_pnpsub[2]); 
+							$conqty=$conqty+($row_pnpsub[0]-($row_pnpsub[1]+$row_pnpsub[2])); 
+						}	
+					}
+				}
 				$x++;
 			}
-			$totalplper=round((($totalpl/$rawqty)*100),3);
+			$tot=$totalpl/$rawqty;
+			if($tot>0)
+			{
+				$totalplper=round(($tot*100),3);
+			}
 		}
+	//echo $rawqty." = ".$conqty." = ".$totalpl." = ".$totalplper."<br />";	
 ?>			  
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $rawqty;?> </td>
 	<td align="center" valign="middle" class="smalltbltext"> <?php echo $conqty;?> </td>
@@ -505,14 +562,15 @@ elseif ($selectedMonth=="ALL" && count($monthList)>0)
 <?php
 }
 }
-
+}
+}
 ?>
 </tbody>
 </table>	
 </div>		
 <table width="974" cellpadding="5" cellspacing="5" border="0" >
 <tr >
-<td height="49" align="center" valign="top"><a href="report_monthlyprocess.php"><img src="../images/back.gif" border="0"  style="display:inline;cursor:pointer;"/></a>&nbsp;&nbsp;<a href="excelmonthlydprocess.php?txtcrop=<?php echo $_REQUEST['txtcrop'];?>&financial_year=<?php echo $_REQUEST['financial_year'];?>&month=<?php echo $_REQUEST['month'];?>&txtvariety=<?php echo $_REQUEST['txtvariety'];?>&txtplant=<?php echo $_REQUEST['txtplant'];?>" target="_blank"><img src="../images/excelicon1.jpg" border="0" height="30" width="30" class="butn" alt="Export to Excel" style="display:inline;cursor:pointer;" /></a><!--&nbsp;&nbsp;<img src="../images/printpreview.gif" onclick="openprint()" style="cursor:pointer" border="0" />-->
+<td height="49" align="center" valign="top"><a href="report_monthlypacking.php"><img src="../images/back.gif" border="0"  style="display:inline;cursor:pointer;"/></a>&nbsp;&nbsp;<a href="excelmonthlydpacking.php?txtcrop=<?php echo $_REQUEST['txtcrop'];?>&financial_year=<?php echo $_REQUEST['financial_year'];?>&month=<?php echo $_REQUEST['month'];?>&txtvariety=<?php echo $_REQUEST['txtvariety'];?>&txtplant=<?php echo $_REQUEST['txtplant'];?>" target="_blank"><img src="../images/excelicon1.jpg" border="0" height="30" width="30" class="butn" alt="Export to Excel" style="display:inline;cursor:pointer;" /></a><!--&nbsp;&nbsp;<img src="../images/printpreview.gif" onclick="openprint()" style="cursor:pointer" border="0" />-->
   <input type="hidden" name="txtinv" /></td>
 </tr>
 </table>
@@ -546,9 +604,7 @@ paging:         false,
 searching: false,
 ordering:  false,
 fixedHeader: true,
-fixedColumns:   {
-left: 6
-}
+
 } );
 } );
 </script>
